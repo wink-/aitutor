@@ -242,6 +242,16 @@ class TerminalSimulator {
     }
     
     updateCursorPosition() {
+        // Get computed styles from the input element
+        const computedStyle = window.getComputedStyle(this.input);
+        const inputPaddingLeft = parseInt(computedStyle.paddingLeft) || 0;
+        
+        if (this.input.value === '') {
+            // When input is empty, position cursor at the start (accounting for padding)
+            this.cursor.style.left = inputPaddingLeft + 'px';
+            return;
+        }
+        
         // Create a temporary span to measure text width
         const tempSpan = document.createElement('span');
         tempSpan.style.visibility = 'hidden';
@@ -249,12 +259,10 @@ class TerminalSimulator {
         tempSpan.style.whiteSpace = 'pre';
         
         // Copy all computed styles from the input element
-        const computedStyle = window.getComputedStyle(this.input);
         tempSpan.style.fontFamily = computedStyle.fontFamily;
         tempSpan.style.fontSize = computedStyle.fontSize;
         tempSpan.style.fontWeight = computedStyle.fontWeight;
         tempSpan.style.letterSpacing = computedStyle.letterSpacing;
-        tempSpan.style.padding = computedStyle.padding;
         
         // Get text up to cursor position
         tempSpan.textContent = this.input.value.substring(0, this.input.selectionStart);
@@ -264,7 +272,6 @@ class TerminalSimulator {
         this.input.parentElement.removeChild(tempSpan);
         
         // Position the cursor accounting for input padding
-        const inputPaddingLeft = parseInt(computedStyle.paddingLeft) || 0;
         this.cursor.style.left = (textWidth + inputPaddingLeft) + 'px';
     }
     
