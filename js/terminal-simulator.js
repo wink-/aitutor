@@ -35,8 +35,10 @@ class TerminalSimulator {
                     <div class="terminal-output" id="terminal-output"></div>
                     <div class="terminal-input-line">
                         <span class="terminal-prompt" id="terminal-prompt">${this.getPrompt()}</span>
-                        <input type="text" class="terminal-input" id="terminal-input" autocomplete="off" spellcheck="false">
-                        <span class="terminal-cursor">|</span>
+                        <div class="terminal-input-container">
+                            <input type="text" class="terminal-input" id="terminal-input" autocomplete="off" spellcheck="false">
+                            <span class="terminal-cursor" id="terminal-cursor">|</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -45,9 +47,11 @@ class TerminalSimulator {
         this.output = document.getElementById('terminal-output');
         this.input = document.getElementById('terminal-input');
         this.promptElement = document.getElementById('terminal-prompt');
+        this.cursor = document.getElementById('terminal-cursor');
         
         this.setupEventListeners();
         this.focusInput();
+        this.updateCursorPosition();
     }
     
     setupEventListeners() {
@@ -69,6 +73,23 @@ class TerminalSimulator {
                     this.handleTabCompletion();
                     break;
             }
+        });
+        
+        // Update cursor position on input, click, and key events
+        this.input.addEventListener('input', () => {
+            this.updateCursorPosition();
+        });
+        
+        this.input.addEventListener('keyup', () => {
+            this.updateCursorPosition();
+        });
+        
+        this.input.addEventListener('click', () => {
+            this.updateCursorPosition();
+        });
+        
+        this.input.addEventListener('focus', () => {
+            this.updateCursorPosition();
         });
         
         this.container.addEventListener('click', () => {
@@ -192,6 +213,10 @@ class TerminalSimulator {
         } else {
             this.input.value = '';
         }
+        
+        // Move cursor to end of input
+        this.input.setSelectionRange(this.input.value.length, this.input.value.length);
+        this.updateCursorPosition();
     }
     
     handleTabCompletion() {
@@ -201,6 +226,8 @@ class TerminalSimulator {
         
         if (matches.length === 1) {
             this.input.value = matches[0];
+            this.input.setSelectionRange(this.input.value.length, this.input.value.length);
+            this.updateCursorPosition();
         } else if (matches.length > 1) {
             this.addToOutput(matches.join('  '), 'output');
         }
@@ -212,6 +239,24 @@ class TerminalSimulator {
     
     scrollToBottom() {
         this.container.scrollTop = this.container.scrollHeight;
+    }
+    
+    updateCursorPosition() {
+        // Create a temporary span to measure text width
+        const tempSpan = document.createElement('span');
+        tempSpan.style.visibility = 'hidden';
+        tempSpan.style.position = 'absolute';
+        tempSpan.style.whiteSpace = 'pre';
+        tempSpan.style.fontFamily = this.input.style.fontFamily || 'inherit';
+        tempSpan.style.fontSize = this.input.style.fontSize || 'inherit';
+        tempSpan.textContent = this.input.value.substring(0, this.input.selectionStart);
+        
+        document.body.appendChild(tempSpan);
+        const textWidth = tempSpan.offsetWidth;
+        document.body.removeChild(tempSpan);
+        
+        // Position the cursor
+        this.cursor.style.left = textWidth + 'px';
     }
     
     // Lesson management
