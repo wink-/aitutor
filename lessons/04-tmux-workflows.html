@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 4: Advanced Tmux Workflows - AI Terminal Tutor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/lessons.css">
+    <style>
+        .terminal-simulator {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            min-height: 300px;
+            margin: 20px 0;
+            position: relative;
+            overflow-y: auto;
+            border: 2px solid #333;
+        }
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: #d4d4d4;
+            outline: none;
+            width: 100%;
+            font-family: inherit;
+        }
+        .terminal-line {
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+        .terminal-prompt {
+            color: #4ec9b0;
+            font-weight: bold;
+        }
+        .terminal-output {
+            color: #cccccc;
+            white-space: pre-wrap;
+        }
+        .terminal-command {
+            color: #9cdcfe;
+        }
+        .terminal-success {
+            color: #4ec9b0;
+        }
+        .terminal-error {
+            color: #f14c4c;
+        }
+        .workflow-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        .workflow-card:hover {
+            transform: translateY(-5px);
+        }
+        .config-example {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            border: 1px solid #4a5568;
+            margin: 15px 0;
+        }
+        .tmuxinator-config {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85em;
+            overflow-x: auto;
+            border: 2px solid #667eea;
+            margin: 15px 0;
+        }
+        .exercise-box {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        .collaboration-feature {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .automation-tip {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .script-example {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            border: 2px solid #4299e1;
+            margin: 15px 0;
+        }
+        .advanced-feature {
+            background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .demo-button {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            color: white;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+        }
+        .layout-preview {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 2px solid #4299e1;
+        }
+        .layout-pane {
+            background: rgba(66, 153, 225, 0.2);
+            border: 1px solid #4299e1;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 5px;
+            color: white;
+            text-align: center;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .plugin-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .plugin-card:hover {
+            transform: translateY(-3px);
+        }
+        .team-workflow {
+            background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .performance-tip {
+            background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-terminal"></i> AI Terminal Tutor
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="../index.html#lessons">Lessons</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="list-group sticky-top" style="top: 20px;">
+                    <a href="#introduction" class="list-group-item list-group-item-action">
+                        <i class="fas fa-rocket me-2"></i>Advanced Workflows
+                    </a>
+                    <a href="#tmuxinator" class="list-group-item list-group-item-action">
+                        <i class="fas fa-magic me-2"></i>Tmuxinator
+                    </a>
+                    <a href="#layouts" class="list-group-item list-group-item-action">
+                        <i class="fas fa-th me-2"></i>Custom Layouts
+                    </a>
+                    <a href="#automation" class="list-group-item list-group-item-action">
+                        <i class="fas fa-cogs me-2"></i>Automation Scripts
+                    </a>
+                    <a href="#ai-workflows" class="list-group-item list-group-item-action">
+                        <i class="fas fa-brain me-2"></i>AI Development
+                    </a>
+                    <a href="#collaboration" class="list-group-item list-group-item-action">
+                        <i class="fas fa-users me-2"></i>Team Collaboration
+                    </a>
+                    <a href="#plugins" class="list-group-item list-group-item-action">
+                        <i class="fas fa-plug me-2"></i>Plugins & Extensions
+                    </a>
+                    <a href="#best-practices" class="list-group-item list-group-item-action">
+                        <i class="fas fa-star me-2"></i>Best Practices
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <!-- Lesson Header -->
+                <div class="card mb-4 shadow">
+                    <div class="card-body bg-light">
+                        <h1 class="card-title h2 mb-3">
+                            <i class="fas fa-graduation-cap text-primary"></i> Lesson 4: Advanced Tmux Workflows
+                        </h1>
+                        <p class="lead mb-4">Take your tmux skills to the next level with workspace automation, custom layouts, and advanced AI development workflows.</p>
+                        
+                        <!-- Learning Objectives -->
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading"><i class="fas fa-bullseye"></i> Learning Objectives</h5>
+                            <ul class="mb-0">
+                                <li>Master tmuxinator for workspace automation</li>
+                                <li>Create custom layouts for different project types</li>
+                                <li>Build automation scripts for repetitive tasks</li>
+                                <li>Implement advanced AI development workflows</li>
+                                <li>Enable team collaboration and session sharing</li>
+                                <li>Extend tmux with plugins and custom configurations</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 1: Introduction -->
+                <section id="introduction" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-rocket"></i> Advanced Workflows Overview</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Advanced tmux workflows go beyond basic session management to create powerful, automated development environments.</p>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="workflow-card">
+                                        <h5><i class="fas fa-magic"></i> Workspace Automation</h5>
+                                        <p>Automatically create complex layouts with predefined commands, windows, and panes for different projects.</p>
+                                        <ul class="mb-0">
+                                            <li>Tmuxinator configurations</li>
+                                            <li>Custom shell scripts</li>
+                                            <li>Project-specific environments</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="workflow-card">
+                                        <h5><i class="fas fa-users"></i> Team Collaboration</h5>
+                                        <p>Share sessions with team members, pair programming, and collaborative debugging sessions.</p>
+                                        <ul class="mb-0">
+                                            <li>Session sharing protocols</li>
+                                            <li>Multi-user permissions</li>
+                                            <li>Real-time collaboration</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <div class="workflow-card">
+                                        <h5><i class="fas fa-brain"></i> AI Development</h5>
+                                        <p>Specialized workflows for machine learning, data science, and AI model development.</p>
+                                        <ul class="mb-0">
+                                            <li>Training pipeline management</li>
+                                            <li>Experiment tracking</li>
+                                            <li>Model deployment workflows</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="workflow-card">
+                                        <h5><i class="fas fa-plug"></i> Extensions</h5>
+                                        <p>Enhance tmux with plugins, themes, and custom integrations for maximum productivity.</p>
+                                        <ul class="mb-0">
+                                            <li>Plugin ecosystem</li>
+                                            <li>Custom themes</li>
+                                            <li>IDE integrations</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: Tmuxinator -->
+                <section id="tmuxinator" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-magic"></i> Tmuxinator: Workspace Automation</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Tmuxinator is a powerful tool that lets you define and launch complex tmux sessions with a single command.</p>
+                            
+                            <h4><i class="fas fa-download"></i> Installation</h4>
+                            <p>Install tmuxinator using your preferred package manager:</p>
+                            
+                            <div class="terminal-simulator">
+                                <div class="terminal-line">
+                                    <span class="terminal-prompt">$</span> <span class="terminal-command">gem install tmuxinator</span>
+                                </div>
+                                <div class="terminal-line terminal-success">
+                                    Successfully installed tmuxinator
+                                </div>
+                                <div class="terminal-line">
+                                    <span class="terminal-prompt">$</span> <span class="terminal-command">brew install tmuxinator</span>
+                                </div>
+                                <div class="terminal-line terminal-success">
+                                    tmuxinator installed successfully
+                                </div>
+                            </div>
+
+                            <h4 class="mt-4"><i class="fas fa-cog"></i> Basic Configuration</h4>
+                            <p>Create your first tmuxinator project:</p>
+                            
+                            <div class="terminal-simulator">
+                                <div class="terminal-line">
+                                    <span class="terminal-prompt">$</span> <span class="terminal-command">tmuxinator new ai-project</span>
+                                </div>
+                                <div class="terminal-line terminal-output">
+                                    Created project file: ~/.tmuxinator/ai-project.yml
+                                    Opening in $EDITOR...
+                                </div>
+                            </div>
+
+                            <h4 class="mt-4"><i class="fas fa-file-code"></i> AI Development Project Configuration</h4>
+                            <p>Here's a comprehensive tmuxinator configuration for AI development:</p>
+                            
+                            <div class="tmuxinator-config">
+# ~/.tmuxinator/ai-project.yml
+
+name: ai-project
+root: ~/projects/ai-research
+
+# Optional tmux socket
+# socket_name: foo
+
+# Runs before everything. Use it to start daemons etc.
+# pre: sudo /etc/rc.d/mysqld start
+
+# Runs in each window and pane before window/pane specific commands. Useful for setting up interpreter versions.
+pre_window: conda activate ai-env
+
+# Pass command line options to tmux. Useful for specifying a different tmux.conf.
+# tmux_options: -f ~/.tmux.mac.conf
+
+# Change the command to call tmux.  This can be used by derivatives/wrappers like byobu.
+# tmux_command: byobu
+
+# Specifies (by name or index) which window will be selected on project startup. If not set, the first window is used.
+startup_window: development
+
+# Specifies (by index) which pane of the specified window will be selected on project startup. If not set, the first pane is used.
+startup_pane: 1
+
+# Controls whether the tmux session should be attached to automatically. Defaults to true.
+attach: true
+
+windows:
+  - development:
+      layout: main-horizontal
+      panes:
+        - editor:
+          - clear
+          - nvim src/main.py
+        - terminal:
+          - clear
+          - echo "Development terminal ready"
+        - files:
+          - clear
+          - ranger
+  - training:
+      layout: even-horizontal
+      panes:
+        - script:
+          - clear
+          - echo "Training environment ready"
+          - python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
+        - logs:
+          - clear
+          - echo "Monitoring training logs..."
+          - tail -f logs/training.log
+  - jupyter:
+      panes:
+        - notebook:
+          - clear
+          - echo "Starting Jupyter Lab..."
+          - jupyter lab --no-browser --port=8888
+  - monitoring:
+      layout: even-horizontal
+      panes:
+        - system:
+          - clear
+          - htop
+        - gpu:
+          - clear
+          - nvidia-smi -l 2
+        - tensorboard:
+          - clear
+          - echo "Starting TensorBoard..."
+          - tensorboard --logdir=logs --port=6006
+  - experiments:
+      layout: tiled
+      panes:
+        - experiment1:
+          - clear
+          - echo "Experiment 1 ready"
+        - experiment2:
+          - clear
+          - echo "Experiment 2 ready"
+        - experiment3:
+          - clear
+          - echo "Experiment 3 ready"
+        - comparison:
+          - clear
+          - echo "Results comparison ready"
+</div>
+
+                            <h4 class="mt-4"><i class="fas fa-play"></i> Using Tmuxinator</h4>
+                            <p>Common tmuxinator commands:</p>
+                            
+                            <div class="terminal-simulator">
+                                <div class="terminal-line">
+                                    <span class="terminal-prompt">$</span> <span class="terminal-command">tmuxinator start ai-project</span>
+                                </div>
+                                <div class="terminal-line terminal-success">
+                                    Starting ai-project session...
+                                </div>
+                                <div class="terminal-line">
+                                    <span class="terminal-prompt">$</span> <span class="terminal-command">tmuxinator list</span>
+                                </div>
+                                <div class="terminal-line terminal-output">
+                                    tmuxinator projects:
+                                    ai-project
+                                    web-dev
+                                    data-science
+                                </div>
+                                <div class="terminal-line">
+                                    <span class="terminal-prompt">$</span> <span class="terminal-command">tmuxinator stop ai-project</span>
+                                </div>
+                                <div class="terminal-line terminal-success">
+                                    Stopping ai-project session...
+                                </div>
+                            </div>
+
+                            <div class="exercise-box">
+                                <h5><i class="fas fa-dumbbell"></i> Exercise: Create Your First Tmuxinator Project</h5>
+                                <p>Create a tmuxinator configuration for your own AI project:</p>
+                                <ol>
+                                    <li>Create a new tmuxinator project: <code>tmuxinator new my-ai-project</code></li>
+                                    <li>Configure at least 3 windows: development, training, monitoring</li>
+                                    <li>Add appropriate panes and commands for each window</li>
+                                    <li>Test your configuration: <code>tmuxinator start my-ai-project</code></li>
+                                </ol>
+                                
+                                <button class="btn demo-button mt-3" onclick="toggleSolution('tmuxinator-solution')">
+                                    <i class="fas fa-eye"></i> Show Solution Template
+                                </button>
+                                
+                                <div id="tmuxinator-solution" class="mt-3" style="display: none;">
+                                    <div class="alert alert-info">
+                                        <h6><i class="fas fa-lightbulb"></i> Solution Template:</h6>
+                                        <div class="tmuxinator-config">
+name: my-ai-project
+root: ~/projects/my-ai-project
+
+pre_window: source venv/bin/activate
+
+startup_window: development
+
+windows:
+  - development:
+      layout: main-vertical
+      panes:
+        - editor: nvim
+        - terminal: clear
+  - training:
+      layout: even-horizontal
+      panes:
+        - train: python train.py
+        - logs: tail -f training.log
+  - monitoring:
+      panes:
+        - system: htop
+</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3: Custom Layouts -->
+                <section id="layouts" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-th"></i> Custom Layouts</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Create custom layouts optimized for different types of AI development work.</p>
+                            
+                            <h4><i class="fas fa-brain"></i> Machine Learning Training Layout</h4>
+                            <p>Perfect for monitoring long-running training jobs:</p>
+                            
+                            <div class="layout-preview">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="layout-pane">
+                                            <i class="fas fa-play"></i> Training Script
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="layout-pane">
+                                            <i class="fas fa-chart-line"></i> Loss Curves
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <div class="layout-pane">
+                                            <i class="fas fa-file-alt"></i> Logs
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="layout-pane">
+                                            <i class="fas fa-microchip"></i> GPU Monitor
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="layout-pane">
+                                            <i class="fas fa-server"></i> System Resources
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="script-example">
+#!/bin/bash
+# ml-training-layout.sh
+
+tmux new-session -d -s ml-training
+
+# Main training window
+tmux rename-window -t ml-training:0 'training'
+tmux split-window -h -t ml-training:0
+tmux send-keys -t ml-training:0.0 'python train.py --config config.yml' Enter
+tmux send-keys -t ml-training:0.1 'tensorboard --logdir=logs' Enter
+
+# Monitoring window
+tmux new-window -t ml-training -n 'monitoring'
+tmux split-window -h -t ml-training:1
+tmux split-window -v -t ml-training:1.0
+tmux send-keys -t ml-training:1.0 'tail -f logs/training.log' Enter
+tmux send-keys -t ml-training:1.1 'nvidia-smi -l 2' Enter
+tmux send-keys -t ml-training:1.2 'htop' Enter
+
+# Attach to session
+tmux attach-session -t ml-training
+</div>
+
+                            <h4 class="mt-4"><i class="fas fa-code"></i> Data Science Research Layout</h4>
+                            <p>Optimized for exploratory data analysis and research:</p>
+                            
+                            <div class="layout-preview">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="layout-pane">
+                                            <i class="fas fa-book"></i> Jupyter Notebook
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="layout-pane">
+                                            <i class="fas fa-terminal"></i> Python REPL
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-6">
+                                        <div class="layout-pane">
+                                            <i class="fas fa-folder"></i> File Manager
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="layout-pane">
+                                            <i class="fas fa-database"></i> Data Preview
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="script-example">
+#!/bin/bash
+# data-science-layout.sh
+
+tmux new-session -d -s data-science
+
+# Main research window
+tmux rename-window -t data-science:0 'research'
+tmux split-window -h -t data-science:0 -p 25
+tmux split-window -v -t data-science:0.1
+tmux send-keys -t data-science:0.0 'jupyter lab --no-browser' Enter
+tmux send-keys -t data-science:0.1 'ipython' Enter
+tmux send-keys -t data-science:0.2 'ranger' Enter
+
+# Analysis window
+tmux new-window -t data-science -n 'analysis'
+tmux split-window -h -t data-science:1
+tmux send-keys -t data-science:1.0 'python -c "import pandas as pd; print(pd.read_csv(\"data.csv\").head())"' Enter
+tmux send-keys -t data-science:1.1 'python -c "import pandas as pd; print(pd.read_csv(\"data.csv\").describe())"' Enter
+
+tmux attach-session -t data-science
+</div>
+
+                            <h4 class="mt-4"><i class="fas fa-server"></i> Model Deployment Layout</h4>
+                            <p>For managing model serving and API development:</p>
+                            
+                            <div class="layout-preview">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="layout-pane">
+                                            <i class="fas fa-rocket"></i> API Server
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="layout-pane">
+                                            <i class="fas fa-vial"></i> API Testing
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <div class="layout-pane">
+                                            <i class="fas fa-file-alt"></i> Server Logs
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="layout-pane">
+                                            <i class="fas fa-tachometer-alt"></i> Metrics
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="layout-pane">
+                                            <i class="fas fa-database"></i> Database
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="script-example">
+#!/bin/bash
+# model-deployment-layout.sh
+
+tmux new-session -d -s model-deployment
+
+# Main deployment window
+tmux rename-window -t model-deployment:0 'deployment'
+tmux split-window -h -t model-deployment:0
+tmux send-keys -t model-deployment:0.0 'uvicorn app:app --reload --host 0.0.0.0 --port 8000' Enter
+tmux send-keys -t model-deployment:0.1 'python test_api.py' Enter
+
+# Monitoring window
+tmux new-window -t model-deployment -n 'monitoring'
+tmux split-window -h -t model-deployment:1
+tmux split-window -v -t model-deployment:1.0
+tmux send-keys -t model-deployment:1.0 'tail -f logs/api.log' Enter
+tmux send-keys -t model-deployment:1.1 'prometheus --config.file=prometheus.yml' Enter
+tmux send-keys -t model-deployment:1.2 'redis-server' Enter
+
+tmux attach-session -t model-deployment
+</div>
+
+                            <div class="exercise-box">
+                                <h5><i class="fas fa-dumbbell"></i> Exercise: Create Custom Layout Scripts</h5>
+                                <p>Create custom layout scripts for your specific use cases:</p>
+                                <ol>
+                                    <li>Choose one of the layouts above that matches your work</li>
+                                    <li>Modify the script to use your actual project paths and commands</li>
+                                    <li>Make the script executable: <code>chmod +x layout-script.sh</code></li>
+                                    <li>Test your custom layout</li>
+                                </ol>
+                                
+                                <button class="btn demo-button mt-3" onclick="startLayoutExercise()">
+                                    <i class="fas fa-play"></i> Start Exercise
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 4: Automation Scripts -->
+                <section id="automation" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-cogs"></i> Automation Scripts</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Automate repetitive tasks and create intelligent workflows that respond to your development needs.</p>
+                            
+                            <h4><i class="fas fa-magic"></i> Smart Session Management</h4>
+                            <p>Automatically create or attach to sessions based on your current directory:</p>
+                            
+                            <div class="script-example">
+#!/bin/bash
+# smart-tmux.sh - Intelligent session management
+
+SESSION_NAME=$(basename "$PWD")
+TMUX_SESSION=$(tmux list-sessions | grep "$SESSION_NAME")
+
+if [ "$TMUX_SESSION" = "" ]; then
+    echo "Creating new session: $SESSION_NAME"
+    
+    # Check if it's an AI/ML project
+    if [ -f "requirements.txt" ] || [ -f "environment.yml" ] || [ -f "train.py" ]; then
+        echo "Detected AI/ML project, using specialized layout..."
+        
+        # Create main session
+        tmux new-session -d -s "$SESSION_NAME"
+        
+        # Development window
+        tmux rename-window -t "$SESSION_NAME:0" 'dev'
+        tmux split-window -h -t "$SESSION_NAME:0"
+        tmux send-keys -t "$SESSION_NAME:0.0" 'nvim' Enter
+        tmux send-keys -t "$SESSION_NAME:0.1" 'clear' Enter
+        
+        # Training window if train.py exists
+        if [ -f "train.py" ]; then
+            tmux new-window -t "$SESSION_NAME" -n 'train'
+            tmux split-window -h -t "$SESSION_NAME:1"
+            tmux send-keys -t "$SESSION_NAME:1.0" 'python train.py' 
+            tmux send-keys -t "$SESSION_NAME:1.1" 'tail -f logs/training.log'
+        fi
+        
+        # Jupyter window if notebooks exist
+        if [ -d "notebooks" ] || ls *.ipynb 1> /dev/null 2>&1; then
+            tmux new-window -t "$SESSION_NAME" -n 'jupyter'
+            tmux send-keys -t "$SESSION_NAME:2" 'jupyter lab --no-browser' Enter
+        fi
+        
+    else
+        echo "Creating standard development session..."
+        tmux new-session -d -s "$SESSION_NAME"
+        tmux split-window -h -t "$SESSION_NAME:0"
+        tmux send-keys -t "$SESSION_NAME:0.0" 'nvim' Enter
+        tmux send-keys -t "$SESSION_NAME:0.1" 'clear' Enter
+    fi
+    
+    tmux attach-session -t "$SESSION_NAME"
+else
+    echo "Attaching to existing session: $SESSION_NAME"
+    tmux attach-session -t "$SESSION_NAME"
+fi
+</div>
+
+                            <h4 class="mt-4"><i class="fas fa-brain"></i> AI Experiment Runner</h4>
+                            <p>Script to set up and monitor multiple AI experiments:</p>
+                            
+                            <div class="script-example">
+#!/bin/bash
+# ai-experiment-runner.sh
+
+EXPERIMENT_NAME=$1
+if [ -z "$EXPERIMENT_NAME" ]; then
+    echo "Usage: $0 <experiment_name>"
+    exit 1
+fi
+
+SESSION_NAME="exp-$EXPERIMENT_NAME"
+EXPERIMENT_DIR="experiments/$EXPERIMENT_NAME"
+
+# Create experiment directory
+mkdir -p "$EXPERIMENT_DIR"
+cd "$EXPERIMENT_DIR"
+
+# Create experiment session
+tmux new-session -d -s "$SESSION_NAME"
+
+# Main experiment window
+tmux rename-window -t "$SESSION_NAME:0" 'experiment'
+tmux split-window -h -t "$SESSION_NAME:0"
+tmux split-window -v -t "$SESSION_NAME:0.1"
+
+# Setup experiment environment
+tmux send-keys -t "$SESSION_NAME:0.0" "echo 'Starting experiment: $EXPERIMENT_NAME'" Enter
+tmux send-keys -t "$SESSION_NAME:0.0" "python ../../train.py --experiment $EXPERIMENT_NAME" 
+
+# Monitor logs
+tmux send-keys -t "$SESSION_NAME:0.1" "tail -f logs/experiment.log" Enter
+
+# Monitor GPU usage
+tmux send-keys -t "$SESSION_NAME:0.2" "nvidia-smi -l 3" Enter
+
+# Results window
+tmux new-window -t "$SESSION_NAME" -n 'results'
+tmux send-keys -t "$SESSION_NAME:1" "tensorboard --logdir=logs --port=6006" Enter
+
+# Analysis window
+tmux new-window -t "$SESSION_NAME" -n 'analysis'
+tmux send-keys -t "$SESSION_NAME:2" "jupyter lab --no-browser --port=8888" Enter
+
+echo "Experiment session created: $SESSION_NAME"
+echo "Attach with: tmux attach-session -t $SESSION_NAME"
+</div>
+
+                            <h4 class="mt-4"><i class="fas fa-cloud"></i> Remote Development Setup</h4>
+                            <p>Script for setting up remote development environments:</p>
+                            
+                            <div class="script-example">
+#!/bin/bash
+# remote-dev-setup.sh
+
+REMOTE_HOST=$1
+PROJECT_NAME=$2
+
+if [ -z "$REMOTE_HOST" ] || [ -z "$PROJECT_NAME" ]; then
+    echo "Usage: $0 <remote_host> <project_name>"
+    exit 1
+fi
+
+echo "Setting up remote development environment..."
+
+# SSH into remote host and create tmux session
+ssh "$REMOTE_HOST" << EOF
+    # Create project directory
+    mkdir -p "projects/$PROJECT_NAME"
+    cd "projects/$PROJECT_NAME"
+    
+    # Create tmux session
+    tmux new-session -d -s "$PROJECT_NAME"
+    
+    # Development window
+    tmux rename-window -t "$PROJECT_NAME:0" 'dev'
+    tmux split-window -h -t "$PROJECT_NAME:0"
+    tmux send-keys -t "$PROJECT_NAME:0.0" 'nvim' Enter
+    tmux send-keys -t "$PROJECT_NAME:0.1" 'clear' Enter
+    
+    # System monitoring window
+    tmux new-window -t "$PROJECT_NAME" -n 'system'
+    tmux split-window -h -t "$PROJECT_NAME:1"
+    tmux send-keys -t "$PROJECT_NAME:1.0" 'htop' Enter
+    tmux send-keys -t "$PROJECT_NAME:1.1" 'nvidia-smi -l 5' Enter
+    
+    echo "Remote session created: $PROJECT_NAME"
+    echo "To attach: ssh $REMOTE_HOST -t 'tmux attach-session -t $PROJECT_NAME'"
+EOF
+
+echo "Remote development environment ready!"
+echo "Connect with: ssh $REMOTE_HOST -t 'tmux attach-session -t $PROJECT_NAME'"
+</div>
+
+                            <div class="automation-tip">
+                                <h5><i class="fas fa-lightbulb"></i> Automation Tips</h5>
+                                <ul class="mb-0">
+                                    <li><strong>Environment Variables:</strong> Use environment variables to make scripts portable</li>
+                                    <li><strong>Error Handling:</strong> Add proper error checking and cleanup</li>
+                                    <li><strong>Configuration Files:</strong> Store project-specific settings in config files</li>
+                                    <li><strong>Integration:</strong> Combine with Git hooks for automatic session creation</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 5: AI Development Workflows -->
+                <section id="ai-workflows" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-brain"></i> AI Development Workflows</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Specialized workflows designed for the unique challenges of AI and machine learning development.</p>
+                            
+                            <h4><i class="fas fa-cogs"></i> Complete ML Pipeline Workflow</h4>
+                            <p>End-to-end machine learning development process:</p>
+                            
+                            <div class="tmuxinator-config">
+# ~/.tmuxinator/ml-pipeline.yml
+
+name: ml-pipeline
+root: ~/projects/ml-pipeline
+
+pre_window: |
+  conda activate ml-env
+  export CUDA_VISIBLE_DEVICES=0
+  export PYTHONPATH="$PWD:$PYTHONPATH"
+
+startup_window: development
+
+windows:
+  - development:
+      layout: main-horizontal
+      panes:
+        - editor:
+          - nvim src/
+        - terminal:
+          - clear
+        - git:
+          - git status
+          
+  - data-prep:
+      layout: even-horizontal
+      panes:
+        - preprocessing:
+          - python scripts/preprocess_data.py
+        - validation:
+          - python scripts/validate_data.py
+        - visualization:
+          - jupyter lab notebooks/data_exploration.ipynb
+          
+  - training:
+      layout: main-vertical
+      panes:
+        - main-training:
+          - python train.py --config configs/base.yml
+        - monitoring:
+          - tail -f logs/training.log
+        - tensorboard:
+          - tensorboard --logdir=logs/tensorboard
+          
+  - evaluation:
+      layout: tiled
+      panes:
+        - metrics:
+          - python evaluate.py --model checkpoints/best_model.pth
+        - inference:
+          - python inference.py --input data/test_samples/
+        - comparison:
+          - python compare_models.py
+        - plots:
+          - python generate_plots.py
+          
+  - deployment:
+      layout: even-horizontal
+      panes:
+        - api-server:
+          - uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
+        - testing:
+          - python test_api.py
+        - monitoring:
+          - tail -f logs/api.log
+          
+  - experiments:
+      layout: tiled
+      panes:
+        - exp1:
+          - echo "Experiment 1: Baseline model"
+          - python train.py --config configs/baseline.yml
+        - exp2:
+          - echo "Experiment 2: Enhanced model"
+          - python train.py --config configs/enhanced.yml
+        - exp3:
+          - echo "Experiment 3: Optimized model"
+          - python train.py --config configs/optimized.yml
+        - comparison:
+          - python compare_experiments.py
+</div>
+
+                            <h4 class="mt-4"><i class="fas fa-network-wired"></i> Distributed Training Workflow</h4>
+                            <p>For managing distributed training across multiple GPUs or machines:</p>
+                            
+                            <div class="script-example">
+#!/bin/bash
+# distributed-training.sh
+
+NUM_GPUS=$1
+if [ -z "$NUM_GPUS" ]; then
+    NUM_GPUS=4
+fi
+
+SESSION_NAME="distributed-training"
+tmux new-session -d -s "$SESSION_NAME"
+
+# Main control window
+tmux rename-window -t "$SESSION_NAME:0" 'control'
+tmux send-keys -t "$SESSION_NAME:0" "echo 'Distributed training control panel'" Enter
+tmux send-keys -t "$SESSION_NAME:0" "python -m torch.distributed.launch --nproc_per_node=$NUM_GPUS train.py"
+
+# GPU monitoring window
+tmux new-window -t "$SESSION_NAME" -n 'gpu-monitor'
+tmux send-keys -t "$SESSION_NAME:1" "nvidia-smi -l 2" Enter
+
+# Individual GPU windows
+for i in $(seq 0 $((NUM_GPUS-1))); do
+    tmux new-window -t "$SESSION_NAME" -n "gpu-$i"
+    tmux send-keys -t "$SESSION_NAME:$((i+2))" "CUDA_VISIBLE_DEVICES=$i python train.py --local_rank=$i"
+done
+
+# Logs aggregation window
+tmux new-window -t "$SESSION_NAME" -n 'logs'
+tmux split-window -h -t "$SESSION_NAME:$((NUM_GPUS+2))"
+tmux send-keys -t "$SESSION_NAME:$((NUM_GPUS+2)).0" "tail -f logs/training.log" Enter
+tmux send-keys -t "$SESSION_NAME:$((NUM_GPUS+2)).1" "tensorboard --logdir=logs/distributed" Enter
+
+echo "Distributed training session created with $NUM_GPUS GPUs"
+echo "Attach with: tmux attach-session -t $SESSION_NAME"
+</div>
+
+                            <h4 class="mt-4"><i class="fas fa-flask"></i> Research Experiment Tracking</h4>
+                            <p>Workflow for managing multiple research experiments:</p>
+                            
+                            <div class="tmuxinator-config">
+# ~/.tmuxinator/research-experiments.yml
+
+name: research-experiments
+root: ~/research/current-project
+
+pre_window: |
+  conda activate research-env
+  export WANDB_PROJECT="current-research"
+  export PYTHONPATH="$PWD:$PYTHONPATH"
+
+startup_window: overview
+
+windows:
+  - overview:
+      panes:
+        - dashboard:
+          - python -c "
+            import pandas as pd
+            import os
+            print('=== Research Dashboard ===')
+            if os.path.exists('experiments.csv'):
+                df = pd.read_csv('experiments.csv')
+                print(df.to_string())
+            else:
+                print('No experiments logged yet')
+            "
+        - notes:
+          - nvim research_notes.md
+          
+  - baseline:
+      layout: main-horizontal
+      panes:
+        - experiment:
+          - python train.py --config configs/baseline.yml --experiment baseline
+        - logs:
+          - tail -f logs/baseline.log
+        - metrics:
+          - python monitor_metrics.py --experiment baseline
+          
+  - ablation-study:
+      layout: tiled
+      panes:
+        - no-dropout:
+          - python train.py --config configs/no_dropout.yml --experiment no_dropout
+        - no-regularization:
+          - python train.py --config configs/no_reg.yml --experiment no_reg
+        - no-augmentation:
+          - python train.py --config configs/no_aug.yml --experiment no_aug
+        - full-model:
+          - python train.py --config configs/full.yml --experiment full
+          
+  - hyperparameter-search:
+      layout: even-horizontal
+      panes:
+        - search:
+          - python hyperparameter_search.py --trials 100
+        - results:
+          - python analyze_hp_search.py
+        - visualization:
+          - jupyter lab notebooks/hp_analysis.ipynb
+          
+  - model-comparison:
+      layout: main-vertical
+      panes:
+        - comparison:
+          - python compare_models.py --models baseline enhanced optimized
+        - plots:
+          - python generate_comparison_plots.py
+          
+  - paper-writing:
+      layout: main-horizontal
+      panes:
+        - writing:
+          - nvim paper/main.tex
+        - figures:
+          - python generate_paper_figures.py
+        - references:
+          - nvim paper/references.bib
+</div>
+
+                            <div class="exercise-box">
+                                <h5><i class="fas fa-dumbbell"></i> Exercise: Build Your AI Workflow</h5>
+                                <p>Create a comprehensive AI development workflow:</p>
+                                <ol>
+                                    <li>Identify the key stages in your AI development process</li>
+                                    <li>Create a tmuxinator configuration that includes all stages</li>
+                                    <li>Add monitoring and logging for each stage</li>
+                                    <li>Include experiment tracking and comparison tools</li>
+                                    <li>Test the workflow with a sample project</li>
+                                </ol>
+                                
+                                <button class="btn demo-button mt-3" onclick="startAIWorkflowExercise()">
+                                    <i class="fas fa-play"></i> Start AI Workflow Exercise
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 6: Team Collaboration -->
+                <section id="collaboration" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-users"></i> Team Collaboration</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Enable seamless collaboration between team members using shared tmux sessions.</p>
+                            
+                            <h4><i class="fas fa-handshake"></i> Session Sharing</h4>
+                            <p>Share tmux sessions with team members for pair programming and collaborative debugging:</p>
+                            
+                            <div class="collaboration-feature">
+                                <h5><i class="fas fa-share-alt"></i> Basic Session Sharing</h5>
+                                <p>Multiple users can attach to the same session:</p>
+                                <div class="config-example">
+# User 1 creates the session
+$ tmux new-session -d -s shared-session
+
+# User 2 attaches to the same session
+$ tmux attach-session -t shared-session
+
+# Both users see the same view and can interact
+</div>
+                            </div>
+
+                            <h4 class="mt-4"><i class="fas fa-user-shield"></i> Multi-User Setup</h4>
+                            <p>Configure tmux for multiple users on the same system:</p>
+                            
+                            <div class="config-example">
+# /etc/tmux.conf - System-wide configuration
+
+# Create a shared socket directory
+set-option -g socket-path /tmp/tmux-shared
+
+# Allow multiple users to access the same session
+set-option -g default-command "newgrp tmux-users"
+
+# Set up proper permissions
+set-option -g set-titles on
+set-option -g set-titles-string "#{session_name}@#{host}"
+</div>
+
+                            <h4 class="mt-4"><i class="fas fa-code"></i> Collaborative Development Script</h4>
+                            <p>Script to set up collaborative development environment:</p>
+                            
+                            <div class="script-example">
+#!/bin/bash
+# collaborative-dev.sh
+
+PROJECT_NAME=$1
+if [ -z "$PROJECT_NAME" ]; then
+    echo "Usage: $0 <project_name>"
+    exit 1
+fi
+
+SESSION_NAME="collab-$PROJECT_NAME"
+SOCKET_PATH="/tmp/tmux-$PROJECT_NAME"
+
+# Create shared socket
+tmux -S "$SOCKET_PATH" new-session -d -s "$SESSION_NAME"
+
+# Set socket permissions for group access
+chmod 770 "$SOCKET_PATH"
+
+# Development window
+tmux -S "$SOCKET_PATH" rename-window -t "$SESSION_NAME:0" 'dev'
+tmux -S "$SOCKET_PATH" split-window -h -t "$SESSION_NAME:0"
+tmux -S "$SOCKET_PATH" send-keys -t "$SESSION_NAME:0.0" 'nvim' Enter
+tmux -S "$SOCKET_PATH" send-keys -t "$SESSION_NAME:0.1" 'clear' Enter
+
+# Chat window for communication
+tmux -S "$SOCKET_PATH" new-window -t "$SESSION_NAME" -n 'chat'
+tmux -S "$SOCKET_PATH" send-keys -t "$SESSION_NAME:1" 'echo "=== Team Chat ===" && echo "Use this pane for communication"' Enter
+
+# Testing window
+tmux -S "$SOCKET_PATH" new-window -t "$SESSION_NAME" -n 'test'
+tmux -S "$SOCKET_PATH" send-keys -t "$SESSION_NAME:2" 'python -m pytest -v' 
+
+echo "Collaborative session created: $SESSION_NAME"
+echo "Socket path: $SOCKET_PATH"
+echo "Team members can join with:"
+echo "  tmux -S $SOCKET_PATH attach-session -t $SESSION_NAME"
+</div>
+
+                            <h4 class="mt-4"><i class="fas fa-comments"></i> Team Communication Integration</h4>
+                            <p>Integrate with team communication tools:</p>
+                            
+                            <div class="team-workflow">
+                                <h5><i class="fas fa-bell"></i> Notification System</h5>
+                                <p>Set up notifications for important events:</p>
+                                <div class="config-example">
+# Add to ~/.tmux.conf
+# Send notification when pane activity occurs
+set-option -g visual-activity on
+set-window-option -g monitor-activity on
+
+# Custom notification script
+set-option -g @notify-activity-command 'notify-send "Tmux Activity" "Activity in session #{session_name}"'
+</div>
+                            </div>
+
+                            <h4 class="mt-4"><i class="fas fa-sync-alt"></i> Synchronized Development</h4>
+                            <p>Keep development environments synchronized across team members:</p>
+                            
+                            <div class="script-example">
+#!/bin/bash
+# sync-dev-env.sh
+
+REMOTE_HOST=$1
+PROJECT_NAME=$2
+
+if [ -z "$REMOTE_HOST" ] || [ -z "$PROJECT_NAME" ]; then
+    echo "Usage: $0 <remote_host> <project_name>"
+    exit 1
+fi
+
+# Synchronize project files
+rsync -avz --exclude='.git' --exclude='__pycache__' \
+    ./ "$REMOTE_HOST:~/projects/$PROJECT_NAME/"
+
+# Synchronize tmux session configuration
+scp ~/.tmuxinator/"$PROJECT_NAME".yml "$REMOTE_HOST:~/.tmuxinator/"
+
+# Start synchronized session on remote
+ssh "$REMOTE_HOST" << EOF
+    cd "projects/$PROJECT_NAME"
+    tmuxinator start "$PROJECT_NAME"
+    echo "Synchronized session started on $REMOTE_HOST"
+EOF
+
+echo "Development environment synchronized!"
+</div>
+
+                            <div class="exercise-box">
+                                <h5><i class="fas fa-dumbbell"></i> Exercise: Set Up Team Collaboration</h5>
+                                <p>Create a collaborative development environment:</p>
+                                <ol>
+                                    <li>Set up a shared tmux session with proper permissions</li>
+                                    <li>Create different windows for different team roles</li>
+                                    <li>Add a communication/chat window</li>
+                                    <li>Test with a team member or second user account</li>
+                                </ol>
+                                
+                                <button class="btn demo-button mt-3" onclick="startCollaborationExercise()">
+                                    <i class="fas fa-play"></i> Start Collaboration Exercise
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 7: Plugins & Extensions -->
+                <section id="plugins" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-plug"></i> Plugins & Extensions</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Extend tmux capabilities with plugins and integrations for enhanced productivity.</p>
+                            
+                            <h4><i class="fas fa-download"></i> Tmux Plugin Manager (TPM)</h4>
+                            <p>Install and manage tmux plugins easily:</p>
+                            
+                            <div class="terminal-simulator">
+                                <div class="terminal-line">
+                                    <span class="terminal-prompt">$</span> <span class="terminal-command">git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm</span>
+                                </div>
+                                <div class="terminal-line terminal-success">
+                                    TPM installed successfully
+                                </div>
+                            </div>
+
+                            <p class="mt-3">Add to your <code>~/.tmux.conf</code>:</p>
+                            <div class="config-example">
+# List of plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+
+# Initialize TMUX plugin manager (keep this line at the very bottom)
+run '~/.tmux/plugins/tpm/tpm'
+</div>
+
+                            <h4 class="mt-4"><i class="fas fa-star"></i> Essential Plugins for AI Development</h4>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="plugin-card">
+                                        <h5><i class="fas fa-chart-line"></i> tmux-cpu</h5>
+                                        <p>Display CPU and memory usage in the status bar</p>
+                                        <div class="config-example">
+set -g @plugin 'tmux-plugins/tmux-cpu'
+set -g status-right '#{cpu_bg_color} CPU: #{cpu_icon} #{cpu_percentage} | %a %h-%d %H:%M '
+</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="plugin-card">
+                                        <h5><i class="fas fa-save"></i> tmux-resurrect</h5>
+                                        <p>Persist tmux environment across system restarts</p>
+                                        <div class="config-example">
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-strategy-vim 'session'
+</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <div class="plugin-card">
+                                        <h5><i class="fas fa-copy"></i> tmux-yank</h5>
+                                        <p>Enhanced copy and paste functionality</p>
+                                        <div class="config-example">
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @yank_selection_mouse 'clipboard'
+set -g @yank_action 'copy-pipe-and-cancel'
+</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="plugin-card">
+                                        <h5><i class="fas fa-folder"></i> tmux-fzf</h5>
+                                        <p>Fuzzy finder integration for sessions, windows, and panes</p>
+                                        <div class="config-example">
+set -g @plugin 'sainnhe/tmux-fzf'
+set -g @tmux-fzf-launch-key 'C-f'
+</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h4 class="mt-4"><i class="fas fa-microchip"></i> GPU Monitoring Plugin</h4>
+                            <p>Custom plugin for monitoring GPU usage:</p>
+                            
+                            <div class="script-example">
+#!/bin/bash
+# ~/.tmux/plugins/tmux-gpu/scripts/gpu_usage.sh
+
+# Get GPU usage information
+if command -v nvidia-smi &> /dev/null; then
+    GPU_USAGE=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | head -1)
+    GPU_MEMORY=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1)
+    GPU_MEMORY_TOTAL=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -1)
+    
+    if [ "$GPU_USAGE" -gt 80 ]; then
+        echo "#[fg=red]GPU: ${GPU_USAGE}%"
+    elif [ "$GPU_USAGE" -gt 50 ]; then
+        echo "#[fg=yellow]GPU: ${GPU_USAGE}%"
+    else
+        echo "#[fg=green]GPU: ${GPU_USAGE}%"
+    fi
+else
+    echo "#[fg=gray]GPU: N/A"
+fi
+</div>
+
+                            <p>Add to <code>~/.tmux.conf</code>:</p>
+                            <div class="config-example">
+# GPU monitoring
+set -g status-right '#(~/.tmux/plugins/tmux-gpu/scripts/gpu_usage.sh) | %Y-%m-%d %H:%M'
+</div>
+
+                            <h4 class="mt-4"><i class="fas fa-palette"></i> Custom Status Bar for AI Development</h4>
+                            <p>Comprehensive status bar configuration:</p>
+                            
+                            <div class="config-example">
+# ~/.tmux.conf - AI Development Status Bar
+
+# Status bar configuration
+set -g status-interval 5
+set -g status-left-length 50
+set -g status-right-length 100
+
+# Left side: session name and window info
+set -g status-left '#[fg=green,bold]#S #[fg=blue]#I:#P #[default]'
+
+# Right side: system info, GPU, time
+set -g status-right '#{?client_prefix,#[reverse]PREFIX#[noreverse] ,}#[fg=yellow]#(uptime | cut -d "," -f 1-2) #[fg=cyan]#{cpu_percentage} #[fg=magenta]#{ram_percentage} #[fg=red]GPU:#{gpu_percentage} #[fg=white]%Y-%m-%d %H:%M'
+
+# Window status
+setw -g window-status-format ' #I:#W#{?window_flags,#{window_flags}, } '
+setw -g window-status-current-format ' #I:#W#{?window_flags,#{window_flags}, } '
+
+# Colors
+set -g status-style bg=black,fg=white
+setw -g window-status-current-style bg=red,fg=white,bright
+</div>
+
+                            <h4 class="mt-4"><i class="fas fa-code"></i> IDE Integration</h4>
+                            <p>Integrate tmux with popular IDEs and editors:</p>
+                            
+                            <div class="advanced-feature">
+                                <h5><i class="fas fa-vim"></i> Vim/Neovim Integration</h5>
+                                <p>Seamless navigation between vim and tmux panes:</p>
+                                <div class="config-example">
+# ~/.tmux.conf
+# Smart pane switching with awareness of Vim splits
+bind -n C-h run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-h) || tmux select-pane -L"
+bind -n C-j run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-j) || tmux select-pane -D"
+bind -n C-k run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-k) || tmux select-pane -U"
+bind -n C-l run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-l) || tmux select-pane -R"
+</div>
+                            </div>
+
+                            <div class="exercise-box">
+                                <h5><i class="fas fa-dumbbell"></i> Exercise: Set Up Plugin Environment</h5>
+                                <p>Create a comprehensive plugin setup:</p>
+                                <ol>
+                                    <li>Install TPM (Tmux Plugin Manager)</li>
+                                    <li>Add at least 3 plugins from the list above</li>
+                                    <li>Configure a custom status bar with system monitoring</li>
+                                    <li>Test the GPU monitoring plugin (if you have a GPU)</li>
+                                    <li>Customize the appearance to match your preferences</li>
+                                </ol>
+                                
+                                <button class="btn demo-button mt-3" onclick="startPluginExercise()">
+                                    <i class="fas fa-play"></i> Start Plugin Exercise
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 8: Best Practices -->
+                <section id="best-practices" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-star"></i> Best Practices</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Professional tips and best practices for advanced tmux usage in AI development.</p>
+                            
+                            <h4><i class="fas fa-tachometer-alt"></i> Performance Optimization</h4>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="performance-tip">
+                                        <h6><i class="fas fa-memory"></i> Memory Management</h6>
+                                        <ul class="mb-0">
+                                            <li>Set appropriate history limits</li>
+                                            <li>Clean up unused sessions regularly</li>
+                                            <li>Monitor memory usage in status bar</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="performance-tip">
+                                        <h6><i class="fas fa-clock"></i> Startup Time</h6>
+                                        <ul class="mb-0">
+                                            <li>Minimize plugins in configuration</li>
+                                            <li>Use lazy loading for heavy operations</li>
+                                            <li>Profile startup time regularly</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h4 class="mt-4"><i class="fas fa-shield-alt"></i> Security Considerations</h4>
+                            
+                            <div class="config-example">
+# ~/.tmux.conf - Security settings
+
+# Disable automatic window renaming to prevent information leakage
+set-window-option -g automatic-rename off
+
+# Set proper permissions for shared sessions
+set-option -g default-command "umask 0077; exec $SHELL"
+
+# Limit session access
+set-option -g lock-command "vlock"
+set-option -g lock-after-time 3600
+
+# Secure socket permissions
+set-option -g socket-path "/tmp/tmux-$(id -u)"
+</div>
+
+                            <h4 class="mt-4"><i class="fas fa-folder-open"></i> Project Organization</h4>
+                            
+                            <div class="workflow-card">
+                                <h5><i class="fas fa-sitemap"></i> Recommended Directory Structure</h5>
+                                <div class="config-example">
+~/projects/
+├── ai-project-1/
+│   ├── .tmuxinator.yml          # Project-specific tmux config
+│   ├── scripts/
+│   │   ├── setup-env.sh         # Environment setup
+│   │   └── start-tmux.sh        # Custom tmux startup
+│   ├── configs/
+│   │   ├── development.yml      # Development environment
+│   │   └── production.yml       # Production settings
+│   └── logs/
+│       ├── tmux-sessions.log    # Session logs
+│       └── training.log         # Training logs
+└── shared/
+    ├── tmux-scripts/            # Reusable scripts
+    └── configurations/          # Shared configurations
+</div>
+                            </div>
+
+                            <h4 class="mt-4"><i class="fas fa-file-alt"></i> Documentation and Naming</h4>
+                            
+                            <div class="config-example">
+# Consistent naming conventions
+# Sessions: project-name-purpose (e.g., ml-research-training)
+# Windows: descriptive-action (e.g., data-preprocessing, model-training)
+# Panes: tool-or-purpose (e.g., nvim, logs, monitoring)
+
+# Example session naming
+tmux new-session -d -s "ai-research-experiment-1"
+tmux new-window -t "ai-research-experiment-1" -n "data-prep"
+tmux new-window -t "ai-research-experiment-1" -n "model-training"
+tmux new-window -t "ai-research-experiment-1" -n "evaluation"
+</div>
+
+                            <h4 class="mt-4"><i class="fas fa-save"></i> Backup and Recovery</h4>
+                            
+                            <div class="script-example">
+#!/bin/bash
+# backup-tmux-sessions.sh
+
+BACKUP_DIR="$HOME/.tmux-backups"
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+mkdir -p "$BACKUP_DIR"
+
+# Backup tmux configuration
+cp ~/.tmux.conf "$BACKUP_DIR/tmux.conf.$TIMESTAMP"
+
+# Backup tmuxinator configurations
+if [ -d ~/.tmuxinator ]; then
+    cp -r ~/.tmuxinator "$BACKUP_DIR/tmuxinator.$TIMESTAMP"
+fi
+
+# Save current session layout
+tmux list-sessions -F "#{session_name}" | while read session; do
+    tmux list-windows -t "$session" -F "#{window_name}: #{window_layout}" > "$BACKUP_DIR/session-$session.$TIMESTAMP"
+done
+
+echo "Tmux environment backed up to $BACKUP_DIR"
+</div>
+
+                            <h4 class="mt-4"><i class="fas fa-users-cog"></i> Team Standards</h4>
+                            
+                            <div class="team-workflow">
+                                <h5><i class="fas fa-clipboard-check"></i> Team Guidelines</h5>
+                                <ul>
+                                    <li><strong>Naming Conventions:</strong> Use consistent session and window names</li>
+                                    <li><strong>Shared Configurations:</strong> Keep team configurations in version control</li>
+                                    <li><strong>Documentation:</strong> Document custom keybindings and workflows</li>
+                                    <li><strong>Regular Reviews:</strong> Review and update team practices regularly</li>
+                                    <li><strong>Onboarding:</strong> Create setup scripts for new team members</li>
+                                </ul>
+                            </div>
+
+                            <h4 class="mt-4"><i class="fas fa-bug"></i> Debugging and Troubleshooting</h4>
+                            
+                            <div class="config-example">
+# ~/.tmux.conf - Debug settings
+
+# Enable logging for troubleshooting
+set -g history-file ~/.tmux_history
+
+# Verbose logging
+set -g @debug-logging on
+
+# Show detailed pane information
+bind-key i display-panes -t . -d 0
+
+# Debug key bindings
+bind-key ? list-keys
+
+# Show tmux server information
+bind-key I display-message "Server: #{server_pid}, Client: #{client_pid}"
+</div>
+
+                            <div class="exercise-box">
+                                <h5><i class="fas fa-dumbbell"></i> Exercise: Implement Best Practices</h5>
+                                <p>Apply best practices to your tmux setup:</p>
+                                <ol>
+                                    <li>Audit your current tmux configuration for performance issues</li>
+                                    <li>Implement security measures for shared sessions</li>
+                                    <li>Create a project organization structure</li>
+                                    <li>Set up backup and recovery procedures</li>
+                                    <li>Document your team's tmux standards</li>
+                                </ol>
+                                
+                                <button class="btn demo-button mt-3" onclick="startBestPracticesExercise()">
+                                    <i class="fas fa-play"></i> Start Best Practices Exercise
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Summary -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-check-circle"></i> Lesson Summary</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">Congratulations! You've mastered advanced tmux workflows for AI development. Here's what you've accomplished:</p>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-rocket text-warning"></i> Advanced Skills</h5>
+                                <ul>
+                                    <li>Automated workspace creation with tmuxinator</li>
+                                    <li>Custom layouts for different development phases</li>
+                                    <li>Intelligent automation scripts</li>
+                                    <li>Team collaboration and session sharing</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-brain text-info"></i> AI Development Mastery</h5>
+                                <ul>
+                                    <li>Complete ML pipeline workflows</li>
+                                    <li>Distributed training management</li>
+                                    <li>Research experiment tracking</li>
+                                    <li>Model deployment and monitoring</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-plug text-success"></i> Extensibility</h5>
+                                <ul>
+                                    <li>Plugin ecosystem mastery</li>
+                                    <li>Custom status bar configurations</li>
+                                    <li>IDE and editor integrations</li>
+                                    <li>Performance optimization</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-star text-primary"></i> Professional Practices</h5>
+                                <ul>
+                                    <li>Security and access control</li>
+                                    <li>Project organization standards</li>
+                                    <li>Backup and recovery procedures</li>
+                                    <li>Team collaboration guidelines</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h5><i class="fas fa-graduation-cap"></i> You're Now Ready For:</h5>
+                            <ul>
+                                <li>Leading tmux adoption in your team</li>
+                                <li>Creating complex AI development environments</li>
+                                <li>Automating repetitive development tasks</li>
+                                <li>Building custom tmux extensions and plugins</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Final Challenge -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-trophy"></i> Master Challenge</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">Put all your skills together in this comprehensive master challenge:</p>
+                        
+                        <div class="alert alert-primary">
+                            <h5><i class="fas fa-tasks"></i> Challenge: Build a Complete AI Development Platform</h5>
+                            <p>Create a comprehensive tmux-based AI development platform that includes:</p>
+                            <ol>
+                                <li>Automated project setup with tmuxinator</li>
+                                <li>Custom layouts for different AI development phases</li>
+                                <li>Team collaboration features</li>
+                                <li>Monitoring and logging integration</li>
+                                <li>Plugin ecosystem for extensibility</li>
+                                <li>Documentation and team onboarding materials</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="alert alert-success">
+                            <h5><i class="fas fa-lightbulb"></i> Success Criteria</h5>
+                            <ul class="mb-0">
+                                <li>New team members can set up the environment in under 10 minutes</li>
+                                <li>All common AI development workflows are automated</li>
+                                <li>Multiple users can collaborate simultaneously</li>
+                                <li>The system is well-documented and maintainable</li>
+                                <li>Performance is optimized for heavy AI workloads</li>
+                            </ul>
+                        </div>
+                        
+                        <button class="btn btn-lg btn-success mt-3" onclick="startMasterChallenge()">
+                            <i class="fas fa-rocket"></i> Begin Master Challenge
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 AI Terminal Tutor. Built with Bootstrap and love for the command line.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/terminal-simulator.js"></script>
+    <script>
+        function toggleSolution(solutionId) {
+            const solution = document.getElementById(solutionId);
+            const button = event.target;
+            
+            if (solution.style.display === 'none') {
+                solution.style.display = 'block';
+                button.innerHTML = '<i class="fas fa-eye-slash"></i> Hide Solution';
+            } else {
+                solution.style.display = 'none';
+                button.innerHTML = '<i class="fas fa-eye"></i> Show Solution';
+            }
+        }
+
+        function startLayoutExercise() {
+            alert('Layout Exercise Started!\n\nSteps:\n1. Choose a layout that matches your workflow\n2. Customize the script with your project paths\n3. Test the layout with actual commands\n4. Refine the layout based on your needs\n\nGood luck!');
+        }
+
+        function startAIWorkflowExercise() {
+            alert('AI Workflow Exercise Started!\n\nCreate a comprehensive workflow that includes:\n\n1. Data preprocessing stage\n2. Model training and validation\n3. Experiment tracking\n4. Model evaluation and comparison\n5. Deployment and monitoring\n\nTip: Start with a simple workflow and gradually add complexity!');
+        }
+
+        function startCollaborationExercise() {
+            alert('Collaboration Exercise Started!\n\nSteps:\n1. Create a shared socket with proper permissions\n2. Set up windows for different team roles\n3. Add a communication channel\n4. Test with another user\n5. Document the process for your team\n\nRemember: Security and clear communication are key!');
+        }
+
+        function startPluginExercise() {
+            alert('Plugin Exercise Started!\n\nTasks:\n1. Install TPM (Tmux Plugin Manager)\n2. Add tmux-cpu, tmux-resurrect, and tmux-yank\n3. Configure a custom status bar\n4. Test GPU monitoring (if available)\n5. Customize colors and appearance\n\nTip: Start with basic plugins and gradually add more advanced ones!');
+        }
+
+        function startBestPracticesExercise() {
+            alert('Best Practices Exercise Started!\n\nImplement:\n1. Performance optimization settings\n2. Security measures for shared sessions\n3. Organized project structure\n4. Backup and recovery procedures\n5. Team documentation standards\n\nTip: Focus on one area at a time and test thoroughly!');
+        }
+
+        function startMasterChallenge() {
+            alert('Master Challenge Accepted! 🚀\n\nYou\'re about to build a complete AI development platform.\n\nThis challenge will test everything you\'ve learned:\n- Automation\n- Collaboration\n- Performance\n- Security\n- Documentation\n\nTake your time, plan carefully, and create something amazing!\n\nGood luck, tmux master!');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

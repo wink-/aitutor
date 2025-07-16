@@ -1,0 +1,2516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 11: Automation Scripts - AI Terminal Tutor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            position: relative;
+        }
+        .code-block .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #444;
+            border: none;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .code-block .copy-btn:hover {
+            background: #555;
+        }
+        .workflow-step {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 4px solid #007bff;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .productivity-metric {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+        .script-template {
+            background: #f8f9fa;
+            border: 2px dashed #007bff;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .performance-tip {
+            background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%);
+            color: #212529;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid #f39c12;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-terminal"></i> AI Terminal Tutor
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="../index.html#lessons">Lessons</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <!-- Lesson Header -->
+                <div class="card mb-4 shadow-lg">
+                    <div class="card-body bg-gradient" style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);">
+                        <h1 class="card-title h2 mb-3 text-white">
+                            <i class="fas fa-robot"></i> Lesson 11: Advanced Automation Scripts
+                        </h1>
+                        <p class="lead mb-4 text-white">Master the art of creating custom automation scripts for dataset management, model training, deployment, and CI/CD integration.</p>
+                        
+                        <!-- Learning Objectives -->
+                        <div class="alert alert-light">
+                            <h5 class="alert-heading"><i class="fas fa-bullseye text-primary"></i> Learning Objectives</h5>
+                            <ul class="mb-0">
+                                <li>Design and implement shell scripts for dataset management workflows</li>
+                                <li>Create automated model training and evaluation pipelines</li>
+                                <li>Build deployment automation with monitoring and rollback capabilities</li>
+                                <li>Develop custom terminal functions and aliases for productivity</li>
+                                <li>Integrate automation scripts with CI/CD pipelines</li>
+                                <li>Implement error handling and logging in automation scripts</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Productivity Metrics -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="productivity-metric">
+                            <h3>85%</h3>
+                            <p class="mb-0">Time Saved</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="productivity-metric">
+                            <h3>90%</h3>
+                            <p class="mb-0">Error Reduction</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="productivity-metric">
+                            <h3>3x</h3>
+                            <p class="mb-0">Deployment Speed</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="productivity-metric">
+                            <h3>100%</h3>
+                            <p class="mb-0">Consistency</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 1: Dataset Management Automation -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-database"></i> Dataset Management Automation</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-4">Automate the complete dataset lifecycle from ingestion to preprocessing, validation, and versioning.</p>
+
+                        <div class="workflow-step">
+                            <h5><i class="fas fa-download"></i> Step 1: Data Ingestion Pipeline</h5>
+                            <p>Automated data collection from multiple sources with validation and error handling.</p>
+                        </div>
+
+                        <div class="script-template">
+                            <h6><i class="fas fa-file-code"></i> Template: Dataset Ingestion Script</h6>
+                            <div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">Copy</button>#!/bin/bash
+# dataset_ingestion.sh - Automated data collection and validation
+
+set -euo pipefail  # Exit on error, undefined vars, pipe failures
+
+# Configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="${SCRIPT_DIR}/config/data_config.yml"
+LOG_FILE="${SCRIPT_DIR}/logs/ingestion_$(date +%Y%m%d_%H%M%S).log"
+DATA_DIR="${SCRIPT_DIR}/data"
+TEMP_DIR="${SCRIPT_DIR}/tmp"
+
+# Create necessary directories
+mkdir -p "${DATA_DIR}" "${TEMP_DIR}" "$(dirname "${LOG_FILE}")"
+
+# Logging function
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "${LOG_FILE}"
+}
+
+# Error handling
+error_exit() {
+    log "ERROR: $1"
+    cleanup
+    exit 1
+}
+
+# Cleanup function
+cleanup() {
+    log "Cleaning up temporary files..."
+    rm -rf "${TEMP_DIR}"/*
+}
+
+# Trap for cleanup on exit
+trap cleanup EXIT
+
+# Data source validation
+validate_source() {
+    local source="$1"
+    local source_type="$2"
+    
+    log "Validating data source: ${source}"
+    
+    case "${source_type}" in
+        "api")
+            curl -sf "${source}/health" > /dev/null || error_exit "API source unreachable: ${source}"
+            ;;
+        "s3")
+            aws s3 ls "${source}" > /dev/null || error_exit "S3 source inaccessible: ${source}"
+            ;;
+        "database")
+            # Database connection check
+            python3 -c "
+import psycopg2
+import sys
+try:
+    conn = psycopg2.connect('${source}')
+    conn.close()
+    print('Database connection successful')
+except Exception as e:
+    print(f'Database connection failed: {e}')
+    sys.exit(1)
+            " || error_exit "Database source unreachable: ${source}"
+            ;;
+        *)
+            error_exit "Unknown source type: ${source_type}"
+            ;;
+    esac
+}
+
+# Data quality validation
+validate_data_quality() {
+    local file="$1"
+    local expected_schema="$2"
+    
+    log "Validating data quality for: ${file}"
+    
+    # Check file size
+    if [[ ! -s "${file}" ]]; then
+        error_exit "Data file is empty: ${file}"
+    fi
+    
+    # Schema validation using Python
+    python3 << EOF
+import pandas as pd
+import sys
+import json
+
+try:
+    # Load data
+    df = pd.read_csv('${file}')
+    
+    # Load expected schema
+    with open('${expected_schema}', 'r') as f:
+        schema = json.load(f)
+    
+    # Validate columns
+    expected_cols = set(schema['columns'])
+    actual_cols = set(df.columns)
+    
+    if expected_cols != actual_cols:
+        missing = expected_cols - actual_cols
+        extra = actual_cols - expected_cols
+        print(f"Schema mismatch - Missing: {missing}, Extra: {extra}")
+        sys.exit(1)
+    
+    # Validate data types
+    for col, expected_type in schema['types'].items():
+        if str(df[col].dtype) != expected_type:
+            print(f"Type mismatch for {col}: expected {expected_type}, got {df[col].dtype}")
+            sys.exit(1)
+    
+    # Check for null values in required columns
+    for col in schema['required']:
+        if df[col].isnull().any():
+            print(f"Null values found in required column: {col}")
+            sys.exit(1)
+    
+    print("Data quality validation passed")
+    
+except Exception as e:
+    print(f"Data quality validation failed: {e}")
+    sys.exit(1)
+EOF
+    
+    [[ $? -eq 0 ]] || error_exit "Data quality validation failed for: ${file}"
+}
+
+# Main ingestion function
+ingest_data() {
+    local source="$1"
+    local source_type="$2"
+    local destination="$3"
+    
+    log "Starting data ingestion from ${source}"
+    
+    # Validate source
+    validate_source "${source}" "${source_type}"
+    
+    # Download/fetch data
+    case "${source_type}" in
+        "api")
+            curl -s "${source}/data" -o "${TEMP_DIR}/raw_data.json" || error_exit "Failed to fetch API data"
+            # Convert JSON to CSV if needed
+            python3 -c "
+import json
+import pandas as pd
+with open('${TEMP_DIR}/raw_data.json', 'r') as f:
+    data = json.load(f)
+df = pd.DataFrame(data)
+df.to_csv('${destination}', index=False)
+            "
+            ;;
+        "s3")
+            aws s3 cp "${source}" "${destination}" || error_exit "Failed to download S3 data"
+            ;;
+        "database")
+            python3 -c "
+import psycopg2
+import pandas as pd
+conn = psycopg2.connect('${source}')
+df = pd.read_sql_query('SELECT * FROM main_table', conn)
+df.to_csv('${destination}', index=False)
+conn.close()
+            "
+            ;;
+    esac
+    
+    # Validate downloaded data
+    validate_data_quality "${destination}" "${SCRIPT_DIR}/config/schema.json"
+    
+    log "Data ingestion completed successfully: ${destination}"
+}
+
+# Data preprocessing
+preprocess_data() {
+    local input_file="$1"
+    local output_file="$2"
+    
+    log "Starting data preprocessing: ${input_file}"
+    
+    python3 << EOF
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+try:
+    # Load data
+    df = pd.read_csv('${input_file}')
+    logger.info(f"Loaded {len(df)} rows of data")
+    
+    # Handle missing values
+    df = df.dropna()
+    
+    # Feature engineering
+    # Add your specific preprocessing steps here
+    
+    # Save processed data
+    df.to_csv('${output_file}', index=False)
+    logger.info(f"Preprocessing completed. Saved to: ${output_file}")
+    
+except Exception as e:
+    logger.error(f"Preprocessing failed: {e}")
+    raise
+EOF
+    
+    [[ $? -eq 0 ]] || error_exit "Data preprocessing failed"
+}
+
+# Data versioning
+version_data() {
+    local data_file="$1"
+    local version_dir="${DATA_DIR}/versions"
+    local version_tag="v$(date +%Y%m%d_%H%M%S)"
+    
+    mkdir -p "${version_dir}"
+    
+    # Create version directory
+    local version_path="${version_dir}/${version_tag}"
+    mkdir -p "${version_path}"
+    
+    # Copy data with metadata
+    cp "${data_file}" "${version_path}/data.csv"
+    
+    # Create metadata file
+    cat > "${version_path}/metadata.json" << EOF
+{
+    "version": "${version_tag}",
+    "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+    "file_size": $(stat -c%s "${data_file}"),
+    "row_count": $(tail -n +2 "${data_file}" | wc -l),
+    "checksum": "$(md5sum "${data_file}" | cut -d' ' -f1)"
+}
+EOF
+    
+    # Update latest symlink
+    ln -sfn "${version_path}" "${version_dir}/latest"
+    
+    log "Data versioned as: ${version_tag}"
+}
+
+# Main execution
+main() {
+    log "Starting dataset management pipeline"
+    
+    # Read configuration
+    source_url=$(yq r "${CONFIG_FILE}" 'sources[0].url')
+    source_type=$(yq r "${CONFIG_FILE}" 'sources[0].type')
+    
+    # Execute pipeline
+    raw_data_file="${DATA_DIR}/raw_data.csv"
+    processed_data_file="${DATA_DIR}/processed_data.csv"
+    
+    ingest_data "${source_url}" "${source_type}" "${raw_data_file}"
+    preprocess_data "${raw_data_file}" "${processed_data_file}"
+    version_data "${processed_data_file}"
+    
+    log "Dataset management pipeline completed successfully"
+}
+
+# Run main function
+main "$@"
+</div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-cog"></i> Configuration File (config/data_config.yml)</h6>
+                            <div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">Copy</button>sources:
+  - name: "primary_api"
+    url: "https://api.example.com/v1"
+    type: "api"
+    auth:
+      type: "bearer"
+      token: "${API_TOKEN}"
+  - name: "backup_s3"
+    url: "s3://my-data-bucket/dataset.csv"
+    type: "s3"
+    region: "us-west-2"
+
+validation:
+  schema_file: "config/schema.json"
+  quality_checks:
+    - null_threshold: 0.05
+    - duplicate_threshold: 0.01
+    - outlier_detection: true
+
+preprocessing:
+  steps:
+    - "remove_duplicates"
+    - "handle_missing_values"
+    - "feature_engineering"
+    - "normalization"
+
+versioning:
+  enabled: true
+  retention_days: 30
+  compression: true
+</div>
+                        </div>
+
+                        <div class="performance-tip">
+                            <i class="fas fa-rocket"></i> <strong>Performance Tip:</strong> Use parallel processing for large datasets by splitting files and processing chunks concurrently with GNU parallel or xargs -P.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Model Training Automation -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-brain"></i> Model Training Automation</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-4">Automate the entire model training lifecycle with hyperparameter optimization, cross-validation, and experiment tracking.</p>
+
+                        <div class="workflow-step">
+                            <h5><i class="fas fa-play-circle"></i> Step 2: Automated Training Pipeline</h5>
+                            <p>Comprehensive training automation with experiment tracking and model versioning.</p>
+                        </div>
+
+                        <div class="script-template">
+                            <h6><i class="fas fa-file-code"></i> Template: Model Training Script</h6>
+                            <div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">Copy</button>#!/bin/bash
+# model_training.sh - Automated model training with MLOps best practices
+
+set -euo pipefail
+
+# Configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="${SCRIPT_DIR}/config/training_config.yml"
+LOG_FILE="${SCRIPT_DIR}/logs/training_$(date +%Y%m%d_%H%M%S).log"
+MODEL_DIR="${SCRIPT_DIR}/models"
+EXPERIMENT_DIR="${SCRIPT_DIR}/experiments"
+
+# Create directories
+mkdir -p "${MODEL_DIR}" "${EXPERIMENT_DIR}" "$(dirname "${LOG_FILE}")"
+
+# Logging
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "${LOG_FILE}"
+}
+
+# Error handling
+error_exit() {
+    log "ERROR: $1"
+    cleanup_failed_experiment
+    exit 1
+}
+
+# Cleanup failed experiments
+cleanup_failed_experiment() {
+    if [[ -n "${EXPERIMENT_ID:-}" ]]; then
+        log "Cleaning up failed experiment: ${EXPERIMENT_ID}"
+        rm -rf "${EXPERIMENT_DIR}/${EXPERIMENT_ID}"
+    fi
+}
+
+# Generate experiment ID
+generate_experiment_id() {
+    echo "exp_$(date +%Y%m%d_%H%M%S)_$(openssl rand -hex 4)"
+}
+
+# Setup experiment environment
+setup_experiment() {
+    local experiment_id="$1"
+    local experiment_path="${EXPERIMENT_DIR}/${experiment_id}"
+    
+    mkdir -p "${experiment_path}"/{logs,models,metrics,artifacts}
+    
+    # Create experiment metadata
+    cat > "${experiment_path}/metadata.json" << EOF
+{
+    "experiment_id": "${experiment_id}",
+    "start_time": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+    "config_file": "${CONFIG_FILE}",
+    "git_commit": "$(git rev-parse HEAD 2>/dev/null || echo 'unknown')",
+    "environment": {
+        "python_version": "$(python3 --version)",
+        "cuda_version": "$(nvidia-smi --query-gpu=driver_version --format=csv,noheader 2>/dev/null || echo 'N/A')",
+        "hostname": "$(hostname)",
+        "user": "$(whoami)"
+    }
+}
+EOF
+    
+    echo "${experiment_path}"
+}
+
+# Data validation for training
+validate_training_data() {
+    local data_path="$1"
+    
+    log "Validating training data: ${data_path}"
+    
+    python3 << EOF
+import pandas as pd
+import numpy as np
+import sys
+
+try:
+    # Load training data
+    train_df = pd.read_csv('${data_path}/train.csv')
+    val_df = pd.read_csv('${data_path}/val.csv')
+    test_df = pd.read_csv('${data_path}/test.csv')
+    
+    # Basic validation
+    assert len(train_df) > 0, "Training data is empty"
+    assert len(val_df) > 0, "Validation data is empty"
+    assert len(test_df) > 0, "Test data is empty"
+    
+    # Check data distribution
+    train_target_dist = train_df['target'].value_counts(normalize=True)
+    val_target_dist = val_df['target'].value_counts(normalize=True)
+    
+    # Check for data leakage
+    train_ids = set(train_df.get('id', []))
+    val_ids = set(val_df.get('id', []))
+    test_ids = set(test_df.get('id', []))
+    
+    assert len(train_ids & val_ids) == 0, "Data leakage detected: train/val overlap"
+    assert len(train_ids & test_ids) == 0, "Data leakage detected: train/test overlap"
+    assert len(val_ids & test_ids) == 0, "Data leakage detected: val/test overlap"
+    
+    print("Training data validation passed")
+    
+except Exception as e:
+    print(f"Training data validation failed: {e}")
+    sys.exit(1)
+EOF
+    
+    [[ $? -eq 0 ]] || error_exit "Training data validation failed"
+}
+
+# Hyperparameter optimization
+optimize_hyperparameters() {
+    local experiment_path="$1"
+    local config_file="$2"
+    
+    log "Starting hyperparameter optimization"
+    
+    python3 << EOF
+import optuna
+import json
+import yaml
+import pandas as pd
+from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+import joblib
+import os
+
+# Load configuration
+with open('${config_file}', 'r') as f:
+    config = yaml.safe_load(f)
+
+# Load data
+train_df = pd.read_csv(config['data']['train_path'])
+X_train = train_df.drop('target', axis=1)
+y_train = train_df['target']
+
+# Define objective function
+def objective(trial):
+    # Suggest hyperparameters
+    n_estimators = trial.suggest_int('n_estimators', 10, 100)
+    max_depth = trial.suggest_int('max_depth', 3, 10)
+    min_samples_split = trial.suggest_int('min_samples_split', 2, 10)
+    min_samples_leaf = trial.suggest_int('min_samples_leaf', 1, 5)
+    
+    # Create model
+    model = RandomForestClassifier(
+        n_estimators=n_estimators,
+        max_depth=max_depth,
+        min_samples_split=min_samples_split,
+        min_samples_leaf=min_samples_leaf,
+        random_state=42
+    )
+    
+    # Cross-validation
+    cv_scores = cross_val_score(model, X_train, y_train, cv=5, scoring='accuracy')
+    return cv_scores.mean()
+
+# Run optimization
+study = optuna.create_study(direction='maximize')
+study.optimize(objective, n_trials=config['hyperparameter_optimization']['n_trials'])
+
+# Save best parameters
+best_params = study.best_params
+with open('${experiment_path}/best_params.json', 'w') as f:
+    json.dump(best_params, f, indent=2)
+
+# Save study results
+study_results = {
+    'best_value': study.best_value,
+    'best_params': best_params,
+    'n_trials': len(study.trials)
+}
+
+with open('${experiment_path}/optimization_results.json', 'w') as f:
+    json.dump(study_results, f, indent=2)
+
+print(f"Hyperparameter optimization completed. Best score: {study.best_value}")
+print(f"Best parameters: {best_params}")
+EOF
+    
+    [[ $? -eq 0 ]] || error_exit "Hyperparameter optimization failed"
+}
+
+# Model training with monitoring
+train_model() {
+    local experiment_path="$1"
+    local config_file="$2"
+    
+    log "Starting model training with monitoring"
+    
+    python3 << EOF
+import json
+import yaml
+import pandas as pd
+import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+import joblib
+import matplotlib.pyplot as plt
+import seaborn as sns
+from datetime import datetime
+import os
+
+# Load configuration and best parameters
+with open('${config_file}', 'r') as f:
+    config = yaml.safe_load(f)
+
+with open('${experiment_path}/best_params.json', 'r') as f:
+    best_params = json.load(f)
+
+# Load data
+train_df = pd.read_csv(config['data']['train_path'])
+val_df = pd.read_csv(config['data']['val_path'])
+test_df = pd.read_csv(config['data']['test_path'])
+
+X_train = train_df.drop('target', axis=1)
+y_train = train_df['target']
+X_val = val_df.drop('target', axis=1)
+y_val = val_df['target']
+X_test = test_df.drop('target', axis=1)
+y_test = test_df['target']
+
+# Create and train model
+model = RandomForestClassifier(**best_params, random_state=42)
+model.fit(X_train, y_train)
+
+# Make predictions
+train_pred = model.predict(X_train)
+val_pred = model.predict(X_val)
+test_pred = model.predict(X_test)
+
+# Calculate metrics
+metrics = {
+    'train_accuracy': accuracy_score(y_train, train_pred),
+    'val_accuracy': accuracy_score(y_val, val_pred),
+    'test_accuracy': accuracy_score(y_test, test_pred),
+    'training_time': datetime.now().isoformat(),
+    'model_params': best_params
+}
+
+# Save metrics
+with open('${experiment_path}/metrics.json', 'w') as f:
+    json.dump(metrics, f, indent=2)
+
+# Generate classification report
+val_report = classification_report(y_val, val_pred, output_dict=True)
+with open('${experiment_path}/classification_report.json', 'w') as f:
+    json.dump(val_report, f, indent=2)
+
+# Generate confusion matrix plot
+plt.figure(figsize=(8, 6))
+cm = confusion_matrix(y_val, val_pred)
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+plt.title('Confusion Matrix - Validation Set')
+plt.ylabel('True Label')
+plt.xlabel('Predicted Label')
+plt.savefig('${experiment_path}/confusion_matrix.png')
+plt.close()
+
+# Feature importance plot
+feature_importance = pd.DataFrame({
+    'feature': X_train.columns,
+    'importance': model.feature_importances_
+}).sort_values('importance', ascending=False)
+
+plt.figure(figsize=(10, 6))
+sns.barplot(data=feature_importance.head(10), x='importance', y='feature')
+plt.title('Top 10 Feature Importance')
+plt.tight_layout()
+plt.savefig('${experiment_path}/feature_importance.png')
+plt.close()
+
+# Save model
+joblib.dump(model, '${experiment_path}/model.pkl')
+
+print(f"Model training completed successfully")
+print(f"Validation accuracy: {metrics['val_accuracy']:.4f}")
+print(f"Test accuracy: {metrics['test_accuracy']:.4f}")
+EOF
+    
+    [[ $? -eq 0 ]] || error_exit "Model training failed"
+}
+
+# Model evaluation and validation
+evaluate_model() {
+    local experiment_path="$1"
+    
+    log "Evaluating model performance"
+    
+    python3 << EOF
+import json
+import joblib
+import pandas as pd
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+import numpy as np
+
+# Load model and test data
+model = joblib.load('${experiment_path}/model.pkl')
+test_df = pd.read_csv('${experiment_path}/../config/test_data.csv')
+
+X_test = test_df.drop('target', axis=1)
+y_test = test_df['target']
+
+# Make predictions
+y_pred = model.predict(X_test)
+y_pred_proba = model.predict_proba(X_test)
+
+# Calculate comprehensive metrics
+evaluation_metrics = {
+    'accuracy': accuracy_score(y_test, y_pred),
+    'precision': precision_score(y_test, y_pred, average='weighted'),
+    'recall': recall_score(y_test, y_pred, average='weighted'),
+    'f1_score': f1_score(y_test, y_pred, average='weighted'),
+    'confusion_matrix': confusion_matrix(y_test, y_pred).tolist(),
+    'classification_report': classification_report(y_test, y_pred, output_dict=True)
+}
+
+# Save evaluation results
+with open('${experiment_path}/evaluation_metrics.json', 'w') as f:
+    json.dump(evaluation_metrics, f, indent=2)
+
+# Model performance summary
+print("Model Evaluation Summary:")
+print(f"Accuracy: {evaluation_metrics['accuracy']:.4f}")
+print(f"Precision: {evaluation_metrics['precision']:.4f}")
+print(f"Recall: {evaluation_metrics['recall']:.4f}")
+print(f"F1 Score: {evaluation_metrics['f1_score']:.4f}")
+
+# Performance threshold check
+if evaluation_metrics['accuracy'] >= 0.85:
+    print("✓ Model meets performance threshold")
+    exit(0)
+else:
+    print("✗ Model does not meet performance threshold")
+    exit(1)
+EOF
+    
+    local eval_result=$?
+    if [[ $eval_result -eq 0 ]]; then
+        log "Model evaluation passed"
+    else
+        log "Model evaluation failed - performance below threshold"
+        return 1
+    fi
+}
+
+# Model deployment preparation
+prepare_deployment() {
+    local experiment_path="$1"
+    local model_version="$2"
+    
+    log "Preparing model for deployment"
+    
+    # Create deployment package
+    deployment_dir="${MODEL_DIR}/deployment/${model_version}"
+    mkdir -p "${deployment_dir}"
+    
+    # Copy model artifacts
+    cp "${experiment_path}/model.pkl" "${deployment_dir}/"
+    cp "${experiment_path}/best_params.json" "${deployment_dir}/"
+    cp "${experiment_path}/metrics.json" "${deployment_dir}/"
+    
+    # Create model metadata
+    cat > "${deployment_dir}/model_info.json" << EOF
+{
+    "model_version": "${model_version}",
+    "experiment_id": "$(basename "${experiment_path}")",
+    "deployment_time": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+    "model_type": "RandomForestClassifier",
+    "performance_metrics": $(cat "${experiment_path}/evaluation_metrics.json"),
+    "deployment_status": "ready"
+}
+EOF
+    
+    # Create deployment script
+    cat > "${deployment_dir}/deploy.sh" << 'EOF'
+#!/bin/bash
+# Deployment script for model
+
+set -euo pipefail
+
+MODEL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SERVICE_NAME="ml-model-service"
+
+# Deploy model
+echo "Deploying model to production..."
+
+# Update model symlink
+ln -sfn "${MODEL_DIR}" "/opt/ml/models/current"
+
+# Restart service
+sudo systemctl restart "${SERVICE_NAME}"
+
+# Health check
+sleep 5
+curl -f http://localhost:8080/health || {
+    echo "Health check failed"
+    exit 1
+}
+
+echo "Model deployment completed successfully"
+EOF
+    
+    chmod +x "${deployment_dir}/deploy.sh"
+    
+    log "Deployment package created: ${deployment_dir}"
+}
+
+# Main training function
+main() {
+    log "Starting automated model training pipeline"
+    
+    # Generate experiment ID
+    EXPERIMENT_ID=$(generate_experiment_id)
+    log "Generated experiment ID: ${EXPERIMENT_ID}"
+    
+    # Setup experiment
+    experiment_path=$(setup_experiment "${EXPERIMENT_ID}")
+    log "Experiment path: ${experiment_path}"
+    
+    # Validate data
+    data_path=$(yq r "${CONFIG_FILE}" 'data.base_path')
+    validate_training_data "${data_path}"
+    
+    # Optimize hyperparameters
+    optimize_hyperparameters "${experiment_path}" "${CONFIG_FILE}"
+    
+    # Train model
+    train_model "${experiment_path}" "${CONFIG_FILE}"
+    
+    # Evaluate model
+    if evaluate_model "${experiment_path}"; then
+        # Prepare for deployment
+        model_version="v$(date +%Y%m%d_%H%M%S)"
+        prepare_deployment "${experiment_path}" "${model_version}"
+        
+        log "Model training pipeline completed successfully"
+        log "Model version: ${model_version}"
+        log "Experiment ID: ${EXPERIMENT_ID}"
+    else
+        error_exit "Model failed evaluation - not ready for deployment"
+    fi
+}
+
+# Execute main function
+main "$@"
+</div>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <h6><i class="fas fa-exclamation-triangle"></i> Training Configuration (config/training_config.yml)</h6>
+                            <div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">Copy</button>data:
+  base_path: "/path/to/data"
+  train_path: "/path/to/data/train.csv"
+  val_path: "/path/to/data/val.csv"
+  test_path: "/path/to/data/test.csv"
+
+model:
+  type: "RandomForestClassifier"
+  performance_threshold: 0.85
+
+hyperparameter_optimization:
+  n_trials: 100
+  search_space:
+    n_estimators:
+      type: "int"
+      low: 10
+      high: 100
+    max_depth:
+      type: "int"
+      low: 3
+      high: 10
+
+evaluation:
+  metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1_score"
+  cross_validation:
+    folds: 5
+    stratified: true
+
+deployment:
+  auto_deploy: false
+  staging_environment: "staging"
+  production_environment: "production"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Deployment Automation -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-warning text-dark">
+                        <h3 class="h5 mb-0"><i class="fas fa-rocket"></i> Deployment Automation</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-4">Implement zero-downtime deployment with monitoring, health checks, and automated rollback capabilities.</p>
+
+                        <div class="workflow-step">
+                            <h5><i class="fas fa-upload"></i> Step 3: Automated Deployment Pipeline</h5>
+                            <p>Production-ready deployment with monitoring and rollback mechanisms.</p>
+                        </div>
+
+                        <div class="script-template">
+                            <h6><i class="fas fa-file-code"></i> Template: Deployment Script</h6>
+                            <div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">Copy</button>#!/bin/bash
+# deploy.sh - Zero-downtime deployment with monitoring and rollback
+
+set -euo pipefail
+
+# Configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="${SCRIPT_DIR}/config/deployment_config.yml"
+LOG_FILE="${SCRIPT_DIR}/logs/deployment_$(date +%Y%m%d_%H%M%S).log"
+DEPLOYMENT_DIR="${SCRIPT_DIR}/deployments"
+BACKUP_DIR="${SCRIPT_DIR}/backups"
+
+# Create directories
+mkdir -p "${DEPLOYMENT_DIR}" "${BACKUP_DIR}" "$(dirname "${LOG_FILE}")"
+
+# Logging
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "${LOG_FILE}"
+}
+
+# Error handling with rollback
+error_exit() {
+    log "ERROR: $1"
+    if [[ "${ROLLBACK_ON_ERROR:-true}" == "true" ]]; then
+        rollback_deployment
+    fi
+    exit 1
+}
+
+# Parse command line arguments
+parse_args() {
+    ENVIRONMENT=""
+    MODEL_VERSION=""
+    FORCE_DEPLOY=false
+    DRY_RUN=false
+    
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -e|--environment)
+                ENVIRONMENT="$2"
+                shift 2
+                ;;
+            -v|--version)
+                MODEL_VERSION="$2"
+                shift 2
+                ;;
+            -f|--force)
+                FORCE_DEPLOY=true
+                shift
+                ;;
+            --dry-run)
+                DRY_RUN=true
+                shift
+                ;;
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            *)
+                echo "Unknown parameter: $1"
+                show_help
+                exit 1
+                ;;
+        esac
+    done
+    
+    # Validate required parameters
+    if [[ -z "${ENVIRONMENT}" || -z "${MODEL_VERSION}" ]]; then
+        echo "Error: Environment and model version are required"
+        show_help
+        exit 1
+    fi
+}
+
+show_help() {
+    cat << EOF
+Usage: $0 -e ENVIRONMENT -v MODEL_VERSION [OPTIONS]
+
+Options:
+    -e, --environment    Target environment (staging, production)
+    -v, --version       Model version to deploy
+    -f, --force         Force deployment even if checks fail
+    --dry-run          Show what would be deployed without executing
+    -h, --help         Show this help message
+
+Examples:
+    $0 -e staging -v v20240115_120000
+    $0 -e production -v v20240115_120000 --force
+    $0 -e staging -v v20240115_120000 --dry-run
+EOF
+}
+
+# Load configuration
+load_config() {
+    log "Loading deployment configuration for environment: ${ENVIRONMENT}"
+    
+    # Extract environment-specific configuration
+    export DEPLOY_HOST=$(yq r "${CONFIG_FILE}" "environments.${ENVIRONMENT}.host")
+    export DEPLOY_PORT=$(yq r "${CONFIG_FILE}" "environments.${ENVIRONMENT}.port")
+    export DEPLOY_USER=$(yq r "${CONFIG_FILE}" "environments.${ENVIRONMENT}.user")
+    export DEPLOY_PATH=$(yq r "${CONFIG_FILE}" "environments.${ENVIRONMENT}.deploy_path")
+    export HEALTH_CHECK_URL=$(yq r "${CONFIG_FILE}" "environments.${ENVIRONMENT}.health_check_url")
+    export ROLLBACK_ON_ERROR=$(yq r "${CONFIG_FILE}" "environments.${ENVIRONMENT}.rollback_on_error")
+    
+    log "Configuration loaded successfully"
+}
+
+# Pre-deployment checks
+pre_deployment_checks() {
+    log "Running pre-deployment checks"
+    
+    # Check if model version exists
+    local model_path="${SCRIPT_DIR}/models/deployment/${MODEL_VERSION}"
+    if [[ ! -d "${model_path}" ]]; then
+        error_exit "Model version ${MODEL_VERSION} not found at ${model_path}"
+    fi
+    
+    # Check target environment connectivity
+    if ! ssh -o ConnectTimeout=10 "${DEPLOY_USER}@${DEPLOY_HOST}" "echo 'Connection test successful'"; then
+        error_exit "Cannot connect to deployment target: ${DEPLOY_HOST}"
+    fi
+    
+    # Check current service status
+    local current_status=$(curl -s -w "%{http_code}" -o /dev/null "${HEALTH_CHECK_URL}" || echo "000")
+    if [[ "${current_status}" != "200" ]] && [[ "${FORCE_DEPLOY}" != "true" ]]; then
+        error_exit "Current service is not healthy (HTTP ${current_status}). Use --force to deploy anyway."
+    fi
+    
+    # Check disk space on target
+    local available_space=$(ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "df ${DEPLOY_PATH} | tail -1 | awk '{print \$4}'")
+    if [[ "${available_space}" -lt 1000000 ]]; then  # Less than 1GB
+        error_exit "Insufficient disk space on deployment target"
+    fi
+    
+    log "Pre-deployment checks completed successfully"
+}
+
+# Create deployment backup
+create_backup() {
+    log "Creating deployment backup"
+    
+    local backup_name="backup_$(date +%Y%m%d_%H%M%S)"
+    local backup_path="${BACKUP_DIR}/${backup_name}"
+    
+    # Create backup directory
+    mkdir -p "${backup_path}"
+    
+    # Backup current deployment
+    ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "
+        if [[ -d '${DEPLOY_PATH}/current' ]]; then
+            tar -czf '/tmp/${backup_name}.tar.gz' -C '${DEPLOY_PATH}' current
+        fi
+    "
+    
+    # Download backup
+    if ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "[[ -f '/tmp/${backup_name}.tar.gz' ]]"; then
+        scp "${DEPLOY_USER}@${DEPLOY_HOST}:/tmp/${backup_name}.tar.gz" "${backup_path}/"
+        ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "rm -f '/tmp/${backup_name}.tar.gz'"
+    fi
+    
+    # Save backup metadata
+    cat > "${backup_path}/metadata.json" << EOF
+{
+    "backup_name": "${backup_name}",
+    "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+    "environment": "${ENVIRONMENT}",
+    "previous_deployment": "$(ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "readlink '${DEPLOY_PATH}/current' 2>/dev/null || echo 'none')"
+}
+EOF
+    
+    echo "${backup_name}"
+}
+
+# Deploy new version
+deploy_new_version() {
+    local backup_name="$1"
+    
+    log "Deploying model version: ${MODEL_VERSION}"
+    
+    if [[ "${DRY_RUN}" == "true" ]]; then
+        log "DRY RUN: Would deploy ${MODEL_VERSION} to ${ENVIRONMENT}"
+        return 0
+    fi
+    
+    # Upload new model version
+    local model_path="${SCRIPT_DIR}/models/deployment/${MODEL_VERSION}"
+    local remote_path="${DEPLOY_PATH}/versions/${MODEL_VERSION}"
+    
+    # Create remote directory
+    ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "mkdir -p '${remote_path}'"
+    
+    # Upload model files
+    scp -r "${model_path}/"* "${DEPLOY_USER}@${DEPLOY_HOST}:${remote_path}/"
+    
+    # Update current symlink (atomic operation)
+    ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "
+        cd '${DEPLOY_PATH}'
+        ln -sfn 'versions/${MODEL_VERSION}' current_new
+        mv current_new current
+    "
+    
+    log "Model deployment completed"
+}
+
+# Restart services
+restart_services() {
+    log "Restarting application services"
+    
+    if [[ "${DRY_RUN}" == "true" ]]; then
+        log "DRY RUN: Would restart services"
+        return 0
+    fi
+    
+    # Restart services based on environment configuration
+    local services=$(yq r "${CONFIG_FILE}" "environments.${ENVIRONMENT}.services[]")
+    
+    for service in $services; do
+        log "Restarting service: ${service}"
+        ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "sudo systemctl restart '${service}'"
+        
+        # Wait for service to start
+        sleep 5
+        
+        # Check service status
+        if ! ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "sudo systemctl is-active '${service}' >/dev/null"; then
+            error_exit "Service ${service} failed to start"
+        fi
+    done
+    
+    log "Services restarted successfully"
+}
+
+# Health checks
+perform_health_checks() {
+    log "Performing health checks"
+    
+    local max_attempts=12
+    local attempt=1
+    local health_check_passed=false
+    
+    while [[ $attempt -le $max_attempts ]]; do
+        log "Health check attempt ${attempt}/${max_attempts}"
+        
+        # Basic health check
+        local status_code=$(curl -s -w "%{http_code}" -o /dev/null "${HEALTH_CHECK_URL}")
+        
+        if [[ "${status_code}" == "200" ]]; then
+            # Extended health check
+            local response=$(curl -s "${HEALTH_CHECK_URL}")
+            
+            if echo "${response}" | jq -e '.status == "healthy"' >/dev/null 2>&1; then
+                health_check_passed=true
+                break
+            fi
+        fi
+        
+        log "Health check failed (HTTP ${status_code}), waiting..."
+        sleep 10
+        ((attempt++))
+    done
+    
+    if [[ "${health_check_passed}" != "true" ]]; then
+        error_exit "Health checks failed after ${max_attempts} attempts"
+    fi
+    
+    log "Health checks passed"
+}
+
+# Performance validation
+validate_performance() {
+    log "Validating deployment performance"
+    
+    # Load test configuration
+    local load_test_duration=$(yq r "${CONFIG_FILE}" "performance.load_test_duration")
+    local expected_response_time=$(yq r "${CONFIG_FILE}" "performance.max_response_time")
+    local expected_throughput=$(yq r "${CONFIG_FILE}" "performance.min_throughput")
+    
+    # Run load test
+    log "Running load test for ${load_test_duration} seconds"
+    
+    local load_test_results=$(python3 << EOF
+import requests
+import time
+import statistics
+import json
+from concurrent.futures import ThreadPoolExecutor
+import sys
+
+def make_request():
+    try:
+        start_time = time.time()
+        response = requests.get('${HEALTH_CHECK_URL}', timeout=30)
+        end_time = time.time()
+        
+        return {
+            'response_time': end_time - start_time,
+            'status_code': response.status_code,
+            'success': response.status_code == 200
+        }
+    except Exception as e:
+        return {
+            'response_time': 30.0,
+            'status_code': 0,
+            'success': False,
+            'error': str(e)
+        }
+
+# Run load test
+start_time = time.time()
+end_time = start_time + ${load_test_duration}
+results = []
+
+with ThreadPoolExecutor(max_workers=10) as executor:
+    while time.time() < end_time:
+        futures = [executor.submit(make_request) for _ in range(10)]
+        for future in futures:
+            results.append(future.result())
+        time.sleep(0.1)
+
+# Calculate metrics
+successful_requests = [r for r in results if r['success']]
+response_times = [r['response_time'] for r in successful_requests]
+
+if len(successful_requests) == 0:
+    print(json.dumps({'error': 'No successful requests'}))
+    sys.exit(1)
+
+metrics = {
+    'total_requests': len(results),
+    'successful_requests': len(successful_requests),
+    'success_rate': len(successful_requests) / len(results),
+    'avg_response_time': statistics.mean(response_times),
+    'median_response_time': statistics.median(response_times),
+    'max_response_time': max(response_times),
+    'min_response_time': min(response_times),
+    'throughput': len(successful_requests) / ${load_test_duration}
+}
+
+print(json.dumps(metrics))
+EOF
+    )
+    
+    # Parse results
+    local avg_response_time=$(echo "${load_test_results}" | jq -r '.avg_response_time')
+    local throughput=$(echo "${load_test_results}" | jq -r '.throughput')
+    local success_rate=$(echo "${load_test_results}" | jq -r '.success_rate')
+    
+    # Validate performance
+    if (( $(echo "${avg_response_time} > ${expected_response_time}" | bc -l) )); then
+        error_exit "Performance validation failed: Response time ${avg_response_time}s > ${expected_response_time}s"
+    fi
+    
+    if (( $(echo "${throughput} < ${expected_throughput}" | bc -l) )); then
+        error_exit "Performance validation failed: Throughput ${throughput} < ${expected_throughput}"
+    fi
+    
+    if (( $(echo "${success_rate} < 0.99" | bc -l) )); then
+        error_exit "Performance validation failed: Success rate ${success_rate} < 0.99"
+    fi
+    
+    log "Performance validation passed"
+    log "Response time: ${avg_response_time}s, Throughput: ${throughput} req/s, Success rate: ${success_rate}"
+}
+
+# Rollback deployment
+rollback_deployment() {
+    log "Rolling back deployment"
+    
+    # Find latest backup
+    local latest_backup=$(ls -t "${BACKUP_DIR}" | head -1)
+    
+    if [[ -z "${latest_backup}" ]]; then
+        log "No backup found for rollback"
+        return 1
+    fi
+    
+    log "Rolling back to backup: ${latest_backup}"
+    
+    # Extract and restore backup
+    local backup_file="${BACKUP_DIR}/${latest_backup}/backup_*.tar.gz"
+    
+    if [[ -f "${backup_file}" ]]; then
+        # Upload and restore backup
+        scp "${backup_file}" "${DEPLOY_USER}@${DEPLOY_HOST}:/tmp/rollback.tar.gz"
+        ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "
+            cd '${DEPLOY_PATH}'
+            tar -xzf /tmp/rollback.tar.gz
+            rm -f /tmp/rollback.tar.gz
+        "
+        
+        # Restart services
+        restart_services
+        
+        log "Rollback completed successfully"
+    else
+        log "Backup file not found: ${backup_file}"
+        return 1
+    fi
+}
+
+# Post-deployment tasks
+post_deployment_tasks() {
+    log "Running post-deployment tasks"
+    
+    # Update deployment registry
+    local deployment_record="${DEPLOYMENT_DIR}/deployment_$(date +%Y%m%d_%H%M%S).json"
+    
+    cat > "${deployment_record}" << EOF
+{
+    "deployment_id": "$(uuidgen)",
+    "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+    "environment": "${ENVIRONMENT}",
+    "model_version": "${MODEL_VERSION}",
+    "deployed_by": "$(whoami)",
+    "deployment_status": "success",
+    "health_check_url": "${HEALTH_CHECK_URL}",
+    "rollback_available": true
+}
+EOF
+    
+    # Send deployment notification
+    if command -v slack >/dev/null 2>&1; then
+        slack_webhook=$(yq r "${CONFIG_FILE}" "notifications.slack.webhook")
+        if [[ -n "${slack_webhook}" ]]; then
+            curl -X POST -H 'Content-type: application/json' \
+                --data "{\"text\":\"✅ Deployment successful: ${MODEL_VERSION} to ${ENVIRONMENT}\"}" \
+                "${slack_webhook}"
+        fi
+    fi
+    
+    # Cleanup old versions
+    local retention_days=$(yq r "${CONFIG_FILE}" "cleanup.retention_days")
+    if [[ -n "${retention_days}" ]]; then
+        find "${DEPLOYMENT_DIR}" -name "deployment_*.json" -mtime +${retention_days} -delete
+        find "${BACKUP_DIR}" -type d -mtime +${retention_days} -exec rm -rf {} +
+    fi
+    
+    log "Post-deployment tasks completed"
+}
+
+# Main deployment function
+main() {
+    log "Starting automated deployment pipeline"
+    
+    # Parse command line arguments
+    parse_args "$@"
+    
+    # Load configuration
+    load_config
+    
+    # Pre-deployment checks
+    pre_deployment_checks
+    
+    # Create backup
+    local backup_name=$(create_backup)
+    log "Created backup: ${backup_name}"
+    
+    # Deploy new version
+    deploy_new_version "${backup_name}"
+    
+    # Restart services
+    restart_services
+    
+    # Health checks
+    perform_health_checks
+    
+    # Performance validation
+    validate_performance
+    
+    # Post-deployment tasks
+    post_deployment_tasks
+    
+    log "Deployment pipeline completed successfully"
+    log "Model version ${MODEL_VERSION} deployed to ${ENVIRONMENT}"
+}
+
+# Execute main function
+main "$@"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Custom Terminal Functions -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-terminal"></i> Custom Terminal Functions & Aliases</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-4">Create powerful custom functions and aliases to boost your terminal productivity.</p>
+
+                        <div class="workflow-step">
+                            <h5><i class="fas fa-magic"></i> Step 4: Productivity Enhancement Functions</h5>
+                            <p>Custom functions that streamline common AI/ML development tasks.</p>
+                        </div>
+
+                        <div class="script-template">
+                            <h6><i class="fas fa-file-code"></i> Custom Functions Library (.zshrc additions)</h6>
+                            <div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">Copy</button># AI/ML Development Functions
+# Add these to your ~/.zshrc file
+
+# Project Management
+aiproj() {
+    local project_name="$1"
+    local project_type="${2:-python}"
+    
+    if [[ -z "$project_name" ]]; then
+        echo "Usage: aiproj <project_name> [python|notebook|research]"
+        return 1
+    fi
+    
+    # Create project directory structure
+    mkdir -p ~/projects/$project_name/{data,models,notebooks,scripts,config,logs,tests}
+    cd ~/projects/$project_name
+    
+    # Initialize git repository
+    git init
+    
+    # Create project-specific files based on type
+    case "$project_type" in
+        python)
+            # Create Python project structure
+            cat > requirements.txt << EOF
+numpy>=1.21.0
+pandas>=1.3.0
+scikit-learn>=1.0.0
+matplotlib>=3.5.0
+seaborn>=0.11.0
+jupyter>=1.0.0
+pytest>=6.0.0
+EOF
+            
+            cat > setup.py << EOF
+from setuptools import setup, find_packages
+
+setup(
+    name="$project_name",
+    version="0.1.0",
+    packages=find_packages(),
+    install_requires=[
+        "numpy>=1.21.0",
+        "pandas>=1.3.0",
+        "scikit-learn>=1.0.0",
+    ],
+)
+EOF
+            
+            mkdir -p src/$project_name
+            touch src/$project_name/__init__.py
+            ;;
+            
+        notebook)
+            # Create Jupyter notebook environment
+            cat > requirements.txt << EOF
+jupyter>=1.0.0
+jupyterlab>=3.0.0
+numpy>=1.21.0
+pandas>=1.3.0
+matplotlib>=3.5.0
+seaborn>=0.11.0
+plotly>=5.0.0
+EOF
+            
+            # Create sample notebook
+            cat > notebooks/01_exploration.ipynb << EOF
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# $project_name - Data Exploration\n",
+    "\n",
+    "This notebook contains initial data exploration and analysis."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns\n",
+    "\n",
+    "# Set style\n",
+    "plt.style.use('seaborn')\n",
+    "sns.set_palette('husl')"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
+EOF
+            ;;
+            
+        research)
+            # Create research project structure
+            mkdir -p {papers,experiments,presentations,figures}
+            
+            cat > README.md << EOF
+# $project_name
+
+## Research Question
+[Describe your research question here]
+
+## Methodology
+[Describe your approach]
+
+## Results
+[Document your findings]
+
+## References
+[List your references]
+EOF
+            ;;
+    esac
+    
+    # Create common files
+    cat > .gitignore << EOF
+# Data files
+*.csv
+*.json
+*.parquet
+data/
+*.db
+*.sqlite
+
+# Model files
+*.pkl
+*.joblib
+*.h5
+*.model
+models/
+
+# Logs
+*.log
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+EOF
+    
+    # Create virtual environment
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    
+    echo "✅ Created AI/ML project: $project_name"
+    echo "📁 Project directory: $(pwd)"
+    echo "🐍 Virtual environment activated"
+    echo "📝 Next steps: Edit requirements.txt and start coding!"
+}
+
+# Data Operations
+datainfo() {
+    local file="$1"
+    
+    if [[ -z "$file" ]]; then
+        echo "Usage: datainfo <data_file>"
+        return 1
+    fi
+    
+    if [[ ! -f "$file" ]]; then
+        echo "Error: File not found: $file"
+        return 1
+    fi
+    
+    echo "📊 Data File Analysis: $file"
+    echo "═══════════════════════════════════════"
+    
+    # Basic file info
+    echo "📁 File size: $(du -h "$file" | cut -f1)"
+    echo "📅 Modified: $(stat -c %y "$file" 2>/dev/null || stat -f %Sm "$file")"
+    
+    # Detect file type and show appropriate info
+    case "${file##*.}" in
+        csv)
+            python3 -c "
+import pandas as pd
+import sys
+
+try:
+    df = pd.read_csv('$file')
+    print(f'📏 Shape: {df.shape[0]:,} rows × {df.shape[1]} columns')
+    print(f'💾 Memory: {df.memory_usage(deep=True).sum() / 1024**2:.1f} MB')
+    print()
+    print('📋 Column Info:')
+    print(df.dtypes.to_string())
+    print()
+    print('🔍 Sample Data:')
+    print(df.head(3).to_string())
+    print()
+    print('📈 Numeric Summary:')
+    print(df.describe().to_string())
+    
+    # Missing values
+    missing = df.isnull().sum()
+    if missing.any():
+        print()
+        print('❌ Missing Values:')
+        print(missing[missing > 0].to_string())
+        
+except Exception as e:
+    print(f'Error reading file: {e}')
+    sys.exit(1)
+"
+            ;;
+        json)
+            python3 -c "
+import json
+import sys
+
+try:
+    with open('$file', 'r') as f:
+        data = json.load(f)
+    
+    if isinstance(data, dict):
+        print(f'📋 JSON Object with {len(data)} keys')
+        print('🔑 Keys:', list(data.keys())[:10])
+    elif isinstance(data, list):
+        print(f'📋 JSON Array with {len(data)} items')
+        if data:
+            print('🔍 First item type:', type(data[0]).__name__)
+    
+    print()
+    print('📄 Structure:')
+    print(json.dumps(data, indent=2)[:500] + '...' if len(str(data)) > 500 else json.dumps(data, indent=2))
+    
+except Exception as e:
+    print(f'Error reading JSON: {e}')
+    sys.exit(1)
+"
+            ;;
+        *)
+            echo "📄 File type: ${file##*.}"
+            echo "📏 Lines: $(wc -l < "$file")"
+            echo "📝 Words: $(wc -w < "$file")"
+            echo "🔤 Characters: $(wc -c < "$file")"
+            echo
+            echo "🔍 Sample content:"
+            head -5 "$file"
+            ;;
+    esac
+}
+
+# Model Operations
+modelinfo() {
+    local model_path="$1"
+    
+    if [[ -z "$model_path" ]]; then
+        echo "Usage: modelinfo <model_file>"
+        return 1
+    fi
+    
+    if [[ ! -f "$model_path" ]]; then
+        echo "Error: Model file not found: $model_path"
+        return 1
+    fi
+    
+    echo "🤖 Model Analysis: $model_path"
+    echo "═══════════════════════════════════════"
+    
+    python3 -c "
+import pickle
+import joblib
+import sys
+import os
+
+model_path = '$model_path'
+file_size = os.path.getsize(model_path)
+
+print(f'📁 File size: {file_size / (1024**2):.1f} MB')
+print(f'📅 Modified: {os.path.getmtime(model_path)}')
+
+try:
+    # Try loading with different methods
+    model = None
+    loader_used = None
+    
+    # Try joblib first
+    try:
+        model = joblib.load(model_path)
+        loader_used = 'joblib'
+    except:
+        # Try pickle
+        try:
+            with open(model_path, 'rb') as f:
+                model = pickle.load(f)
+            loader_used = 'pickle'
+        except:
+            print('❌ Could not load model')
+            sys.exit(1)
+    
+    print(f'📦 Loader: {loader_used}')
+    print(f'🏷️  Type: {type(model).__name__}')
+    
+    # Get model-specific info
+    if hasattr(model, 'get_params'):
+        print('⚙️  Parameters:')
+        params = model.get_params()
+        for key, value in list(params.items())[:10]:
+            print(f'   {key}: {value}')
+        if len(params) > 10:
+            print(f'   ... and {len(params) - 10} more')
+    
+    if hasattr(model, 'feature_importances_'):
+        print(f'📊 Feature importances available: {len(model.feature_importances_)} features')
+    
+    if hasattr(model, 'classes_'):
+        print(f'🏷️  Classes: {model.classes_}')
+    
+    if hasattr(model, 'coef_'):
+        print(f'📈 Coefficients shape: {model.coef_.shape}')
+    
+    # Memory usage
+    try:
+        import sys
+        size = sys.getsizeof(model)
+        print(f'💾 Memory usage: {size / (1024**2):.1f} MB')
+    except:
+        pass
+        
+except Exception as e:
+    print(f'Error analyzing model: {e}')
+    sys.exit(1)
+"
+}
+
+# Environment Management
+aienv() {
+    local action="$1"
+    local env_name="$2"
+    
+    case "$action" in
+        create)
+            if [[ -z "$env_name" ]]; then
+                echo "Usage: aienv create <env_name>"
+                return 1
+            fi
+            
+            echo "🐍 Creating conda environment: $env_name"
+            conda create -n "$env_name" python=3.9 -y
+            conda activate "$env_name"
+            
+            # Install common AI/ML packages
+            pip install numpy pandas scikit-learn matplotlib seaborn jupyter
+            
+            echo "✅ Environment '$env_name' created and activated"
+            ;;
+            
+        list)
+            echo "📋 Available environments:"
+            conda env list
+            ;;
+            
+        activate)
+            if [[ -z "$env_name" ]]; then
+                echo "Usage: aienv activate <env_name>"
+                return 1
+            fi
+            conda activate "$env_name"
+            ;;
+            
+        remove)
+            if [[ -z "$env_name" ]]; then
+                echo "Usage: aienv remove <env_name>"
+                return 1
+            fi
+            conda remove -n "$env_name" --all -y
+            echo "✅ Environment '$env_name' removed"
+            ;;
+            
+        *)
+            echo "Usage: aienv {create|list|activate|remove} [env_name]"
+            return 1
+            ;;
+    esac
+}
+
+# GPU Monitoring
+gpustat() {
+    if command -v nvidia-smi >/dev/null 2>&1; then
+        echo "🖥️  GPU Status:"
+        nvidia-smi --query-gpu=index,name,temperature.gpu,utilization.gpu,memory.used,memory.total --format=csv,noheader,nounits | \
+        while IFS=',' read -r index name temp util mem_used mem_total; do
+            echo "GPU $index: $name"
+            echo "  🌡️  Temperature: ${temp}°C"
+            echo "  ⚡ Utilization: ${util}%"
+            echo "  💾 Memory: ${mem_used}MB / ${mem_total}MB"
+            echo
+        done
+    else
+        echo "❌ nvidia-smi not found"
+    fi
+}
+
+# Experiment Tracking
+experiment() {
+    local action="$1"
+    local name="$2"
+    local experiments_dir="$HOME/experiments"
+    
+    case "$action" in
+        start)
+            if [[ -z "$name" ]]; then
+                name="exp_$(date +%Y%m%d_%H%M%S)"
+            fi
+            
+            local exp_dir="$experiments_dir/$name"
+            mkdir -p "$exp_dir"/{code,data,models,logs,results}
+            
+            # Create experiment metadata
+            cat > "$exp_dir/metadata.json" << EOF
+{
+    "name": "$name",
+    "start_time": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+    "git_commit": "$(git rev-parse HEAD 2>/dev/null || echo 'unknown')",
+    "working_directory": "$(pwd)",
+    "python_version": "$(python --version 2>&1)",
+    "conda_env": "$CONDA_DEFAULT_ENV"
+}
+EOF
+            
+            echo "🧪 Started experiment: $name"
+            echo "📁 Directory: $exp_dir"
+            cd "$exp_dir"
+            ;;
+            
+        list)
+            echo "📋 Recent experiments:"
+            if [[ -d "$experiments_dir" ]]; then
+                ls -lt "$experiments_dir" | head -10
+            else
+                echo "No experiments found"
+            fi
+            ;;
+            
+        goto)
+            if [[ -z "$name" ]]; then
+                echo "Usage: experiment goto <name>"
+                return 1
+            fi
+            
+            local exp_dir="$experiments_dir/$name"
+            if [[ -d "$exp_dir" ]]; then
+                cd "$exp_dir"
+                echo "📂 Switched to experiment: $name"
+            else
+                echo "❌ Experiment not found: $name"
+                return 1
+            fi
+            ;;
+            
+        *)
+            echo "Usage: experiment {start|list|goto} [name]"
+            return 1
+            ;;
+    esac
+}
+
+# Aliases for productivity
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# Git aliases
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit'
+alias gp='git push'
+alias gl='git log --oneline'
+alias gd='git diff'
+alias gb='git branch'
+alias gco='git checkout'
+
+# Python aliases
+alias py='python3'
+alias pip='pip3'
+alias ipy='ipython'
+alias nb='jupyter notebook'
+alias lab='jupyter lab'
+
+# AI/ML specific aliases
+alias tf='python -c "import tensorflow as tf; print(tf.__version__)"'
+alias torch='python -c "import torch; print(torch.__version__)"'
+alias sklearn='python -c "import sklearn; print(sklearn.__version__)"'
+
+# System monitoring
+alias meminfo='free -h'
+alias cpuinfo='lscpu'
+alias diskinfo='df -h'
+alias procinfo='ps aux --sort=-%cpu | head'
+
+# Network aliases
+alias myip='curl -s ifconfig.me'
+alias ports='netstat -tuln'
+alias ping='ping -c 5'
+
+# Docker aliases (if using containers)
+alias dps='docker ps'
+alias dimg='docker images'
+alias dstop='docker stop $(docker ps -q)'
+alias dclean='docker system prune -af'
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5: CI/CD Integration -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-danger text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-sync-alt"></i> CI/CD Pipeline Integration</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-4">Integrate your automation scripts with CI/CD pipelines for seamless deployment workflows.</p>
+
+                        <div class="workflow-step">
+                            <h5><i class="fas fa-cogs"></i> Step 5: CI/CD Pipeline Configuration</h5>
+                            <p>Complete CI/CD setup with automated testing, training, and deployment.</p>
+                        </div>
+
+                        <div class="script-template">
+                            <h6><i class="fas fa-file-code"></i> Template: GitHub Actions Workflow</h6>
+                            <div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">Copy</button># .github/workflows/ml-pipeline.yml
+name: ML Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM
+
+env:
+  PYTHON_VERSION: '3.9'
+  MODEL_REGISTRY: 'my-registry.com'
+  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-test.txt
+    
+    - name: Run linting
+      run: |
+        flake8 src/ --max-line-length=88
+        black --check src/
+        isort --check-only src/
+    
+    - name: Run tests
+      run: |
+        pytest tests/ -v --cov=src --cov-report=xml
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+  data-validation:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Download data
+      run: |
+        chmod +x scripts/data_ingestion.sh
+        ./scripts/data_ingestion.sh
+    
+    - name: Validate data quality
+      run: |
+        python scripts/data_validation.py
+    
+    - name: Upload data artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: validated-data
+        path: data/processed/
+        retention-days: 7
+
+  model-training:
+    runs-on: ubuntu-latest
+    needs: data-validation
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Download validated data
+      uses: actions/download-artifact@v3
+      with:
+        name: validated-data
+        path: data/processed/
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
+    
+    - name: Train model
+      run: |
+        chmod +x scripts/model_training.sh
+        ./scripts/model_training.sh
+    
+    - name: Evaluate model
+      run: |
+        python scripts/model_evaluation.py
+    
+    - name: Upload model artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: trained-model
+        path: models/
+        retention-days: 30
+    
+    - name: Register model
+      run: |
+        python scripts/register_model.py --model-path models/latest/model.pkl
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: model-training
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    environment: staging
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Download model artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: trained-model
+        path: models/
+    
+    - name: Deploy to staging
+      run: |
+        chmod +x scripts/deploy.sh
+        ./scripts/deploy.sh -e staging -v $(cat models/latest/version.txt)
+    
+    - name: Run integration tests
+      run: |
+        python tests/integration_tests.py --environment staging
+    
+    - name: Send notification
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{"text":"✅ Staging deployment successful"}' \
+            ${{ env.SLACK_WEBHOOK }}
+        else
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{"text":"❌ Staging deployment failed"}' \
+            ${{ env.SLACK_WEBHOOK }}
+        fi
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    environment: production
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Download model artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: trained-model
+        path: models/
+    
+    - name: Deploy to production
+      run: |
+        chmod +x scripts/deploy.sh
+        ./scripts/deploy.sh -e production -v $(cat models/latest/version.txt)
+    
+    - name: Run smoke tests
+      run: |
+        python tests/smoke_tests.py --environment production
+    
+    - name: Send notification
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{"text":"🚀 Production deployment successful"}' \
+            ${{ env.SLACK_WEBHOOK }}
+        else
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{"text":"🚨 Production deployment failed"}' \
+            ${{ env.SLACK_WEBHOOK }}
+        fi
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: [deploy-production]
+    if: always()
+    
+    steps:
+    - name: Cleanup old artifacts
+      run: |
+        # This would typically involve cleaning up old model versions,
+        # temporary files, and other artifacts
+        echo "Cleaning up old artifacts..."
+</div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-info-circle"></i> Alternative: GitLab CI/CD Pipeline</h6>
+                            <div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">Copy</button># .gitlab-ci.yml
+stages:
+  - test
+  - build
+  - deploy-staging
+  - deploy-production
+
+variables:
+  PYTHON_VERSION: "3.9"
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+before_script:
+  - python -m venv venv
+  - source venv/bin/activate
+  - pip install --upgrade pip
+  - pip install -r requirements.txt
+
+test:
+  stage: test
+  script:
+    - flake8 src/
+    - pytest tests/ -v --cov=src
+  coverage: '/TOTAL.+?(\d+\%)$/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+
+data-validation:
+  stage: build
+  script:
+    - chmod +x scripts/data_ingestion.sh
+    - ./scripts/data_ingestion.sh
+    - python scripts/data_validation.py
+  artifacts:
+    paths:
+      - data/processed/
+    expire_in: 1 week
+
+model-training:
+  stage: build
+  script:
+    - chmod +x scripts/model_training.sh
+    - ./scripts/model_training.sh
+    - python scripts/model_evaluation.py
+  artifacts:
+    paths:
+      - models/
+    expire_in: 1 month
+  only:
+    - main
+
+deploy-staging:
+  stage: deploy-staging
+  script:
+    - chmod +x scripts/deploy.sh
+    - ./scripts/deploy.sh -e staging -v $(cat models/latest/version.txt)
+  environment:
+    name: staging
+    url: https://staging.example.com
+  only:
+    - main
+
+deploy-production:
+  stage: deploy-production
+  script:
+    - chmod +x scripts/deploy.sh
+    - ./scripts/deploy.sh -e production -v $(cat models/latest/version.txt)
+  environment:
+    name: production
+    url: https://production.example.com
+  when: manual
+  only:
+    - main
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Best Practices and Troubleshooting -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-warning text-dark">
+                        <h3 class="h5 mb-0"><i class="fas fa-wrench"></i> Best Practices & Troubleshooting</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-check-circle text-success"></i> Best Practices</h5>
+                                <ul>
+                                    <li><strong>Error Handling:</strong> Always implement comprehensive error handling with proper logging</li>
+                                    <li><strong>Idempotency:</strong> Make scripts idempotent - safe to run multiple times</li>
+                                    <li><strong>Configuration:</strong> Use configuration files instead of hardcoded values</li>
+                                    <li><strong>Testing:</strong> Include unit tests and integration tests for all scripts</li>
+                                    <li><strong>Documentation:</strong> Document all scripts with usage examples</li>
+                                    <li><strong>Version Control:</strong> Keep scripts in version control with proper branching</li>
+                                    <li><strong>Monitoring:</strong> Implement monitoring and alerting for automated processes</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-bug text-danger"></i> Common Issues</h5>
+                                <ul>
+                                    <li><strong>Permission Errors:</strong> Ensure proper file permissions (chmod +x)</li>
+                                    <li><strong>Path Issues:</strong> Use absolute paths or properly set working directories</li>
+                                    <li><strong>Environment Variables:</strong> Check that all required env vars are set</li>
+                                    <li><strong>Dependency Issues:</strong> Verify all required tools and libraries are installed</li>
+                                    <li><strong>Resource Limits:</strong> Monitor memory and disk usage during execution</li>
+                                    <li><strong>Network Issues:</strong> Handle network timeouts and connection failures</li>
+                                    <li><strong>Concurrent Execution:</strong> Implement proper locking for concurrent script runs</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Final Exercise -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-graduation-cap"></i> Advanced Challenge</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Create a Complete ML Automation Pipeline:</strong></p>
+                        <ol>
+                            <li>Design a data ingestion script that validates and preprocesses data</li>
+                            <li>Create a model training script with hyperparameter optimization</li>
+                            <li>Build a deployment script with health checks and rollback</li>
+                            <li>Set up CI/CD pipeline integration</li>
+                            <li>Add monitoring and alerting</li>
+                        </ol>
+                        
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-lightbulb"></i> Success Criteria</h6>
+                            <ul class="mb-0">
+                                <li>Scripts handle errors gracefully with proper logging</li>
+                                <li>Pipeline can be triggered automatically</li>
+                                <li>Deployment includes health checks and rollback capability</li>
+                                <li>All components are properly monitored</li>
+                                <li>Scripts are well-documented and tested</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <a href="10-monitoring-optimization.html" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left"></i> Previous: Monitoring & Optimization
+                        </a>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <a href="12-advanced-integration.html" class="btn btn-primary">
+                            Next: Advanced Integration <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 AI Terminal Tutor. Master the art of terminal automation.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function copyCode(button) {
+            const codeBlock = button.parentElement;
+            const code = codeBlock.textContent.replace('Copy', '').trim();
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.background = '#28a745';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#444';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>

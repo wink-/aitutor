@@ -1,0 +1,15 @@
+{
+  "name": "ai-terminal-tutor",
+  "version": "1.0.0",
+  "description": "Interactive HTML5 tutorial site for learning terminal-based AI coding",
+  "main": "index.html",
+  "scripts": {
+    "serve": "python3 -m http.server 8000",
+    "dev": "python3 -m http.server 8000"
+  },
+  "keywords": ["terminal", "ai", "coding", "tutorial", "neovim", "tmux", "zsh"],
+  "author": "AI Terminal Tutor",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}

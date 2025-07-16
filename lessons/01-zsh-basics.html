@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 1: Zsh Basics - AI Terminal Tutor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/lessons.css">
+    <link rel="stylesheet" href="../terminal-simulator.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-terminal"></i> AI Terminal Tutor
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="../index.html#lessons">Lessons</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Breadcrumb Navigation -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Zsh Basics</li>
+                    </ol>
+                </nav>
+                <!-- Lesson Header -->
+                <div class="card mb-4 shadow">
+                    <div class="card-body bg-light">
+                        <h1 class="card-title h2 mb-3">
+                            <i class="fas fa-graduation-cap text-primary"></i> Lesson 1: Zsh Basics
+                        </h1>
+                        <p class="lead mb-4">Master the fundamentals of the Z shell (zsh) - the powerful, feature-rich shell that's now the default on macOS.</p>
+                        
+                        <!-- Learning Objectives -->
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading"><i class="fas fa-bullseye"></i> Learning Objectives</h5>
+                            <ul class="mb-0">
+                                <li>Understand the differences between zsh and bash</li>
+                                <li>Install and configure zsh on different platforms</li>
+                                <li>Master basic zsh features and syntax</li>
+                                <li>Use zsh's powerful completion system</li>
+                                <li>Configure zsh with .zshrc</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 1: Introduction -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-info-circle"></i> What is Zsh?</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Zsh (Z shell) is a powerful command interpreter that combines the best features of bash, ksh, and tcsh with many unique enhancements. Since macOS Catalina, it's the default shell on Mac systems.</p>
+                        
+                        <h5 class="mt-4">Key Advantages of Zsh over Bash:</h5>
+                        <ul>
+                            <li><strong>Better tab completion:</strong> Smarter, more context-aware completions</li>
+                            <li><strong>Spelling correction:</strong> Automatically suggests corrections for typos</li>
+                            <li><strong>Path expansion:</strong> Powerful globbing and pattern matching</li>
+                            <li><strong>Themes and prompts:</strong> Highly customizable appearance</li>
+                            <li><strong>Plugin ecosystem:</strong> Extensive community plugins via Oh-My-Zsh</li>
+                            <li><strong>Array handling:</strong> More intuitive array operations</li>
+                        </ul>
+
+                        <div class="alert alert-warning mt-3">
+                            <i class="fas fa-exclamation-triangle"></i> <strong>Note:</strong> While zsh is largely compatible with bash, some scripts may need minor adjustments to work properly.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Installation -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-download"></i> Installing Zsh</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Installation methods vary by operating system. Here are the most common approaches:</p>
+
+                        <!-- macOS -->
+                        <h5 class="mt-4"><i class="fab fa-apple"></i> macOS</h5>
+                        <p>Zsh comes pre-installed on macOS Catalina and later. For older versions:</p>
+                        <pre class="bg-dark text-light p-3 rounded"><code>brew install zsh</code></pre>
+
+                        <!-- Linux -->
+                        <h5 class="mt-4"><i class="fab fa-linux"></i> Linux</h5>
+                        <div class="mb-3">
+                            <p><strong>Ubuntu/Debian:</strong></p>
+                            <pre class="bg-dark text-light p-3 rounded"><code>sudo apt update
+sudo apt install zsh</code></pre>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <p><strong>Fedora/RHEL:</strong></p>
+                            <pre class="bg-dark text-light p-3 rounded"><code>sudo dnf install zsh</code></pre>
+                        </div>
+
+                        <div class="mb-3">
+                            <p><strong>Arch Linux:</strong></p>
+                            <pre class="bg-dark text-light p-3 rounded"><code>sudo pacman -S zsh</code></pre>
+                        </div>
+
+                        <!-- Windows -->
+                        <h5 class="mt-4"><i class="fab fa-windows"></i> Windows</h5>
+                        <p>Use WSL (Windows Subsystem for Linux) and follow the Linux instructions, or use Git Bash with zsh.</p>
+
+                        <!-- Setting as default -->
+                        <h5 class="mt-4">Setting Zsh as Default Shell</h5>
+                        <pre class="bg-dark text-light p-3 rounded"><code># Check available shells
+cat /etc/shells
+
+# Change default shell to zsh
+chsh -s $(which zsh)
+
+# Verify current shell
+echo $SHELL</code></pre>
+
+                        <!-- Interactive Exercise -->
+                        <div class="try-it-yourself">
+                            <div class="try-it-header">
+                                <i class="fas fa-terminal try-it-icon"></i>
+                                <h5 class="try-it-title">Try it yourself!</h5>
+                            </div>
+                            <p>Check if zsh is installed and see its version:</p>
+                            <button class="btn btn-primary" onclick="openTerminal('# Check zsh installation\nzsh --version\n\n# Check if zsh is your default shell\necho $SHELL\n\n# Check available shells\ncat /etc/shells | grep zsh')">
+                                <i class="fas fa-play"></i> Run Command
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Basic Features -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-star"></i> Essential Zsh Features</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5>1. Smart Tab Completion</h5>
+                        <p>Zsh offers intelligent, context-aware tab completion:</p>
+                        <pre class="bg-dark text-light p-3 rounded"><code># Case-insensitive completion
+cd desk[TAB]  # Completes to Desktop
+
+# Command option completion
+git com[TAB]  # Shows: commit, config, etc.
+
+# Path completion with menu
+cd /u/l/b[TAB]  # Shows menu of matching paths</code></pre>
+
+                        <h5 class="mt-4">2. Spelling Correction</h5>
+                        <p>Zsh can automatically correct minor typos:</p>
+                        <pre class="bg-dark text-light p-3 rounded"><code># If you type:
+cd Desktp
+
+# Zsh asks:
+zsh: correct 'Desktp' to 'Desktop' [nyae]?</code></pre>
+
+                        <h5 class="mt-4">3. Advanced Globbing</h5>
+                        <p>Powerful pattern matching capabilities:</p>
+                        <pre class="bg-dark text-light p-3 rounded"><code># Recursive search
+ls **/*.txt  # Find all .txt files recursively
+
+# Numeric ranges
+ls file[1-5].txt  # Matches file1.txt through file5.txt
+
+# Exclusion patterns
+ls *.txt~backup*  # All .txt files except those with 'backup'
+
+# Extended globbing (requires setopt EXTENDED_GLOB)
+ls *(.)  # List only regular files
+ls *(/)  # List only directories
+ls *(.om[1,10])  # 10 most recently modified files</code></pre>
+
+                        <h5 class="mt-4">4. Command History</h5>
+                        <p>Enhanced history features:</p>
+                        <pre class="bg-dark text-light p-3 rounded"><code># Search history with Ctrl+R (like bash)
+# But also:
+
+# History expansion
+!!  # Last command
+!$  # Last argument of previous command
+!^  # First argument of previous command
+
+# History substring search
+!git  # Last command starting with 'git'
+!?branch?  # Last command containing 'branch'</code></pre>
+
+                        <!-- Interactive Exercise -->
+                        <div class="alert alert-success mt-4">
+                            <h5><i class="fas fa-terminal"></i> Practice Exercise</h5>
+                            <p>Try these zsh features in the terminal:</p>
+                            <ol>
+                                <li>Create some test files and use globbing</li>
+                                <li>Test tab completion with partial commands</li>
+                                <li>Explore command history</li>
+                            </ol>
+                            <button class="btn btn-primary" onclick="openTerminal('# Create test files\ntouch file{1..5}.txt\ntouch backup_file.txt\n\n# Try globbing\nls *.txt\nls *[1-3].txt\nls *.txt~backup*')">
+                                <i class="fas fa-play"></i> Start Exercise
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Configuration -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-cog"></i> Configuring Zsh with .zshrc</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>The <code>~/.zshrc</code> file is your personal zsh configuration. Here's a basic template:</p>
+
+                        <pre class="bg-dark text-light p-3 rounded"><code># ~/.zshrc - Zsh configuration file
+
+# History settings
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt SHARE_HISTORY        # Share history between sessions
+setopt HIST_IGNORE_DUPS     # Don't record duplicate commands
+setopt HIST_FIND_NO_DUPS    # Don't show duplicates in search
+
+# Completion settings
+autoload -Uz compinit && compinit
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'  # Case-insensitive
+
+# Useful options
+setopt AUTO_CD              # cd by typing directory name
+setopt CORRECT              # Spell correction
+setopt EXTENDED_GLOB        # Extended globbing
+setopt NO_CASE_GLOB         # Case-insensitive globbing
+
+# Aliases
+alias ll='ls -lah'
+alias la='ls -A'
+alias l='ls -CF'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias gs='git status'
+alias gc='git commit'
+alias gp='git push'
+
+# Custom prompt (basic)
+PROMPT='%F{blue}%n@%m%f:%F{green}%~%f$ '
+
+# Environment variables
+export EDITOR='vim'
+export PATH="$HOME/bin:$PATH"
+
+# Key bindings
+bindkey '^[[A' history-search-backward  # Up arrow
+bindkey '^[[B' history-search-forward   # Down arrow
+
+# Functions
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+# Load additional configurations
+[ -f ~/.zsh_aliases ] && source ~/.zsh_aliases
+[ -f ~/.zsh_functions ] && source ~/.zsh_functions</code></pre>
+
+                        <div class="alert alert-info mt-3">
+                            <i class="fas fa-lightbulb"></i> <strong>Tip:</strong> After editing .zshrc, reload it with <code>source ~/.zshrc</code> or simply <code>exec zsh</code>.
+                        </div>
+
+                        <!-- Interactive Exercise -->
+                        <div class="alert alert-success mt-4">
+                            <h5><i class="fas fa-terminal"></i> Configuration Exercise</h5>
+                            <p>Create and test your own .zshrc configuration:</p>
+                            <button class="btn btn-primary" onclick="openTerminal('# Create a backup of existing .zshrc\n[ -f ~/.zshrc ] && cp ~/.zshrc ~/.zshrc.backup\n\n# Create a simple .zshrc\necho \"# My Zsh Config\" > ~/.zshrc\necho \"alias ll=\'ls -lah\'\" >> ~/.zshrc\necho \"PROMPT=\'%F{cyan}→%f %~ \'\" >> ~/.zshrc\n\n# Reload configuration\nsource ~/.zshrc\n\n# Test the alias\nll')">
+                                <i class="fas fa-play"></i> Configure Zsh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5: Advanced Tips -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-rocket"></i> Advanced Tips & Tricks</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5>1. Directory Stack Navigation</h5>
+                        <pre class="bg-dark text-light p-3 rounded"><code># Push directory to stack
+pushd /path/to/directory
+
+# Pop back to previous directory
+popd
+
+# View directory stack
+dirs -v
+
+# Jump to directory in stack (e.g., position 2)
+cd ~2</code></pre>
+
+                        <h5 class="mt-4">2. Suffix Aliases</h5>
+                        <p>Open files with specific programs based on extension:</p>
+                        <pre class="bg-dark text-light p-3 rounded"><code># In .zshrc
+alias -s txt=vim
+alias -s md=vim
+alias -s pdf=open
+alias -s {jpg,jpeg,png,gif}=open
+
+# Now you can just type:
+README.md  # Opens in vim
+image.jpg  # Opens in default image viewer</code></pre>
+
+                        <h5 class="mt-4">3. Global Aliases</h5>
+                        <pre class="bg-dark text-light p-3 rounded"><code># Define global aliases in .zshrc
+alias -g L='| less'
+alias -g G='| grep'
+alias -g T='| tail'
+alias -g H='| head'
+alias -g NUL='> /dev/null 2>&1'
+
+# Use them anywhere in a command
+ls -la G zsh  # Same as: ls -la | grep zsh
+cat longfile.txt L  # Same as: cat longfile.txt | less</code></pre>
+
+                        <h5 class="mt-4">4. Parameter Expansion</h5>
+                        <pre class="bg-dark text-light p-3 rounded"><code># String manipulation
+file="document.txt"
+echo ${file:r}     # document (remove extension)
+echo ${file:e}     # txt (extension only)
+echo ${file:h}     # . (directory part)
+echo ${file:t}     # document.txt (tail - filename only)
+echo ${file:u}     # DOCUMENT.TXT (uppercase)
+echo ${file:l}     # document.txt (lowercase)</code></pre>
+                    </div>
+                </div>
+
+                <!-- Troubleshooting -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-warning text-dark">
+                        <h3 class="h5 mb-0"><i class="fas fa-wrench"></i> Troubleshooting Common Issues</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5>1. Command Not Found</h5>
+                        <p><strong>Problem:</strong> Commands that work in bash don't work in zsh</p>
+                        <p><strong>Solution:</strong> Check your PATH and ensure .zshrc sources necessary files:</p>
+                        <pre class="bg-dark text-light p-3 rounded"><code>echo $PATH
+source ~/.bashrc  # If you have bash configurations</code></pre>
+
+                        <h5 class="mt-4">2. Completion Not Working</h5>
+                        <p><strong>Problem:</strong> Tab completion isn't functioning properly</p>
+                        <p><strong>Solution:</strong> Initialize the completion system:</p>
+                        <pre class="bg-dark text-light p-3 rounded"><code>autoload -Uz compinit
+compinit
+# If you get insecure directories warning:
+compaudit | xargs chmod g-w</code></pre>
+
+                        <h5 class="mt-4">3. Slow Startup</h5>
+                        <p><strong>Problem:</strong> Zsh takes too long to start</p>
+                        <p><strong>Solution:</strong> Profile your .zshrc:</p>
+                        <pre class="bg-dark text-light p-3 rounded"><code># Add to beginning of .zshrc
+zmodload zsh/zprof
+
+# Add to end of .zshrc
+zprof
+
+# This will show what's taking time during startup</code></pre>
+
+                        <h5 class="mt-4">4. Script Compatibility</h5>
+                        <p><strong>Problem:</strong> Bash scripts fail in zsh</p>
+                        <p><strong>Solution:</strong> Use bash explicitly or fix compatibility:</p>
+                        <pre class="bg-dark text-light p-3 rounded"><code># Run script with bash
+bash script.sh
+
+# Or add shebang to script
+#!/bin/bash
+
+# Common fixes:
+# - Arrays are 1-indexed in zsh (0-indexed in bash)
+# - Word splitting behaves differently
+# - Use emulate bash for compatibility mode</code></pre>
+                    </div>
+                </div>
+
+                <!-- Summary -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-check-circle"></i> Lesson Summary</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Congratulations! You've learned the fundamentals of zsh. Key takeaways:</p>
+                        <ul>
+                            <li>Zsh offers powerful features like smart completion, spelling correction, and advanced globbing</li>
+                            <li>Configuration through .zshrc allows extensive customization</li>
+                            <li>Zsh is largely bash-compatible but with many enhancements</li>
+                            <li>The shell provides excellent interactive features for daily use</li>
+                        </ul>
+                        
+                        <div class="mt-4">
+                            <h5>Next Steps:</h5>
+                            <p>Ready to supercharge your zsh experience? Continue to the next lesson to learn about Oh-My-Zsh!</p>
+                            <a href="02-oh-my-zsh.html" class="btn btn-primary">
+                                <i class="fas fa-arrow-right"></i> Next Lesson: Oh-My-Zsh
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Final Practice -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-graduation-cap"></i> Final Practice Challenge</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Test your zsh knowledge with this comprehensive exercise:</p>
+                        <ol>
+                            <li>Create a custom function in your .zshrc</li>
+                            <li>Set up useful aliases</li>
+                            <li>Configure your prompt</li>
+                            <li>Test advanced globbing patterns</li>
+                        </ol>
+                        <button class="btn btn-info" onclick="openTerminal('# Challenge: Create a productivity setup\n\n# 1. Create a project directory function\necho \"function mkproject() {\" >> ~/.zshrc\necho \"  mkdir -p ~/projects/\\$1\" >> ~/.zshrc\necho \"  cd ~/projects/\\$1\" >> ~/.zshrc\necho \"  git init\" >> ~/.zshrc\necho \"}\" >> ~/.zshrc\n\n# 2. Add productivity aliases\necho \"alias today=\'date +%Y-%m-%d\'\" >> ~/.zshrc\necho \"alias myip=\'curl -s ifconfig.me\'\" >> ~/.zshrc\n\n# 3. Reload and test\nsource ~/.zshrc\nmkproject test-project\ntoday\nmyip')">
+                            <i class="fas fa-play"></i> Start Challenge
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <div class="lesson-navigation">
+                    <a href="../index.html" class="nav-button prev">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </a>
+                    <a href="02-oh-my-zsh.html" class="nav-button next">
+                        Next: Oh-My-Zsh <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 AI Terminal Tutor. Built with Bootstrap and love for the command line.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/terminal-simulator.js"></script>
+    <script src="../js/lesson-manager.js"></script>
+    <script>
+        // Initialize terminal simulator
+        const terminal = new TerminalSimulator('terminal-container');
+        
+        // Terminal interaction function
+        function openTerminal(commands) {
+            // Create modal or expand terminal section
+            const modal = document.createElement('div');
+            modal.innerHTML = `
+                <div class="modal fade" id="terminalModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Interactive Terminal</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="terminal-container" style="min-height: 400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            const terminalModal = new bootstrap.Modal(document.getElementById('terminalModal'));
+            terminalModal.show();
+            
+            // Initialize terminal in modal
+            setTimeout(() => {
+                const modalTerminal = new TerminalSimulator('terminal-container');
+                modalTerminal.executeCommand(commands);
+            }, 300);
+        }
+        
+        // Code copy functionality
+        function copyCode(button) {
+            const codeBlock = button.closest('.lesson-code-block').querySelector('pre');
+            const text = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const icon = button.querySelector('i');
+                const originalClass = icon.className;
+                
+                icon.className = 'fas fa-check';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    icon.className = originalClass;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+        
+        // Lesson progress tracking
+        let lessonProgress = {
+            sections: ['intro', 'installation', 'features', 'configuration', 'advanced', 'troubleshooting'],
+            completed: []
+        };
+        
+        // Track section completion
+        function markSectionComplete(section) {
+            if (!lessonProgress.completed.includes(section)) {
+                lessonProgress.completed.push(section);
+                localStorage.setItem('zsh-basics-progress', JSON.stringify(lessonProgress));
+            }
+        }
+        
+        // Load progress on page load
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('zsh-basics-progress');
+            if (saved) {
+                lessonProgress = JSON.parse(saved);
+            }
+        });
+    </script>
+</body>
+</html>

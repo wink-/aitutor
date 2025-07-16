@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 7: Neovim Fundamentals for AI Developers</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="../css/main.css" rel="stylesheet">
+    <link href="../css/lessons.css" rel="stylesheet">
+    <link href="../terminal-simulator.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse" id="sidebar">
+                <div class="position-sticky pt-3">
+                    <div class="lesson-progress mb-4">
+                        <div class="progress-header">
+                            <h6 class="progress-title">Lesson Progress</h6>
+                            <span class="progress-percentage">0%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-navigator">
+                        <h6 class="mb-3">Lesson Steps</h6>
+                        <ul class="step-list" id="step-list">
+                            <li class="step-list-item active" data-step="1">
+                                <div class="step-indicator">1</div>
+                                <span>Installation & Setup</span>
+                            </li>
+                            <li class="step-list-item" data-step="2">
+                                <div class="step-indicator">2</div>
+                                <span>Understanding Modes</span>
+                            </li>
+                            <li class="step-list-item" data-step="3">
+                                <div class="step-indicator">3</div>
+                                <span>Essential Motions</span>
+                            </li>
+                            <li class="step-list-item" data-step="4">
+                                <div class="step-indicator">4</div>
+                                <span>Core Commands</span>
+                            </li>
+                            <li class="step-list-item" data-step="5">
+                                <div class="step-indicator">5</div>
+                                <span>Productivity Setup</span>
+                            </li>
+                            <li class="step-list-item" data-step="6">
+                                <div class="step-indicator">6</div>
+                                <span>Practice & Troubleshooting</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="lesson-content">
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">
+                            <i class="fas fa-terminal text-primary me-2"></i>
+                            Lesson 7: Neovim Fundamentals for AI Developers
+                        </h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <div class="btn-group me-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleTheme()">
+                                    <i class="fas fa-adjust"></i> Theme
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="resetProgress()">
+                                    <i class="fas fa-redo"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Master the essential Neovim skills to supercharge your AI development workflow
+                    </div>
+
+                    <!-- Step 1: Installation & Setup -->
+                    <div class="lesson-step active" id="step-1">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <h3 class="step-title">Installation and Initial Setup</h3>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-description">
+                                <p>Let's start by installing Neovim and setting up your development environment. Modern AI development requires a fast, efficient editor that can handle large codebases and integrate with various tools.</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fab fa-apple"></i> macOS</h5>
+                                    <div class="lesson-code-block">
+                                        <div class="code-header">
+                                            <span class="code-language">bash</span>
+                                            <div class="code-actions">
+                                                <button class="code-copy-btn" onclick="copyCode(this)">
+                                                    <i class="fas fa-copy"></i> Copy
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="code-content">
+<pre># Using Homebrew (recommended)
+brew install neovim
+
+# Using MacPorts
+sudo port install neovim
+
+# Verify installation
+nvim --version</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5><i class="fab fa-linux"></i> Linux</h5>
+                                    <div class="lesson-code-block">
+                                        <div class="code-header">
+                                            <span class="code-language">bash</span>
+                                            <div class="code-actions">
+                                                <button class="code-copy-btn" onclick="copyCode(this)">
+                                                    <i class="fas fa-copy"></i> Copy
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="code-content">
+<pre># Ubuntu/Debian
+sudo apt update && sudo apt install neovim
+
+# Fedora
+sudo dnf install neovim
+
+# Arch Linux
+sudo pacman -S neovim</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step-note">
+                                <h6><i class="fas fa-lightbulb text-warning"></i> Pro Tip</h6>
+                                <p>Ensure you have Neovim 0.9.0 or higher for optimal AI development features. Run <code>nvim --version</code> to check your version.</p>
+                            </div>
+
+                            <h5>Initial Configuration</h5>
+                            <p>Create your Neovim configuration directory and basic setup:</p>
+                            
+                            <div class="lesson-code-block">
+                                <div class="code-header">
+                                    <span class="code-language">bash</span>
+                                    <div class="code-actions">
+                                        <button class="code-copy-btn" onclick="copyCode(this)">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="code-content">
+<pre># Linux/macOS
+mkdir -p ~/.config/nvim
+touch ~/.config/nvim/init.lua
+
+# Windows
+mkdir %LOCALAPPDATA%\nvim
+echo. > %LOCALAPPDATA%\nvim\init.lua</pre>
+                                </div>
+                            </div>
+
+                            <h5>Basic init.lua Configuration</h5>
+                            <div class="lesson-code-block">
+                                <div class="code-header">
+                                    <span class="code-language">lua</span>
+                                    <div class="code-actions">
+                                        <button class="code-copy-btn" onclick="copyCode(this)">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                        <button class="btn btn-sm btn-primary" onclick="downloadConfig('basic-init')">
+                                            <i class="fas fa-download"></i> Download
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="code-content">
+<pre>-- Basic settings for AI development
+vim.opt.number = true         -- Show line numbers
+vim.opt.relativenumber = true -- Show relative line numbers
+vim.opt.expandtab = true      -- Use spaces instead of tabs
+vim.opt.shiftwidth = 4        -- Size of an indent
+vim.opt.tabstop = 4           -- Number of spaces tabs count for
+vim.opt.smartindent = true    -- Insert indents automatically
+vim.opt.wrap = false          -- Disable line wrap
+vim.opt.ignorecase = true     -- Ignore case in search
+vim.opt.smartcase = true      -- Override ignorecase if uppercase is used
+vim.opt.termguicolors = true  -- True color support
+vim.opt.signcolumn = "yes"    -- Always show sign column
+vim.opt.updatetime = 300      -- Faster completion
+vim.opt.clipboard = "unnamedplus" -- Use system clipboard
+
+-- Set leader key
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
+-- Basic colorscheme
+vim.cmd.colorscheme("default")</pre>
+                                </div>
+                            </div>
+
+                            <div class="try-it-yourself">
+                                <div class="try-it-header">
+                                    <div class="try-it-icon">💻</div>
+                                    <h6 class="try-it-title">Try It Yourself</h6>
+                                </div>
+                                <p>Install Neovim and create your first configuration file. Test it by opening a Python file:</p>
+                                <div id="terminal-1" class="terminal-container mb-3"></div>
+                                <button class="btn btn-success" onclick="startInstallationDemo()">
+                                    <i class="fas fa-play"></i> Start Installation Demo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Understanding Modes -->
+                    <div class="lesson-step" id="step-2">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <h3 class="step-title">Understanding Vim Modes</h3>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-description">
+                                <p>Vim's modal editing is what makes it so powerful. Each mode is designed for specific tasks, allowing you to work more efficiently than traditional editors.</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Mode</th>
+                                                    <th>Purpose</th>
+                                                    <th>How to Enter</th>
+                                                    <th>How to Exit</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><strong>Normal</strong></td>
+                                                    <td>Navigation and commands</td>
+                                                    <td><kbd>Esc</kbd> from any mode</td>
+                                                    <td>Enter other modes</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Insert</strong></td>
+                                                    <td>Text editing</td>
+                                                    <td><kbd>i</kbd>, <kbd>a</kbd>, <kbd>o</kbd></td>
+                                                    <td><kbd>Esc</kbd></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Visual</strong></td>
+                                                    <td>Text selection</td>
+                                                    <td><kbd>v</kbd>, <kbd>V</kbd>, <kbd>Ctrl+v</kbd></td>
+                                                    <td><kbd>Esc</kbd></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Command</strong></td>
+                                                    <td>Execute commands</td>
+                                                    <td><kbd>:</kbd></td>
+                                                    <td><kbd>Esc</kbd> or <kbd>Enter</kbd></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Mode Indicators</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mode-demo">
+                                                <div class="mode-indicator normal">NORMAL</div>
+                                                <div class="mode-indicator insert">INSERT</div>
+                                                <div class="mode-indicator visual">VISUAL</div>
+                                                <div class="mode-indicator command">COMMAND</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="try-it-yourself">
+                                <div class="try-it-header">
+                                    <div class="try-it-icon">🎯</div>
+                                    <h6 class="try-it-title">Mode Switching Practice</h6>
+                                </div>
+                                <p>Practice these mode transitions in the interactive vim simulator:</p>
+                                <ol>
+                                    <li>Start in Normal mode</li>
+                                    <li>Press <kbd>i</kbd> to enter Insert mode</li>
+                                    <li>Type "Hello, AI Developer!"</li>
+                                    <li>Press <kbd>Esc</kbd> to return to Normal mode</li>
+                                    <li>Press <kbd>v</kbd> to enter Visual mode</li>
+                                    <li>Select the word "Developer"</li>
+                                    <li>Press <kbd>d</kbd> to delete it</li>
+                                </ol>
+                                <div id="vim-simulator" class="interactive-vim-simulator mb-3"></div>
+                                <button class="btn btn-success" onclick="startModeDemo()">
+                                    <i class="fas fa-play"></i> Start Mode Demo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Essential Motions -->
+                    <div class="lesson-step" id="step-3">
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <h3 class="step-title">Essential Vim Motions</h3>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-description">
+                                <p>Efficient navigation is key to Vim mastery. These motions will help you move around your AI code quickly and precisely.</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h5><i class="fas fa-arrows-alt"></i> Basic Movement</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Key</th>
+                                                    <th>Action</th>
+                                                    <th>AI Use Case</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><kbd>h</kbd></td>
+                                                    <td>Left</td>
+                                                    <td>Navigate parameters</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>j</kbd></td>
+                                                    <td>Down</td>
+                                                    <td>Scroll through models</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>k</kbd></td>
+                                                    <td>Up</td>
+                                                    <td>Review implementations</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>l</kbd></td>
+                                                    <td>Right</td>
+                                                    <td>Move through tensors</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <h5><i class="fas fa-font"></i> Word Movement</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Key</th>
+                                                    <th>Action</th>
+                                                    <th>Example</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><kbd>w</kbd></td>
+                                                    <td>Next word</td>
+                                                    <td>model.fit()</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>b</kbd></td>
+                                                    <td>Previous word</td>
+                                                    <td>Back to function</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>e</kbd></td>
+                                                    <td>End of word</td>
+                                                    <td>Variable name end</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>W</kbd></td>
+                                                    <td>Next WORD</td>
+                                                    <td>Skip punctuation</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <h5><i class="fas fa-grip-lines"></i> Line Movement</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Key</th>
+                                                    <th>Action</th>
+                                                    <th>Use Case</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><kbd>0</kbd></td>
+                                                    <td>Line start</td>
+                                                    <td>Import statements</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>^</kbd></td>
+                                                    <td>First non-blank</td>
+                                                    <td>Skip Python indent</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>$</kbd></td>
+                                                    <td>Line end</td>
+                                                    <td>End of tensor op</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>gg</kbd></td>
+                                                    <td>File start</td>
+                                                    <td>Jump to imports</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Practice Code Sample</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="lesson-code-block">
+                                        <div class="code-content">
+<pre>import torch
+import torch.nn as nn
+import torch.optim as optim
+
+class TransformerModel(nn.Module):
+    def __init__(self, vocab_size, d_model, nhead, num_layers):
+        super().__init__()
+        self.embedding = nn.Embedding(vocab_size, d_model)
+        self.pos_encoding = PositionalEncoding(d_model)
+        self.transformer = nn.Transformer(d_model, nhead, num_layers)
+        self.fc = nn.Linear(d_model, vocab_size)
+        
+    def forward(self, src, tgt):
+        src = self.pos_encoding(self.embedding(src))
+        tgt = self.pos_encoding(self.embedding(tgt))
+        output = self.transformer(src, tgt)
+        return self.fc(output)</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="try-it-yourself">
+                                <div class="try-it-header">
+                                    <div class="try-it-icon">🏃</div>
+                                    <h6 class="try-it-title">Motion Challenge</h6>
+                                </div>
+                                <p>Practice these movements in the code above:</p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ol>
+                                            <li>Position cursor on "import" and press <kbd>w</kbd> three times</li>
+                                            <li>Press <kbd>j</kbd> to go to next line</li>
+                                            <li>Press <kbd>$</kbd> to go to end of line</li>
+                                            <li>Press <kbd>b</kbd> twice to go back two words</li>
+                                        </ol>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ol start="5">
+                                            <li>Press <kbd>gg</kbd> to return to top</li>
+                                            <li>Press <kbd>/</kbd> and search for "transformer"</li>
+                                            <li>Press <kbd>n</kbd> to go to next match</li>
+                                            <li>Press <kbd>G</kbd> to go to end of file</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div id="motion-practice" class="interactive-vim-simulator mb-3"></div>
+                                <button class="btn btn-success" onclick="startMotionDemo()">
+                                    <i class="fas fa-play"></i> Start Motion Practice
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Core Commands -->
+                    <div class="lesson-step" id="step-4">
+                        <div class="step-header">
+                            <div class="step-number">4</div>
+                            <h3 class="step-title">Essential Commands for AI Development</h3>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-description">
+                                <p>Master these core commands to edit your AI code efficiently. These operations will become second nature with practice.</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-edit"></i> Editing Commands</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Command</th>
+                                                    <th>Action</th>
+                                                    <th>AI Dev Scenario</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><kbd>dd</kbd></td>
+                                                    <td>Delete line</td>
+                                                    <td>Remove unused imports</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>yy</kbd></td>
+                                                    <td>Copy line</td>
+                                                    <td>Duplicate layer definition</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>p</kbd></td>
+                                                    <td>Paste after</td>
+                                                    <td>Paste hyperparameters</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>u</kbd></td>
+                                                    <td>Undo</td>
+                                                    <td>Revert experiments</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>Ctrl+r</kbd></td>
+                                                    <td>Redo</td>
+                                                    <td>Reapply changes</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-search"></i> Search & Replace</h5>
+                                    <div class="lesson-code-block">
+                                        <div class="code-header">
+                                            <span class="code-language">vim</span>
+                                            <div class="code-actions">
+                                                <button class="code-copy-btn" onclick="copyCode(this)">
+                                                    <i class="fas fa-copy"></i> Copy
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="code-content">
+<pre># Search forward
+/pattern
+
+# Search backward
+?pattern
+
+# Next occurrence
+n
+
+# Previous occurrence
+N
+
+# Replace in line
+:s/old/new/g
+
+# Replace in entire file
+:%s/old/new/g
+
+# Replace with confirmation
+:%s/old/new/gc</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step-note">
+                                <h6><i class="fas fa-lightbulb text-warning"></i> AI Development Tip</h6>
+                                <p>Use <code>:%s/tf\./torch\./g</code> to quickly migrate from TensorFlow to PyTorch syntax!</p>
+                            </div>
+
+                            <h5><i class="fas fa-tools"></i> Advanced Text Objects</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Command</th>
+                                                    <th>Action</th>
+                                                    <th>Use Case</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><kbd>ci"</kbd></td>
+                                                    <td>Change inside quotes</td>
+                                                    <td>Update model names</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>da(</kbd></td>
+                                                    <td>Delete around parens</td>
+                                                    <td>Remove function call</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>vi{</kbd></td>
+                                                    <td>Select inside braces</td>
+                                                    <td>Select dict contents</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><kbd>ct,</kbd></td>
+                                                    <td>Change until comma</td>
+                                                    <td>Replace argument</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Text Objects Reference</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="text-objects-demo">
+                                                <p><strong>Inside (i):</strong> <code>iw</code> (word), <code>i"</code> (quotes), <code>i(</code> (parens)</p>
+                                                <p><strong>Around (a):</strong> <code>aw</code> (word), <code>a"</code> (quotes), <code>a(</code> (parens)</p>
+                                                <p><strong>Common patterns:</strong></p>
+                                                <ul class="small">
+                                                    <li><code>ciw</code> - Change word</li>
+                                                    <li><code>di(</code> - Delete inside parentheses</li>
+                                                    <li><code>ya"</code> - Yank around quotes</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="try-it-yourself">
+                                <div class="try-it-header">
+                                    <div class="try-it-icon">⚡</div>
+                                    <h6 class="try-it-title">Command Practice</h6>
+                                </div>
+                                <p>Practice these commands on a sample AI training script:</p>
+                                <div id="command-practice" class="interactive-vim-simulator mb-3"></div>
+                                <button class="btn btn-success" onclick="startCommandDemo()">
+                                    <i class="fas fa-play"></i> Start Command Practice
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Productivity Setup -->
+                    <div class="lesson-step" id="step-5">
+                        <div class="step-header">
+                            <div class="step-number">5</div>
+                            <h3 class="step-title">Productivity Keybindings</h3>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-description">
+                                <p>Customize Neovim with these productivity-focused keybindings specifically designed for AI development workflows.</p>
+                            </div>
+
+                            <div class="lesson-code-block">
+                                <div class="code-header">
+                                    <span class="code-language">lua</span>
+                                    <div class="code-actions">
+                                        <button class="code-copy-btn" onclick="copyCode(this)">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                        <button class="btn btn-sm btn-primary" onclick="downloadConfig('keybindings')">
+                                            <i class="fas fa-download"></i> Download
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="code-content">
+<pre>-- Better window navigation
+vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to left window' })
+vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to lower window' })
+vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to upper window' })
+vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right window' })
+
+-- Quick save and quit
+vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = 'Save file' })
+vim.keymap.set('n', '<leader>q', ':q<CR>', { desc = 'Quit' })
+vim.keymap.set('n', '<leader>Q', ':qa!<CR>', { desc = 'Quit all without saving' })
+
+-- Better indenting
+vim.keymap.set('v', '<', '<gv', { desc = 'Indent left and reselect' })
+vim.keymap.set('v', '>', '>gv', { desc = 'Indent right and reselect' })
+
+-- Move lines up and down
+vim.keymap.set('n', '<A-j>', ':m .+1<CR>==', { desc = 'Move line down' })
+vim.keymap.set('n', '<A-k>', ':m .-2<CR>==', { desc = 'Move line up' })
+vim.keymap.set('v', '<A-j>', ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
+vim.keymap.set('v', '<A-k>', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
+
+-- Quick access to terminal
+vim.keymap.set('n', '<leader>t', ':split | terminal<CR>', { desc = 'Open terminal' })
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+
+-- AI Development specific
+vim.keymap.set('n', '<leader>rp', ':!python %<CR>', { desc = 'Run Python file' })
+vim.keymap.set('n', '<leader>rj', ':!node %<CR>', { desc = 'Run JavaScript file' })
+vim.keymap.set('n', '<leader>rt', ':!npm test<CR>', { desc = 'Run tests' })
+vim.keymap.set('n', '<leader>rd', ':!python -m pytest<CR>', { desc = 'Run pytest' })
+
+-- File navigation
+vim.keymap.set('n', '<leader>ff', ':find ', { desc = 'Find file' })
+vim.keymap.set('n', '<leader>fg', ':grep ', { desc = 'Grep in files' })
+vim.keymap.set('n', '<leader>fb', ':buffers<CR>', { desc = 'List buffers' })
+
+-- Code folding
+vim.keymap.set('n', '<leader>z', 'za', { desc = 'Toggle fold' })
+vim.keymap.set('n', '<leader>Z', 'zA', { desc = 'Toggle all folds' })</pre>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Window Management</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Keybinding</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><kbd>Ctrl+h</kbd></td>
+                                                            <td>Move to left window</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><kbd>Ctrl+j</kbd></td>
+                                                            <td>Move to lower window</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><kbd>Ctrl+k</kbd></td>
+                                                            <td>Move to upper window</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><kbd>Ctrl+l</kbd></td>
+                                                            <td>Move to right window</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">AI Development Shortcuts</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Keybinding</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><kbd>Space+rp</kbd></td>
+                                                            <td>Run Python file</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><kbd>Space+rt</kbd></td>
+                                                            <td>Run tests</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><kbd>Space+t</kbd></td>
+                                                            <td>Open terminal</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><kbd>Space+ff</kbd></td>
+                                                            <td>Find file</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="try-it-yourself">
+                                <div class="try-it-header">
+                                    <div class="try-it-icon">🚀</div>
+                                    <h6 class="try-it-title">Productivity Challenge</h6>
+                                </div>
+                                <p>Set up your keybindings and test them with a multi-window AI development workflow:</p>
+                                <div id="productivity-demo" class="interactive-vim-simulator mb-3"></div>
+                                <button class="btn btn-success" onclick="startProductivityDemo()">
+                                    <i class="fas fa-play"></i> Start Productivity Demo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 6: Practice & Troubleshooting -->
+                    <div class="lesson-step" id="step-6">
+                        <div class="step-header">
+                            <div class="step-number">6</div>
+                            <h3 class="step-title">Practice & Troubleshooting</h3>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-description">
+                                <p>Apply your Neovim skills to real AI development scenarios and learn to troubleshoot common issues.</p>
+                            </div>
+
+                            <h5><i class="fas fa-chart-line"></i> Before/After Productivity Comparison</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card border-danger">
+                                        <div class="card-header bg-danger text-white">
+                                            <h6 class="mb-0">❌ Without Vim Knowledge (2-3 minutes)</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <h6>Task: Refactor Neural Network Class</h6>
+                                            <ol>
+                                                <li>Click and drag to select old class name</li>
+                                                <li>Type new name</li>
+                                                <li>Manually find each occurrence</li>
+                                                <li>Click and replace each one</li>
+                                                <li>Scroll to find imports</li>
+                                                <li>Update imports manually</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card border-success">
+                                        <div class="card-header bg-success text-white">
+                                            <h6 class="mb-0">✅ With Vim Knowledge (15 seconds)</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <h6>Task: Refactor Neural Network Class</h6>
+                                            <ol>
+                                                <li><code>:%s/OldModel/NewModel/g</code></li>
+                                                <li><code>gg</code> to jump to top</li>
+                                                <li><code>/import</code> to find imports</li>
+                                                <li>Update if needed with <code>cw</code></li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <div class="card border-warning">
+                                        <div class="card-header bg-warning text-dark">
+                                            <h6 class="mb-0">❌ Traditional Editor (1-2 minutes)</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <h6>Task: Extract Method from Long Function</h6>
+                                            <ol>
+                                                <li>Scroll to find code block</li>
+                                                <li>Click and drag to select</li>
+                                                <li>Cut with Ctrl+X</li>
+                                                <li>Scroll to new location</li>
+                                                <li>Paste and manually indent</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card border-success">
+                                        <div class="card-header bg-success text-white">
+                                            <h6 class="mb-0">✅ Neovim (10 seconds)</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <h6>Task: Extract Method from Long Function</h6>
+                                            <ol>
+                                                <li><code>V</code> to start line selection</li>
+                                                <li><code>10j</code> to select 10 lines</li>
+                                                <li><code>d</code> to cut</li>
+                                                <li><code>/def new_method</code> to find location</li>
+                                                <li><code>o</code> to open line, <code>p</code> to paste</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="mt-4"><i class="fas fa-tools"></i> Common Issues & Solutions</h5>
+                            <div class="accordion" id="troubleshootingAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                            <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                                            "E492: Not an editor command"
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#troubleshootingAccordion">
+                                        <div class="accordion-body">
+                                            <p><strong>Problem:</strong> Command doesn't exist or misspelled.</p>
+                                            <p><strong>Solution:</strong> Check spelling and ensure plugins are loaded. Use <code>:help commandname</code> to verify.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                            <i class="fas fa-keyboard text-info me-2"></i>
+                                            Stuck in Insert Mode
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#troubleshootingAccordion">
+                                        <div class="accordion-body">
+                                            <p><strong>Problem:</strong> Can't exit Insert mode.</p>
+                                            <p><strong>Solution:</strong> Press <kbd>Esc</kbd> or <kbd>Ctrl+[</kbd> to return to Normal mode.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingThree">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                            <i class="fas fa-door-open text-danger me-2"></i>
+                                            Can't Exit Vim
+                                        </button>
+                                    </h2>
+                                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#troubleshootingAccordion">
+                                        <div class="accordion-body">
+                                            <p><strong>Solutions:</strong></p>
+                                            <ul>
+                                                <li>Save and quit: <code>:wq</code></li>
+                                                <li>Quit without saving: <code>:q!</code></li>
+                                                <li>Force quit all: <code>:qa!</code></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step-note mt-4">
+                                <h6><i class="fas fa-graduation-cap text-primary"></i> Learning Resources</h6>
+                                <ul>
+                                    <li>Run <code>:Tutor</code> in Neovim for interactive tutorial</li>
+                                    <li>Use <code>:help</code> for any command documentation</li>
+                                    <li>Use <code>:checkhealth</code> to diagnose configuration issues</li>
+                                    <li>Practice with <code>vimtutor</code> command from terminal</li>
+                                </ul>
+                            </div>
+
+                            <div class="try-it-yourself">
+                                <div class="try-it-header">
+                                    <div class="try-it-icon">🎯</div>
+                                    <h6 class="try-it-title">Final Challenge</h6>
+                                </div>
+                                <p>Complete this AI development workflow using only Vim commands:</p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Tasks:</h6>
+                                        <ol>
+                                            <li>Create a new Python file</li>
+                                            <li>Add imports for PyTorch</li>
+                                            <li>Create a simple neural network class</li>
+                                            <li>Add a training loop</li>
+                                            <li>Save and run the file</li>
+                                        </ol>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Requirements:</h6>
+                                        <ul>
+                                            <li>Use only Vim motions for navigation</li>
+                                            <li>Use text objects for efficient editing</li>
+                                            <li>Demonstrate search and replace</li>
+                                            <li>Show window management</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="final-challenge" class="interactive-vim-simulator mb-3"></div>
+                                <button class="btn btn-success" onclick="startFinalChallenge()">
+                                    <i class="fas fa-rocket"></i> Start Final Challenge
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lesson Navigation -->
+                    <div class="lesson-navigation">
+                        <a href="06-package-management.html" class="nav-button prev">
+                            <i class="fas fa-arrow-left"></i>
+                            Previous: Package Management
+                        </a>
+                        <a href="08-neovim-ai-setup.html" class="nav-button next">
+                            Next: AI Development Setup
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/terminal-simulator.js"></script>
+    <script>
+        // Lesson management
+        let currentStep = 1;
+        const totalSteps = 6;
+        let terminals = {};
+
+        // Initialize lesson
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            setupStepNavigation();
+        });
+
+        // Step navigation
+        function setupStepNavigation() {
+            const stepItems = document.querySelectorAll('.step-list-item');
+            stepItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const step = parseInt(this.dataset.step);
+                    goToStep(step);
+                });
+            });
+        }
+
+        function goToStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.lesson-step').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.step-list-item').forEach(s => s.classList.remove('active'));
+            
+            // Show target step
+            document.getElementById(`step-${step}`).classList.add('active');
+            document.querySelector(`[data-step="${step}"]`).classList.add('active');
+            
+            currentStep = step;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progress = Math.round((currentStep / totalSteps) * 100);
+            document.querySelector('.progress-percentage').textContent = progress + '%';
+            document.querySelector('.progress-bar').style.width = progress + '%';
+            
+            // Update step indicators
+            document.querySelectorAll('.step-list-item').forEach((item, index) => {
+                const stepNum = index + 1;
+                const indicator = item.querySelector('.step-indicator');
+                
+                if (stepNum < currentStep) {
+                    item.classList.add('completed');
+                    indicator.classList.add('completed');
+                    indicator.innerHTML = '<i class="fas fa-check"></i>';
+                } else if (stepNum === currentStep) {
+                    item.classList.add('active');
+                    indicator.classList.add('active');
+                    indicator.textContent = stepNum;
+                } else {
+                    item.classList.remove('completed', 'active');
+                    indicator.classList.remove('completed', 'active');
+                    indicator.textContent = stepNum;
+                }
+            });
+        }
+
+        // Code copy functionality
+        function copyCode(button) {
+            const codeBlock = button.closest('.lesson-code-block').querySelector('pre');
+            const code = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Configuration download
+        function downloadConfig(type) {
+            let content = '';
+            let filename = '';
+            
+            if (type === 'basic-init') {
+                filename = 'init.lua';
+                content = `-- Basic settings for AI development
+vim.opt.number = true         -- Show line numbers
+vim.opt.relativenumber = true -- Show relative line numbers
+vim.opt.expandtab = true      -- Use spaces instead of tabs
+vim.opt.shiftwidth = 4        -- Size of an indent
+vim.opt.tabstop = 4           -- Number of spaces tabs count for
+vim.opt.smartindent = true    -- Insert indents automatically
+vim.opt.wrap = false          -- Disable line wrap
+vim.opt.ignorecase = true     -- Ignore case in search
+vim.opt.smartcase = true      -- Override ignorecase if uppercase is used
+vim.opt.termguicolors = true  -- True color support
+vim.opt.signcolumn = "yes"    -- Always show sign column
+vim.opt.updatetime = 300      -- Faster completion
+vim.opt.clipboard = "unnamedplus" -- Use system clipboard
+
+-- Set leader key
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
+-- Basic colorscheme
+vim.cmd.colorscheme("default")`;
+            } else if (type === 'keybindings') {
+                filename = 'keybindings.lua';
+                content = `-- Better window navigation
+vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to left window' })
+vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to lower window' })
+vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to upper window' })
+vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right window' })
+
+-- Quick save and quit
+vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = 'Save file' })
+vim.keymap.set('n', '<leader>q', ':q<CR>', { desc = 'Quit' })
+vim.keymap.set('n', '<leader>Q', ':qa!<CR>', { desc = 'Quit all without saving' })
+
+-- Better indenting
+vim.keymap.set('v', '<', '<gv', { desc = 'Indent left and reselect' })
+vim.keymap.set('v', '>', '>gv', { desc = 'Indent right and reselect' })
+
+-- Move lines up and down
+vim.keymap.set('n', '<A-j>', ':m .+1<CR>==', { desc = 'Move line down' })
+vim.keymap.set('n', '<A-k>', ':m .-2<CR>==', { desc = 'Move line up' })
+vim.keymap.set('v', '<A-j>', ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
+vim.keymap.set('v', '<A-k>', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
+
+-- Quick access to terminal
+vim.keymap.set('n', '<leader>t', ':split | terminal<CR>', { desc = 'Open terminal' })
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+
+-- AI Development specific
+vim.keymap.set('n', '<leader>rp', ':!python %<CR>', { desc = 'Run Python file' })
+vim.keymap.set('n', '<leader>rj', ':!node %<CR>', { desc = 'Run JavaScript file' })
+vim.keymap.set('n', '<leader>rt', ':!npm test<CR>', { desc = 'Run tests' })
+vim.keymap.set('n', '<leader>rd', ':!python -m pytest<CR>', { desc = 'Run pytest' })
+
+-- File navigation
+vim.keymap.set('n', '<leader>ff', ':find ', { desc = 'Find file' })
+vim.keymap.set('n', '<leader>fg', ':grep ', { desc = 'Grep in files' })
+vim.keymap.set('n', '<leader>fb', ':buffers<CR>', { desc = 'List buffers' })
+
+-- Code folding
+vim.keymap.set('n', '<leader>z', 'za', { desc = 'Toggle fold' })
+vim.keymap.set('n', '<leader>Z', 'zA', { desc = 'Toggle all folds' })`;
+            }
+            
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Interactive demos
+        function startInstallationDemo() {
+            if (!terminals['terminal-1']) {
+                terminals['terminal-1'] = new TerminalSimulator('terminal-1', {
+                    prompt: '$ ',
+                    user: 'developer',
+                    host: 'ai-machine'
+                });
+            }
+            
+            const terminal = terminals['terminal-1'];
+            terminal.addToOutput('Welcome to the Neovim Installation Demo!', 'lesson');
+            terminal.addToOutput('Try these commands:', 'lesson');
+            terminal.addToOutput('  nvim --version', 'lesson');
+            terminal.addToOutput('  mkdir -p ~/.config/nvim', 'lesson');
+            terminal.addToOutput('  touch ~/.config/nvim/init.lua', 'lesson');
+        }
+
+        function startModeDemo() {
+            // Create vim mode simulator
+            const simulator = document.getElementById('vim-simulator');
+            simulator.innerHTML = `
+                <div class="vim-editor">
+                    <div class="vim-content">
+                        <div class="vim-line">Welcome to Vim mode practice!</div>
+                        <div class="vim-line">Press 'i' to enter Insert mode</div>
+                        <div class="vim-line">Press 'Esc' to return to Normal mode</div>
+                        <div class="vim-cursor"></div>
+                    </div>
+                    <div class="vim-statusline">
+                        <span class="vim-mode">NORMAL</span>
+                        <span class="vim-info">Press 'i' to start</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startMotionDemo() {
+            // Motion practice simulator
+            const simulator = document.getElementById('motion-practice');
+            simulator.innerHTML = `
+                <div class="motion-practice">
+                    <div class="practice-code">
+                        <div class="code-line">import torch</div>
+                        <div class="code-line">import torch.nn as nn</div>
+                        <div class="code-line"></div>
+                        <div class="code-line">class Model(nn.Module):</div>
+                        <div class="code-line">    def __init__(self):</div>
+                        <div class="code-line">        super().__init__()</div>
+                    </div>
+                    <div class="practice-instructions">
+                        <p>Use hjkl keys to move around. Try w, b, e for word movement.</p>
+                        <p>Press 'gg' to go to top, 'G' to go to bottom.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startCommandDemo() {
+            // Command practice
+            const simulator = document.getElementById('command-practice');
+            simulator.innerHTML = `
+                <div class="command-practice">
+                    <div class="practice-editor">
+                        <div class="editor-line">model = torch.nn.Linear(10, 1)</div>
+                        <div class="editor-line">optimizer = torch.optim.Adam(model.parameters())</div>
+                        <div class="editor-line">loss_fn = torch.nn.MSELoss()</div>
+                    </div>
+                    <div class="practice-commands">
+                        <p>Try these commands:</p>
+                        <ul>
+                            <li>dd - Delete current line</li>
+                            <li>yy - Copy current line</li>
+                            <li>p - Paste below</li>
+                            <li>u - Undo</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startProductivityDemo() {
+            // Productivity demo
+            const simulator = document.getElementById('productivity-demo');
+            simulator.innerHTML = `
+                <div class="productivity-demo">
+                    <div class="demo-windows">
+                        <div class="window active">
+                            <div class="window-header">main.py</div>
+                            <div class="window-content">
+                                <div>import torch</div>
+                                <div>model = torch.nn.Linear(10, 1)</div>
+                            </div>
+                        </div>
+                        <div class="window">
+                            <div class="window-header">terminal</div>
+                            <div class="window-content">
+                                <div>$ python main.py</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="demo-instructions">
+                        <p>Use Ctrl+h/j/k/l to navigate between windows</p>
+                        <p>Use Space+rp to run Python file</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startFinalChallenge() {
+            // Final challenge
+            const simulator = document.getElementById('final-challenge');
+            simulator.innerHTML = `
+                <div class="final-challenge">
+                    <div class="challenge-editor">
+                        <div class="editor-header">
+                            <span>neural_network.py</span>
+                            <span class="editor-mode">NORMAL</span>
+                        </div>
+                        <div class="editor-content">
+                            <div class="line-number">1</div>
+                            <div class="line-content">|</div>
+                        </div>
+                    </div>
+                    <div class="challenge-checklist">
+                        <h6>Complete these tasks:</h6>
+                        <ul>
+                            <li>☐ Add PyTorch imports</li>
+                            <li>☐ Create neural network class</li>
+                            <li>☐ Add forward method</li>
+                            <li>☐ Create training loop</li>
+                            <li>☐ Save and run file</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Reset progress
+        function resetProgress() {
+            currentStep = 1;
+            goToStep(1);
+            // Reset all terminals
+            Object.values(terminals).forEach(terminal => {
+                if (terminal.reset) terminal.reset();
+            });
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+
+    <style>
+        .mode-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+            margin: 2px;
+        }
+        .mode-indicator.normal { background: #28a745; color: white; }
+        .mode-indicator.insert { background: #ffc107; color: black; }
+        .mode-indicator.visual { background: #17a2b8; color: white; }
+        .mode-indicator.command { background: #dc3545; color: white; }
+        
+        .interactive-vim-simulator {
+            min-height: 200px;
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 16px;
+            color: #d4d4d4;
+            font-family: monospace;
+            position: relative;
+        }
+        
+        .vim-editor {
+            background: #2d2d2d;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 8px 0;
+        }
+        
+        .vim-statusline {
+            background: #404040;
+            color: #ffffff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .sidebar {
+            background: var(--bs-light);
+            border-right: 1px solid var(--bs-border-color);
+            min-height: 100vh;
+        }
+        
+        .lesson-step {
+            display: none;
+            margin-bottom: 2rem;
+        }
+        
+        .lesson-step.active {
+            display: block;
+        }
+        
+        .terminal-container {
+            min-height: 300px;
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        [data-theme="dark"] {
+            --bs-body-bg: #1a1a1a;
+            --bs-body-color: #e0e0e0;
+        }
+        
+        [data-theme="dark"] .sidebar {
+            background: #2d2d2d;
+            border-right-color: #404040;
+        }
+        
+        [data-theme="dark"] .card {
+            background: #2d2d2d;
+            border-color: #404040;
+        }
+        
+        [data-theme="dark"] .table {
+            --bs-table-bg: #2d2d2d;
+            --bs-table-color: #e0e0e0;
+        }
+    </style>
+</body>
+</html>

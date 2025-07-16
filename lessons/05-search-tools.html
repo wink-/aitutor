@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 5: Modern Search Tools - ripgrep, fd, and fzf</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="../css/lessons.css" rel="stylesheet">
+    <link href="../css/main.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+        }
+        .tool-card {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+        }
+        .code-example {
+            background-color: #2d2d2d;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .performance-bar {
+            height: 30px;
+            background-color: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .performance-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00c851 0%, #00ff00 100%);
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            color: white;
+            font-weight: bold;
+        }
+        .exercise-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .cheat-sheet {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        .interactive-demo {
+            background-color: #e7f3ff;
+            border: 2px dashed #0066cc;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-4">Modern Search Tools for AI Development</h1>
+            <p class="lead">Master ripgrep, fd, and fzf - the trinity of modern command-line search tools that will revolutionize your AI development workflow</p>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-search fa-2x me-3"></i>
+                        <div>
+                            <h5>Lightning Fast</h5>
+                            <p class="mb-0">10-100x faster than traditional tools</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-code fa-2x me-3"></i>
+                        <div>
+                            <h5>Developer Friendly</h5>
+                            <p class="mb-0">Built-in gitignore support</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-terminal fa-2x me-3"></i>
+                        <div>
+                            <h5>Modern CLI</h5>
+                            <p class="mb-0">Intuitive syntax and colorized output</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <!-- Tool Overview -->
+        <section class="mb-5">
+            <h2 class="mb-4">Tool Overview</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card tool-card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title"><i class="fas fa-bolt text-warning"></i> ripgrep (rg)</h4>
+                            <p class="card-text">A line-oriented search tool that recursively searches directories for a regex pattern. Faster than grep, ag, git grep, ucg, pt, sift.</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Respects .gitignore</li>
+                                <li><i class="fas fa-check text-success"></i> Unicode support</li>
+                                <li><i class="fas fa-check text-success"></i> Parallel processing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card tool-card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title"><i class="fas fa-folder-open text-primary"></i> fd</h4>
+                            <p class="card-text">A simple, fast, and user-friendly alternative to find. Written in Rust for maximum performance.</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Intuitive syntax</li>
+                                <li><i class="fas fa-check text-success"></i> Colorized output</li>
+                                <li><i class="fas fa-check text-success"></i> Smart case</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card tool-card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title"><i class="fas fa-filter text-info"></i> fzf</h4>
+                            <p class="card-text">A command-line fuzzy finder that can be used with any list. Interactive Unix filter for command-line.</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Real-time preview</li>
+                                <li><i class="fas fa-check text-success"></i> Multi-select</li>
+                                <li><i class="fas fa-check text-success"></i> Shell integration</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Installation -->
+        <section class="mb-5">
+            <h2 class="mb-4">Installation Guide</h2>
+            
+            <ul class="nav nav-tabs" id="installTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="macos-tab" data-bs-toggle="tab" data-bs-target="#macos" type="button">macOS</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="linux-tab" data-bs-toggle="tab" data-bs-target="#linux" type="button">Linux</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="windows-tab" data-bs-toggle="tab" data-bs-target="#windows" type="button">Windows</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content mt-3" id="installTabContent">
+                <div class="tab-pane fade show active" id="macos" role="tabpanel">
+                    <h4>Using Homebrew</h4>
+                    <pre><code class="language-bash"># Install all three tools
+brew install ripgrep fd fzf
+
+# Optional: Install fzf key bindings and fuzzy completion
+$(brew --prefix)/opt/fzf/install</code></pre>
+                </div>
+                
+                <div class="tab-pane fade" id="linux" role="tabpanel">
+                    <h4>Ubuntu/Debian</h4>
+                    <pre><code class="language-bash"># ripgrep
+sudo apt-get install ripgrep
+
+# fd (may be called fd-find)
+sudo apt-get install fd-find
+# Create alias if needed
+ln -s $(which fdfind) ~/.local/bin/fd
+
+# fzf
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install</code></pre>
+                    
+                    <h4 class="mt-3">Arch Linux</h4>
+                    <pre><code class="language-bash">sudo pacman -S ripgrep fd fzf</code></pre>
+                </div>
+                
+                <div class="tab-pane fade" id="windows" role="tabpanel">
+                    <h4>Using Scoop</h4>
+                    <pre><code class="language-bash">scoop install ripgrep fd fzf</code></pre>
+                    
+                    <h4 class="mt-3">Using Chocolatey</h4>
+                    <pre><code class="language-bash">choco install ripgrep fd fzf</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- ripgrep Deep Dive -->
+        <section class="mb-5">
+            <h2 class="mb-4"><i class="fas fa-bolt text-warning"></i> ripgrep (rg) - The Search Powerhouse</h2>
+            
+            <h3>Basic Usage</h3>
+            <div class="code-example">
+                <pre><code class="language-bash"># Basic search
+rg "pattern" 
+
+# Search in specific directory
+rg "pattern" /path/to/directory
+
+# Case-insensitive search
+rg -i "pattern"
+
+# Show line numbers
+rg -n "pattern"
+
+# Search specific file types
+rg -t py "import torch"
+
+# Exclude file types
+rg -T js "TODO"</code></pre>
+            </div>
+
+            <h3 class="mt-4">Advanced Patterns</h3>
+            <div class="code-example">
+                <pre><code class="language-bash"># Regular expressions
+rg "def \w+\(.*model.*\):" --type py
+
+# Multiline search
+rg -U "class.*\n.*def __init__" --type py
+
+# Search for whole words
+rg -w "train"
+
+# Show context (3 lines before and after)
+rg -C 3 "error"
+
+# Only show filenames
+rg -l "deprecated"
+
+# Invert match (show lines NOT matching)
+rg -v "test"</code></pre>
+            </div>
+
+            <h3 class="mt-4">AI Development Use Cases</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="exercise-box">
+                        <h5>Finding Model Definitions</h5>
+                        <pre><code class="language-bash"># Find all PyTorch model classes
+rg "class \w+\(nn\.Module\)" --type py
+
+# Find TensorFlow model definitions
+rg "tf\.keras\.Model|Model\(" --type py
+
+# Find model checkpoint saves
+rg "torch\.save|model\.save" --type py</code></pre>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="exercise-box">
+                        <h5>Dataset Operations</h5>
+                        <pre><code class="language-bash"># Find data loaders
+rg "DataLoader|Dataset" --type py
+
+# Find data preprocessing
+rg "transform|preprocess" -A 5
+
+# Find batch size configurations
+rg "batch_size\s*=\s*\d+" --type py</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- fd Deep Dive -->
+        <section class="mb-5">
+            <h2 class="mb-4"><i class="fas fa-folder-open text-primary"></i> fd - The File Finder</h2>
+            
+            <h3>Basic Usage</h3>
+            <div class="code-example">
+                <pre><code class="language-bash"># Find files by name
+fd model
+
+# Find with extension
+fd -e py
+
+# Find in specific directory
+fd model /path/to/project
+
+# Case-insensitive search
+fd -i readme
+
+# Find directories only
+fd -t d data
+
+# Find files only
+fd -t f "\.ipynb$"</code></pre>
+            </div>
+
+            <h3 class="mt-4">Advanced Filters</h3>
+            <div class="code-example">
+                <pre><code class="language-bash"># Exclude directories
+fd -E "__pycache__" -E "node_modules" 
+
+# Find files modified in last 24 hours
+fd --changed-within 24h
+
+# Find large files (> 100MB)
+fd --size +100m
+
+# Execute command on results
+fd -e py -x wc -l
+
+# Find and delete empty directories
+fd -t d -e . -x rmdir</code></pre>
+            </div>
+
+            <h3 class="mt-4">AI Project Organization</h3>
+            <div class="exercise-box">
+                <h5>Common AI Project Searches</h5>
+                <pre><code class="language-bash"># Find all Jupyter notebooks
+fd -e ipynb
+
+# Find model checkpoints
+fd "\.pth$|\.h5$|\.ckpt$"
+
+# Find configuration files
+fd "config|settings" -e json -e yaml -e yml
+
+# Find all Python test files
+fd "test_.*\.py$|.*_test\.py$"
+
+# Clean up cache files
+fd -H "\.pyc$|__pycache__" -x rm -rf</code></pre>
+            </div>
+        </section>
+
+        <!-- fzf Deep Dive -->
+        <section class="mb-5">
+            <h2 class="mb-4"><i class="fas fa-filter text-info"></i> fzf - The Fuzzy Finder</h2>
+            
+            <h3>Basic Usage</h3>
+            <div class="code-example">
+                <pre><code class="language-bash"># Interactive file selection
+fzf
+
+# Preview files while selecting
+fzf --preview 'cat {}'
+
+# Select multiple files
+fzf -m
+
+# Search with initial query
+fzf -q "model"
+
+# Custom preview command
+fzf --preview 'head -100 {}'</code></pre>
+            </div>
+
+            <h3 class="mt-4">Shell Integration</h3>
+            <div class="code-example">
+                <pre><code class="language-bash"># Add to .bashrc or .zshrc
+# CTRL-T - Paste selected files
+# CTRL-R - Search command history
+# ALT-C - cd into selected directory
+
+# Custom key bindings
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+
+# Use fd as default source
+export FZF_DEFAULT_COMMAND='fd --type f'
+
+# Advanced preview options
+export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always --line-range :500 {}'"</code></pre>
+            </div>
+
+            <h3 class="mt-4">Power Combinations</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="exercise-box">
+                        <h5>Git Integration</h5>
+                        <pre><code class="language-bash"># Interactive git branch switch
+git branch | fzf | xargs git checkout
+
+# Interactive git log browser
+git log --oneline | fzf --preview 'git show --color=always {1}'
+
+# Stage files interactively
+git status -s | fzf -m | awk '{print $2}' | xargs git add</code></pre>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="exercise-box">
+                        <h5>AI Workflow Integration</h5>
+                        <pre><code class="language-bash"># Select and edit Python files
+fd -e py | fzf --preview 'bat --color=always {}' | xargs code
+
+# Find and run Jupyter notebooks
+fd -e ipynb | fzf | xargs jupyter notebook
+
+# Search and jump to function definitions
+rg "^def " --type py | fzf | awk -F: '{print $1}' | xargs code</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Integration Patterns -->
+        <section class="mb-5">
+            <h2 class="mb-4">Integration Patterns</h2>
+            
+            <h3>Combining Tools</h3>
+            <div class="code-example">
+                <pre><code class="language-bash"># Find Python files and search within them
+fd -e py | xargs rg "neural_network"
+
+# Interactive grep with preview
+rg --files | fzf --preview 'rg --color=always -n {} {q}' --bind 'change:reload:rg --color=always -n {} {q}'
+
+# Find large model files interactively
+fd --size +10m | fzf --preview 'ls -lh {}'
+
+# Search code and open in editor
+rg -n "TODO" | fzf | awk -F: '{print $1 " +" $2}' | xargs -o vim</code></pre>
+            </div>
+
+            <h3 class="mt-4">Custom Functions</h3>
+            <div class="code-example">
+                <pre><code class="language-bash"># Add to .bashrc/.zshrc
+
+# Interactive code search
+codesearch() {
+    rg --line-number --no-heading . | fzf \
+        --delimiter : \
+        --preview 'bat --color=always --highlight-line {2} {1}' \
+        --preview-window 'up,60%,+{2}+3/3'
+}
+
+# Find and activate Python virtual environments
+venv() {
+    local venv_path=$(fd -t d "venv|env|virtualenv" | fzf)
+    [ -n "$venv_path" ] && source "$venv_path/bin/activate"
+}
+
+# Interactive notebook opener
+notebook() {
+    fd -e ipynb | fzf --preview 'jupyter nbconvert --to markdown {} --stdout | head -200' | xargs jupyter notebook
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- Performance Comparison -->
+        <section class="mb-5">
+            <h2 class="mb-4">Performance Comparison</h2>
+            
+            <h3>Search Speed (1GB codebase)</h3>
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>ripgrep vs Traditional Tools</h5>
+                    <div class="mb-3">
+                        <label>grep (10.2s)</label>
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 100%; background: linear-gradient(90deg, #dc3545 0%, #ff6b6b 100%);">
+                                <span>10.2s</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>ag - The Silver Searcher (2.4s)</label>
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 24%; background: linear-gradient(90deg, #ffc107 0%, #ffeb3b 100%);">
+                                <span>2.4s</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>ripgrep (0.3s)</label>
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 3%;">
+                                <span>0.3s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <h5>fd vs find</h5>
+                    <div class="mb-3">
+                        <label>find (8.5s)</label>
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 100%; background: linear-gradient(90deg, #dc3545 0%, #ff6b6b 100%);">
+                                <span>8.5s</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>fd (0.4s)</label>
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 5%;">
+                                <span>0.4s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exercises -->
+        <section class="mb-5">
+            <h2 class="mb-4">Progressive Exercises</h2>
+            
+            <div class="accordion" id="exerciseAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#exercise1">
+                            Exercise 1: Basic Search Operations (Beginner)
+                        </button>
+                    </h2>
+                    <div id="exercise1" class="accordion-collapse collapse show" data-bs-parent="#exerciseAccordion">
+                        <div class="accordion-body">
+                            <ol>
+                                <li>Use ripgrep to find all occurrences of "import numpy" in Python files</li>
+                                <li>Use fd to find all Jupyter notebooks in your project</li>
+                                <li>Use fzf to interactively select a Python file to edit</li>
+                                <li>Find all TODO comments in your codebase</li>
+                                <li>List all Python files modified in the last week</li>
+                            </ol>
+                            <details class="mt-3">
+                                <summary>Solutions</summary>
+                                <pre><code class="language-bash"># 1. Find numpy imports
+rg "import numpy" --type py
+
+# 2. Find Jupyter notebooks
+fd -e ipynb
+
+# 3. Select Python file interactively
+fd -e py | fzf | xargs code
+
+# 4. Find TODO comments
+rg "TODO|FIXME|XXX"
+
+# 5. Recently modified Python files
+fd -e py --changed-within 1w</code></pre>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#exercise2">
+                            Exercise 2: Advanced Patterns (Intermediate)
+                        </button>
+                    </h2>
+                    <div id="exercise2" class="accordion-collapse collapse" data-bs-parent="#exerciseAccordion">
+                        <div class="accordion-body">
+                            <ol>
+                                <li>Find all class definitions that inherit from nn.Module</li>
+                                <li>Search for function definitions with more than 3 parameters</li>
+                                <li>Find all JSON configuration files and preview their contents</li>
+                                <li>Create a pipeline to find and remove all __pycache__ directories</li>
+                                <li>Search for hardcoded learning rates in your code</li>
+                            </ol>
+                            <details class="mt-3">
+                                <summary>Solutions</summary>
+                                <pre><code class="language-bash"># 1. PyTorch model classes
+rg "class \w+\([^)]*nn\.Module[^)]*\):" --type py
+
+# 2. Functions with many parameters
+rg "def \w+\([^)]*,[^)]*,[^)]*,[^)]*\)" --type py
+
+# 3. JSON files with preview
+fd -e json | fzf --preview 'jq . {} | head -50'
+
+# 4. Remove cache directories
+fd -H -t d "__pycache__" -x rm -rf
+
+# 5. Hardcoded learning rates
+rg "lr\s*=\s*0\.\d+|learning_rate\s*=\s*0\.\d+" --type py</code></pre>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#exercise3">
+                            Exercise 3: Integration Workflows (Advanced)
+                        </button>
+                    </h2>
+                    <div id="exercise3" class="accordion-collapse collapse" data-bs-parent="#exerciseAccordion">
+                        <div class="accordion-body">
+                            <ol>
+                                <li>Create a function to search Python docstrings interactively</li>
+                                <li>Build a pipeline to find duplicate function names across files</li>
+                                <li>Create an interactive model checkpoint browser</li>
+                                <li>Build a code review helper that shows recent changes</li>
+                                <li>Create a dataset explorer for CSV/JSON files</li>
+                            </ol>
+                            <details class="mt-3">
+                                <summary>Solutions</summary>
+                                <pre><code class="language-bash"># 1. Interactive docstring search
+docstring_search() {
+    rg '"""[\s\S]*?"""' --type py -U | 
+    fzf --preview 'echo {} | cut -d: -f1 | xargs bat --color=always'
+}
+
+# 2. Find duplicate functions
+find_duplicates() {
+    rg "^def (\w+)" --type py -o -r '$1' | 
+    sort | uniq -d | 
+    while read func; do
+        echo "=== $func ==="
+        rg "^def $func\(" --type py -n
+    done
+}
+
+# 3. Model checkpoint browser
+checkpoint_browser() {
+    fd "\.(pth|pt|ckpt|h5)$" | 
+    fzf --preview 'ls -lh {} && echo && file {}'
+}
+
+# 4. Code review helper
+review_changes() {
+    git diff --name-only | 
+    fzf -m --preview 'git diff --color=always {}'
+}
+
+# 5. Dataset explorer
+explore_data() {
+    fd "\.(csv|json)$" | 
+    fzf --preview '
+        if [[ {} =~ \.csv$ ]]; then
+            head -20 {} | column -t -s,
+        else
+            jq . {} | head -50
+        fi
+    '
+}</code></pre>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cheat Sheet -->
+        <section class="mb-5">
+            <h2 class="mb-4">Quick Reference Cheat Sheet</h2>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="cheat-sheet">
+                        <h5><i class="fas fa-bolt text-warning"></i> ripgrep</h5>
+                        <pre><code class="language-bash"># Basic
+rg pattern
+rg -i pattern        # case-insensitive
+rg -w word          # whole words
+rg -n pattern       # line numbers
+rg -l pattern       # files only
+rg -c pattern       # count matches
+
+# Types
+rg -t py pattern    # Python only
+rg -T js pattern    # exclude JS
+
+# Context
+rg -A 3 pattern     # 3 lines after
+rg -B 3 pattern     # 3 lines before
+rg -C 3 pattern     # 3 lines both
+
+# Advanced
+rg -U pattern       # multiline
+rg -v pattern       # invert match
+rg --no-ignore pat  # search all</code></pre>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="cheat-sheet">
+                        <h5><i class="fas fa-folder-open text-primary"></i> fd</h5>
+                        <pre><code class="language-bash"># Basic
+fd pattern
+fd -e py           # extension
+fd -t f pattern    # files only
+fd -t d pattern    # dirs only
+fd -H pattern      # hidden files
+fd -I pattern      # no ignore
+
+# Filters
+fd -E node_modules # exclude
+fd -s pattern      # case-sensitive
+fd -i pattern      # case-insensitive
+
+# Time/Size
+fd --changed-within 1d
+fd --changed-before 1w
+fd --size +1M
+fd --size -100k
+
+# Execute
+fd -x command {}
+fd -X command</code></pre>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="cheat-sheet">
+                        <h5><i class="fas fa-filter text-info"></i> fzf</h5>
+                        <pre><code class="language-bash"># Basic
+fzf
+fzf -m             # multi-select
+fzf -q "query"     # start with query
+fzf +i             # case-sensitive
+
+# Preview
+fzf --preview 'cat {}'
+fzf --preview-window right:50%
+
+# Keybindings
+ctrl-j/k           # navigate
+ctrl-a             # select all
+ctrl-d             # deselect all
+tab                # toggle selection
+
+# Integration
+vim $(fzf)
+cd $(fd -t d | fzf)
+git checkout $(git branch | fzf)
+
+# Options
+export FZF_DEFAULT_COMMAND='fd'
+export FZF_DEFAULT_OPTS='--height 40%'</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Best Practices -->
+        <section class="mb-5">
+            <h2 class="mb-4">Best Practices for AI Development</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-check-circle"></i> Do's</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Use ripgrep for searching code patterns and debugging</li>
+                                <li>Leverage fd's gitignore support to skip irrelevant files</li>
+                                <li>Create shell aliases for common search patterns</li>
+                                <li>Combine tools with pipes for powerful workflows</li>
+                                <li>Use preview features to verify results before acting</li>
+                                <li>Take advantage of regex for complex pattern matching</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0"><i class="fas fa-times-circle"></i> Don'ts</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Don't use grep/find when rg/fd would be faster</li>
+                                <li>Don't ignore .gitignore patterns without reason</li>
+                                <li>Don't search binary files or large datasets</li>
+                                <li>Don't forget to escape special regex characters</li>
+                                <li>Don't use overly complex patterns when simple ones work</li>
+                                <li>Don't forget to test commands before using -x with fd</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Demo -->
+        <section class="mb-5">
+            <h2 class="mb-4">Try It Yourself</h2>
+            <div class="interactive-demo">
+                <h4>Interactive Command Builder</h4>
+                <p>Select options to build your search command:</p>
+                
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <label>Tool:</label>
+                        <select class="form-select" id="toolSelect">
+                            <option value="rg">ripgrep</option>
+                            <option value="fd">fd</option>
+                            <option value="fzf">fzf</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Pattern:</label>
+                        <input type="text" class="form-control" id="patternInput" placeholder="Enter pattern">
+                    </div>
+                    <div class="col-md-4">
+                        <label>Options:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="caseInsensitive">
+                            <label class="form-check-label" for="caseInsensitive">Case insensitive</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="showNumbers">
+                            <label class="form-check-label" for="showNumbers">Show line numbers</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <h5>Generated Command:</h5>
+                    <code id="generatedCommand" class="d-block p-3 bg-dark text-white rounded">rg pattern</code>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="../js/terminal-simulator.js"></script>
+    <script src="../js/lesson-manager.js"></script>
+    <script>
+        // Interactive command builder
+        function updateCommand() {
+            const tool = document.getElementById('toolSelect').value;
+            const pattern = document.getElementById('patternInput').value || 'pattern';
+            const caseInsensitive = document.getElementById('caseInsensitive').checked;
+            const showNumbers = document.getElementById('showNumbers').checked;
+            
+            let command = tool + ' ';
+            
+            if (tool === 'rg') {
+                if (caseInsensitive) command += '-i ';
+                if (showNumbers) command += '-n ';
+            } else if (tool === 'fd') {
+                if (caseInsensitive) command += '-i ';
+            }
+            
+            command += pattern;
+            
+            document.getElementById('generatedCommand').textContent = command;
+        }
+        
+        document.getElementById('toolSelect').addEventListener('change', updateCommand);
+        document.getElementById('patternInput').addEventListener('input', updateCommand);
+        document.getElementById('caseInsensitive').addEventListener('change', updateCommand);
+        document.getElementById('showNumbers').addEventListener('change', updateCommand);
+    </script>
+</body>
+</html>

@@ -1,0 +1,438 @@
+{
+  "course": {
+    "title": "Terminal-Based AI Coding Mastery",
+    "description": "A comprehensive course for transitioning from GUI-based development to efficient terminal-based AI coding workflows",
+    "totalEstimatedTime": "12-16 weeks",
+    "categories": [
+      {
+        "id": "foundation",
+        "title": "Foundation",
+        "description": "Essential terminal skills and tools for modern development",
+        "estimatedTime": "2-4 weeks",
+        "order": 1
+      },
+      {
+        "id": "editor-transition",
+        "title": "Editor Transition",
+        "description": "Mastering Neovim for AI development with LSP and plugins",
+        "estimatedTime": "4-6 weeks",
+        "order": 2
+      },
+      {
+        "id": "ai-workflow-tools",
+        "title": "AI Workflow Tools",
+        "description": "Specialized tools for AI/ML development in the terminal",
+        "estimatedTime": "2-3 weeks",
+        "order": 3
+      },
+      {
+        "id": "advanced-integration",
+        "title": "Advanced Integration",
+        "description": "Automation, custom scripts, and advanced workflows",
+        "estimatedTime": "4-5 weeks (ongoing)",
+        "order": 4
+      }
+    ]
+  },
+  "lessons": [
+    {
+      "id": "zsh-basics",
+      "category": "foundation",
+      "title": "Zsh and Oh-My-Zsh Setup",
+      "description": "Install and configure zsh with oh-my-zsh for enhanced shell experience with powerful plugins",
+      "objectives": [
+        "Install and configure zsh as default shell",
+        "Set up oh-my-zsh with essential themes and plugins",
+        "Configure git, python, and docker plugins",
+        "Customize prompt and aliases for productivity"
+      ],
+      "prerequisites": ["Basic command line familiarity"],
+      "estimatedTime": "2-3 hours",
+      "difficulty": "beginner",
+      "hands_on_exercises": [
+        "Install zsh and oh-my-zsh",
+        "Configure .zshrc with useful aliases",
+        "Set up git plugin and test git shortcuts",
+        "Create custom aliases for common AI tasks"
+      ]
+    },
+    {
+      "id": "tmux-fundamentals",
+      "category": "foundation",
+      "title": "Tmux Fundamentals",
+      "description": "Master terminal multiplexing with tmux for managing multiple sessions, windows, and panes",
+      "objectives": [
+        "Understand tmux concepts: sessions, windows, panes",
+        "Learn essential keybindings for navigation",
+        "Configure tmux for optimal workflow",
+        "Use tmux for persistent sessions"
+      ],
+      "prerequisites": ["zsh-basics"],
+      "estimatedTime": "3-4 hours",
+      "difficulty": "beginner",
+      "hands_on_exercises": [
+        "Create and manage tmux sessions",
+        "Split windows into panes and navigate",
+        "Configure .tmux.conf for better defaults",
+        "Practice session persistence and reattachment"
+      ]
+    },
+    {
+      "id": "cli-tools-essentials",
+      "category": "foundation",
+      "title": "Essential CLI Tools",
+      "description": "Install and master core CLI tools: ripgrep, fd, fzf for lightning-fast file operations",
+      "objectives": [
+        "Install ripgrep, fd, and fzf",
+        "Learn advanced search patterns with ripgrep",
+        "Use fd for fast file finding",
+        "Integrate fzf for fuzzy finding in shell"
+      ],
+      "prerequisites": ["zsh-basics"],
+      "estimatedTime": "2-3 hours",
+      "difficulty": "beginner",
+      "hands_on_exercises": [
+        "Install tools via package manager",
+        "Search codebases with ripgrep patterns",
+        "Find files quickly with fd",
+        "Set up fzf keybindings and test fuzzy search"
+      ]
+    },
+    {
+      "id": "ssh-remote-development",
+      "category": "foundation",
+      "title": "SSH and Remote Development",
+      "description": "Set up secure SSH connections and efficient remote development workflows for cloud GPU access",
+      "objectives": [
+        "Configure SSH keys and secure connections",
+        "Set up SSH config for easy server access",
+        "Use tmux for persistent remote sessions",
+        "Transfer files efficiently with scp/rsync"
+      ],
+      "prerequisites": ["tmux-fundamentals"],
+      "estimatedTime": "3-4 hours",
+      "difficulty": "intermediate",
+      "hands_on_exercises": [
+        "Generate and configure SSH keys",
+        "Set up SSH config with aliases",
+        "Connect to remote server and start tmux session",
+        "Practice file transfer and port forwarding"
+      ]
+    },
+    {
+      "id": "neovim-installation",
+      "category": "editor-transition",
+      "title": "Neovim Installation and Basic Configuration",
+      "description": "Install Neovim and set up a modern configuration using kickstart.nvim or LazyVim",
+      "objectives": [
+        "Install Neovim and understand version requirements",
+        "Choose and install a Neovim distribution",
+        "Understand Lua configuration basics",
+        "Configure basic editor settings"
+      ],
+      "prerequisites": ["cli-tools-essentials"],
+      "estimatedTime": "2-3 hours",
+      "difficulty": "beginner",
+      "hands_on_exercises": [
+        "Install Neovim via package manager",
+        "Clone and set up kickstart.nvim or LazyVim",
+        "Customize basic settings in Lua config",
+        "Test installation with a simple file"
+      ]
+    },
+    {
+      "id": "vim-motions-mastery",
+      "category": "editor-transition",
+      "title": "Vim Motions and Navigation",
+      "description": "Master essential vim motions and navigation commands for efficient text editing",
+      "objectives": [
+        "Learn basic movement commands (hjkl, w, b, e)",
+        "Master text objects and operators",
+        "Use search and replace efficiently",
+        "Navigate files with jumps and marks"
+      ],
+      "prerequisites": ["neovim-installation"],
+      "estimatedTime": "6-8 hours",
+      "difficulty": "beginner",
+      "hands_on_exercises": [
+        "Complete vimtutor tutorial",
+        "Practice basic motions on code files",
+        "Learn text objects (words, sentences, paragraphs)",
+        "Use search patterns and replacements"
+      ]
+    },
+    {
+      "id": "lsp-setup",
+      "category": "editor-transition",
+      "title": "Language Server Protocol (LSP) Setup",
+      "description": "Configure LSP for Python, TypeScript, and other languages to get IDE-like features",
+      "objectives": [
+        "Understand what LSP provides",
+        "Install language servers for Python and TypeScript",
+        "Configure LSP keybindings and features",
+        "Set up autocompletion and diagnostics"
+      ],
+      "prerequisites": ["vim-motions-mastery"],
+      "estimatedTime": "3-4 hours",
+      "difficulty": "intermediate",
+      "hands_on_exercises": [
+        "Install pylsp and typescript-language-server",
+        "Configure LSP in Neovim",
+        "Test go-to-definition and references",
+        "Use LSP diagnostics to fix code issues"
+      ]
+    },
+    {
+      "id": "essential-plugins",
+      "category": "editor-transition",
+      "title": "Essential Neovim Plugins",
+      "description": "Install and configure Telescope, nvim-tree, and git integration plugins",
+      "objectives": [
+        "Install Telescope for fuzzy finding",
+        "Set up nvim-tree for file exploration",
+        "Configure git integration (fugitive/gitsigns)",
+        "Customize plugin keybindings"
+      ],
+      "prerequisites": ["lsp-setup"],
+      "estimatedTime": "4-5 hours",
+      "difficulty": "intermediate",
+      "hands_on_exercises": [
+        "Install and configure Telescope",
+        "Set up nvim-tree and learn navigation",
+        "Install git plugins and test git operations",
+        "Create custom keybindings for productivity"
+      ]
+    },
+    {
+      "id": "ai-plugins-integration",
+      "category": "editor-transition",
+      "title": "AI Coding Assistants in Neovim",
+      "description": "Integrate GitHub Copilot or Codeium for AI-powered code completion",
+      "objectives": [
+        "Choose between Copilot and Codeium",
+        "Install and authenticate AI coding assistant",
+        "Configure AI suggestions and keybindings",
+        "Learn best practices for AI-assisted coding"
+      ],
+      "prerequisites": ["essential-plugins"],
+      "estimatedTime": "2-3 hours",
+      "difficulty": "intermediate",
+      "hands_on_exercises": [
+        "Install copilot.vim or codeium.vim",
+        "Authenticate with service",
+        "Test AI completions on Python/TypeScript code",
+        "Configure accept/reject keybindings"
+      ]
+    },
+    {
+      "id": "advanced-neovim-config",
+      "category": "editor-transition",
+      "title": "Advanced Neovim Configuration",
+      "description": "Customize Neovim for AI development workflows with advanced features and optimizations",
+      "objectives": [
+        "Create custom functions and commands",
+        "Set up advanced keybindings and leader keys",
+        "Configure for specific AI/ML file types",
+        "Optimize performance for large files"
+      ],
+      "prerequisites": ["ai-plugins-integration"],
+      "estimatedTime": "4-6 hours",
+      "difficulty": "advanced",
+      "hands_on_exercises": [
+        "Write custom Lua functions for AI workflows",
+        "Set up leader key combinations",
+        "Configure for Jupyter notebooks and YAML",
+        "Create project-specific configurations"
+      ]
+    },
+    {
+      "id": "tmux-layouts-ai",
+      "category": "ai-workflow-tools",
+      "title": "Tmux Layouts for AI Development",
+      "description": "Design optimal tmux layouts for AI development: logs, training, notebooks, and monitoring",
+      "objectives": [
+        "Create layouts for different AI workflows",
+        "Automate pane creation and arrangement",
+        "Integrate with training and monitoring tools",
+        "Save and restore custom layouts"
+      ],
+      "prerequisites": ["tmux-fundamentals", "neovim-installation"],
+      "estimatedTime": "3-4 hours",
+      "difficulty": "intermediate",
+      "hands_on_exercises": [
+        "Design layout for model training workflow",
+        "Create multi-pane setup for data analysis",
+        "Set up monitoring panes for GPU/CPU usage",
+        "Save layouts for quick restoration"
+      ]
+    },
+    {
+      "id": "cloud-cli-tools",
+      "category": "ai-workflow-tools",
+      "title": "Cloud Platform CLI Tools",
+      "description": "Master AWS/GCP CLI and kubectl for cloud-based AI development and deployment",
+      "objectives": [
+        "Install and configure AWS/GCP CLI",
+        "Set up kubectl for Kubernetes",
+        "Manage cloud resources from terminal",
+        "Deploy models using CLI tools"
+      ],
+      "prerequisites": ["ssh-remote-development"],
+      "estimatedTime": "4-5 hours",
+      "difficulty": "intermediate",
+      "hands_on_exercises": [
+        "Install and authenticate cloud CLIs",
+        "Create and manage cloud instances",
+        "Deploy a simple model to cloud",
+        "Monitor resources and costs via CLI"
+      ]
+    },
+    {
+      "id": "jupyter-terminal",
+      "category": "ai-workflow-tools",
+      "title": "Jupyter in the Terminal",
+      "description": "Use Jupyter console and nbterm for notebook-style development in the terminal",
+      "objectives": [
+        "Set up jupyter console for interactive Python",
+        "Use nbterm for terminal-based notebooks",
+        "Integrate with Neovim for seamless workflow",
+        "Convert between notebook and script formats"
+      ],
+      "prerequisites": ["neovim-installation"],
+      "estimatedTime": "2-3 hours",
+      "difficulty": "beginner",
+      "hands_on_exercises": [
+        "Install and configure jupyter console",
+        "Set up nbterm for notebook editing",
+        "Create data analysis workflow in terminal",
+        "Convert notebooks to Python scripts"
+      ]
+    },
+    {
+      "id": "model-monitoring",
+      "category": "ai-workflow-tools",
+      "title": "Model Training Monitoring",
+      "description": "Set up TensorBoard, Weights & Biases CLI, and GPU monitoring for model training",
+      "objectives": [
+        "Configure TensorBoard in terminal",
+        "Set up wandb CLI for experiment tracking",
+        "Monitor GPU usage with nvtop",
+        "Create monitoring dashboards"
+      ],
+      "prerequisites": ["tmux-layouts-ai"],
+      "estimatedTime": "3-4 hours",
+      "difficulty": "intermediate",
+      "hands_on_exercises": [
+        "Launch TensorBoard from command line",
+        "Set up wandb project and logging",
+        "Monitor training with nvtop and htop",
+        "Create tmux layout with monitoring panes"
+      ]
+    },
+    {
+      "id": "automation-scripts",
+      "category": "advanced-integration",
+      "title": "Custom Automation Scripts",
+      "description": "Create shell scripts to automate dataset downloads, model deployments, and common tasks",
+      "objectives": [
+        "Write bash scripts for data pipeline automation",
+        "Create deployment scripts for models",
+        "Automate environment setup and dependencies",
+        "Build CLI tools for project workflows"
+      ],
+      "prerequisites": ["cloud-cli-tools"],
+      "estimatedTime": "5-6 hours",
+      "difficulty": "advanced",
+      "hands_on_exercises": [
+        "Write script to download and preprocess datasets",
+        "Create model deployment automation",
+        "Build environment setup script",
+        "Make scripts executable and add to PATH"
+      ]
+    },
+    {
+      "id": "neovim-repl-integration",
+      "category": "advanced-integration",
+      "title": "Neovim REPL Integration",
+      "description": "Set up seamless integration between Neovim and terminal REPLs for interactive development",
+      "objectives": [
+        "Configure plugins for REPL integration",
+        "Send code blocks from Neovim to terminal",
+        "Set up Python, R, and Julia REPLs",
+        "Create efficient data science workflows"
+      ],
+      "prerequisites": ["advanced-neovim-config", "jupyter-terminal"],
+      "estimatedTime": "4-5 hours",
+      "difficulty": "advanced",
+      "hands_on_exercises": [
+        "Install vim-slime or iron.nvim",
+        "Configure REPL target selection",
+        "Send code blocks to Python REPL",
+        "Set up data visualization workflow"
+      ]
+    },
+    {
+      "id": "tmuxinator-automation",
+      "category": "advanced-integration",
+      "title": "Tmuxinator Project Automation",
+      "description": "Use tmuxinator to create project-specific tmux layouts and automate workspace setup",
+      "objectives": [
+        "Install and configure tmuxinator",
+        "Create project templates for different workflows",
+        "Automate startup commands and layouts",
+        "Integrate with version control and deployment"
+      ],
+      "prerequisites": ["tmux-layouts-ai", "automation-scripts"],
+      "estimatedTime": "3-4 hours",
+      "difficulty": "advanced",
+      "hands_on_exercises": [
+        "Install tmuxinator and create first project",
+        "Design template for ML project workflow",
+        "Set up automatic command execution",
+        "Create templates for different project types"
+      ]
+    },
+    {
+      "id": "performance-profiling",
+      "category": "advanced-integration",
+      "title": "Performance Monitoring and Profiling",
+      "description": "Master htop, iotop, and command-line profiling tools for optimizing AI workloads",
+      "objectives": [
+        "Use htop for CPU and memory monitoring",
+        "Monitor I/O with iotop and iostat",
+        "Profile Python code from command line",
+        "Optimize training performance based on metrics"
+      ],
+      "prerequisites": ["model-monitoring"],
+      "estimatedTime": "4-5 hours",
+      "difficulty": "advanced",
+      "hands_on_exercises": [
+        "Set up system monitoring in tmux pane",
+        "Profile training script with cProfile",
+        "Identify and fix performance bottlenecks",
+        "Create performance monitoring dashboard"
+      ]
+    },
+    {
+      "id": "terminal-ai-mastery",
+      "category": "advanced-integration",
+      "title": "Terminal AI Workflow Mastery",
+      "description": "Integrate all learned skills into a cohesive, efficient terminal-based AI development workflow",
+      "objectives": [
+        "Design complete AI project workflow",
+        "Integrate all tools and techniques learned",
+        "Create reproducible development environment",
+        "Build muscle memory for common operations"
+      ],
+      "prerequisites": ["neovim-repl-integration", "tmuxinator-automation", "performance-profiling"],
+      "estimatedTime": "6-8 hours",
+      "difficulty": "advanced",
+      "hands_on_exercises": [
+        "Set up end-to-end AI project from terminal",
+        "Create complete automated workflow",
+        "Document and share terminal setup",
+        "Mentor others in terminal-based development"
+      ]
+    }
+  ]
+}

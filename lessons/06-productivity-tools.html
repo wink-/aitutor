@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 6: Essential Productivity Tools - bat, exa, htop, jq, and more</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="../css/lessons.css" rel="stylesheet">
+    <link href="../css/main.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+        }
+        .tool-card {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        .tool-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .code-example {
+            background-color: #2d2d2d;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .code-example::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcf7f, #4ecdc4, #45b7d1);
+        }
+        .performance-comparison {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        .performance-bar {
+            height: 30px;
+            background-color: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        .performance-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding-left: 15px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+        .performance-fill.fast {
+            background: linear-gradient(90deg, #00c851 0%, #00ff00 100%);
+        }
+        .performance-fill.medium {
+            background: linear-gradient(90deg, #ffc107 0%, #ffeb3b 100%);
+        }
+        .performance-fill.slow {
+            background: linear-gradient(90deg, #dc3545 0%, #ff6b6b 100%);
+        }
+        .exercise-section {
+            background-color: #e7f3ff;
+            border: 2px solid #0066cc;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .exercise-number {
+            background-color: #0066cc;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .cheat-sheet {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        .terminal-demo {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            overflow: hidden;
+        }
+        .terminal-demo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(90deg, #ff5f57, #ffbd2e, #28ca42);
+            background-size: 60px 30px;
+            background-repeat: no-repeat;
+            background-position: 12px center;
+        }
+        .terminal-demo .content {
+            margin-top: 30px;
+        }
+        .api-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        .json-highlight {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .json-key { color: #f92672; }
+        .json-string { color: #a6e22e; }
+        .json-number { color: #ae81ff; }
+        .json-boolean { color: #66d9ef; }
+        .monitoring-dashboard {
+            background-color: #1a1a1a;
+            color: #00ff00;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+        }
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .metric-bar {
+            background-color: #333;
+            height: 4px;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 0.25rem;
+        }
+        .metric-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #ffff00, #ff0000);
+            transition: width 0.3s ease;
+        }
+        .workflow-diagram {
+            background-color: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        .workflow-step {
+            background-color: #0066cc;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin: 0.5rem;
+            display: inline-block;
+        }
+        .workflow-arrow {
+            font-size: 1.5rem;
+            color: #0066cc;
+            margin: 0 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-terminal"></i> AI Terminal Tutor
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html#lessons">Lessons</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-4">Essential Productivity Tools for AI Development</h1>
+            <p class="lead">Supercharge your terminal workflow with modern alternatives to classic Unix tools</p>
+            <div class="row mt-5">
+                <div class="col-md-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-eye fa-2x me-3"></i>
+                        <div>
+                            <h5>Better Viewing</h5>
+                            <p class="mb-0">Syntax highlighting & pagination</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-chart-line fa-2x me-3"></i>
+                        <div>
+                            <h5>System Monitoring</h5>
+                            <p class="mb-0">Real-time process & I/O tracking</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-code fa-2x me-3"></i>
+                        <div>
+                            <h5>JSON Processing</h5>
+                            <p class="mb-0">Powerful data manipulation</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-network-wired fa-2x me-3"></i>
+                        <div>
+                            <h5>API Testing</h5>
+                            <p class="mb-0">HTTP requests & responses</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <!-- Tool Overview -->
+        <section class="mb-5">
+            <h2 class="mb-4">Modern Tool Arsenal</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card tool-card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-cat tool-icon text-primary"></i>
+                            <h4 class="card-title">bat</h4>
+                            <p class="card-text">A cat clone with wings - syntax highlighting, line numbers, and Git integration</p>
+                            <div class="mt-3">
+                                <span class="badge bg-primary">Syntax Highlighting</span>
+                                <span class="badge bg-success">Git Integration</span>
+                                <span class="badge bg-info">Paging</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card tool-card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-list tool-icon text-warning"></i>
+                            <h4 class="card-title">exa</h4>
+                            <p class="card-text">A modern replacement for ls with colors, icons, and tree view</p>
+                            <div class="mt-3">
+                                <span class="badge bg-warning">Colors</span>
+                                <span class="badge bg-success">Icons</span>
+                                <span class="badge bg-info">Tree View</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card tool-card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-tachometer-alt tool-icon text-danger"></i>
+                            <h4 class="card-title">htop</h4>
+                            <p class="card-text">Interactive process viewer with color-coded metrics and sorting</p>
+                            <div class="mt-3">
+                                <span class="badge bg-danger">Interactive</span>
+                                <span class="badge bg-success">Color Coded</span>
+                                <span class="badge bg-info">Sortable</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card tool-card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-hard-drive tool-icon text-secondary"></i>
+                            <h4 class="card-title">iotop</h4>
+                            <p class="card-text">I/O monitoring tool to track disk read/write activity by process</p>
+                            <div class="mt-3">
+                                <span class="badge bg-secondary">I/O Monitoring</span>
+                                <span class="badge bg-success">Real-time</span>
+                                <span class="badge bg-info">Process Level</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card tool-card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-database tool-icon text-success"></i>
+                            <h4 class="card-title">jq</h4>
+                            <p class="card-text">Command-line JSON processor for parsing, filtering, and transforming</p>
+                            <div class="mt-3">
+                                <span class="badge bg-success">JSON Parser</span>
+                                <span class="badge bg-primary">Filtering</span>
+                                <span class="badge bg-info">Transforming</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card tool-card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-globe tool-icon text-info"></i>
+                            <h4 class="card-title">curl/wget</h4>
+                            <p class="card-text">HTTP clients for API testing, file downloads, and web scraping</p>
+                            <div class="mt-3">
+                                <span class="badge bg-info">HTTP Client</span>
+                                <span class="badge bg-success">API Testing</span>
+                                <span class="badge bg-primary">File Transfer</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Installation Guide -->
+        <section class="mb-5">
+            <h2 class="mb-4">Installation Guide</h2>
+            
+            <ul class="nav nav-tabs" id="installTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="macos-tab" data-bs-toggle="tab" data-bs-target="#macos" type="button">macOS</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="linux-tab" data-bs-toggle="tab" data-bs-target="#linux" type="button">Linux</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="windows-tab" data-bs-toggle="tab" data-bs-target="#windows" type="button">Windows</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content mt-3" id="installTabContent">
+                <div class="tab-pane fade show active" id="macos" role="tabpanel">
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Install all tools with Homebrew
+brew install bat exa htop jq curl wget
+
+# Install iotop (requires sudo)
+brew install iotop
+
+# Verify installations
+bat --version
+exa --version
+htop --version
+jq --version
+curl --version
+wget --version</code></pre>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="linux" role="tabpanel">
+                    <h4>Ubuntu/Debian</h4>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Update package list
+sudo apt update
+
+# Install essential tools
+sudo apt install bat exa htop jq curl wget iotop
+
+# Note: On Ubuntu, bat might be installed as batcat
+# Create alias if needed
+echo "alias bat='batcat'" >> ~/.bashrc
+
+# Verify installations
+bat --version  # or batcat --version
+exa --version
+htop --version
+jq --version</code></pre>
+                    </div>
+                    
+                    <h4 class="mt-3">Arch Linux</h4>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Install with pacman
+sudo pacman -S bat exa htop jq curl wget iotop
+
+# Or use yay for AUR packages
+yay -S bat exa htop jq curl wget iotop</code></pre>
+                    </div>
+                    
+                    <h4 class="mt-3">Fedora/RHEL</h4>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Install with dnf
+sudo dnf install bat exa htop jq curl wget iotop
+
+# Some packages might be in EPEL
+sudo dnf install epel-release
+sudo dnf install bat exa</code></pre>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="windows" role="tabpanel">
+                    <h4>Using Scoop (Recommended)</h4>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Install Scoop first (if not already installed)
+Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+iwr -useb get.scoop.sh | iex
+
+# Install tools
+scoop install bat exa jq curl wget
+scoop install extras/htop
+
+# Note: iotop is Linux-specific, use Resource Monitor instead</code></pre>
+                    </div>
+                    
+                    <h4 class="mt-3">Using Chocolatey</h4>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Install tools
+choco install bat exa jq curl wget
+
+# Note: htop and iotop are not available on Windows
+# Use Task Manager or Resource Monitor instead</code></pre>
+                    </div>
+                    
+                    <h4 class="mt-3">Using WSL (Windows Subsystem for Linux)</h4>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Install Ubuntu on WSL, then use Linux installation commands
+wsl --install -d Ubuntu
+
+# In WSL terminal
+sudo apt update
+sudo apt install bat exa htop jq curl wget iotop</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- bat - Better cat -->
+        <section class="mb-5">
+            <h2 class="mb-4"><i class="fas fa-cat text-primary"></i> bat - A cat clone with wings</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Basic Usage</h3>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Basic file viewing
+bat file.py
+
+# Multiple files
+bat file1.py file2.js file3.json
+
+# Show line numbers
+bat -n file.py
+
+# Show all characters (including tabs, newlines)
+bat -A file.py
+
+# Disable paging
+bat --paging never file.py</code></pre>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h3>Advanced Features</h3>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Show specific lines
+bat -r 10:20 file.py
+
+# Highlight specific lines
+bat -H 15 file.py
+
+# Different themes
+bat --theme=GitHub file.py
+bat --theme=Monokai file.py
+
+# List all themes
+bat --list-themes
+
+# Output to file with syntax highlighting
+bat --color always file.py > highlighted.html</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-section">
+                <div class="exercise-header">
+                    <div class="exercise-number">1</div>
+                    <h4>AI Development with bat</h4>
+                </div>
+                <div class="code-example">
+                    <pre><code class="language-bash"># View Python models with syntax highlighting
+bat model.py
+
+# Compare configuration files
+bat config.json config.yaml
+
+# Quick preview of Jupyter notebooks (JSON format)
+bat notebook.ipynb
+
+# View log files with line numbers
+bat -n training.log
+
+# Check requirements files
+bat requirements.txt
+
+# View shell scripts with highlighting
+bat train.sh deploy.sh</code></pre>
+                </div>
+            </div>
+
+            <div class="performance-comparison">
+                <h4>Performance Comparison</h4>
+                <div class="mb-3">
+                    <label>cat (no syntax highlighting)</label>
+                    <div class="performance-bar">
+                        <div class="performance-fill fast" style="width: 95%;">
+                            <span>0.001s</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label>bat (with syntax highlighting)</label>
+                    <div class="performance-bar">
+                        <div class="performance-fill fast" style="width: 85%;">
+                            <span>0.025s</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label>less + manual navigation</label>
+                    <div class="performance-bar">
+                        <div class="performance-fill medium" style="width: 60%;">
+                            <span>User dependent</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- exa - Modern ls -->
+        <section class="mb-5">
+            <h2 class="mb-4"><i class="fas fa-list text-warning"></i> exa - A modern replacement for ls</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Basic Usage</h3>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Basic listing
+exa
+
+# Long format (like ls -l)
+exa -l
+
+# Show hidden files
+exa -a
+
+# List with file size in human readable format
+exa -lh
+
+# Sort by size
+exa -l --sort=size
+
+# Sort by modified time
+exa -l --sort=modified</code></pre>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h3>Advanced Features</h3>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Tree view
+exa --tree
+
+# Tree with depth limit
+exa --tree --level=2
+
+# Show git status
+exa -l --git
+
+# Group directories first
+exa -l --group-directories-first
+
+# Show file headers
+exa -l --header
+
+# Custom time format
+exa -l --time-style=long-iso</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="terminal-demo">
+                <div class="content">
+                    <div style="color: #61dafb;">~/ai-project</div>
+                    <div style="color: #98c379;">$ exa -l --git --header</div>
+                    <div style="color: #d4d4d4;">
+Permissions Size User Date Modified Git Name<br>
+drwxr-xr-x     - user 12 Nov 14:30   -- <span style="color: #61dafb;">data/</span><br>
+drwxr-xr-x     - user 12 Nov 14:30   -- <span style="color: #61dafb;">models/</span><br>
+.rw-r--r--  1.2k user 12 Nov 14:29   M  <span style="color: #98c379;">config.json</span><br>
+.rw-r--r--  2.1k user 12 Nov 14:31   M  <span style="color: #e5c07b;">train.py</span><br>
+.rw-r--r--   156 user 12 Nov 14:15   --  <span style="color: #98c379;">requirements.txt</span><br>
+.rw-r--r--  4.5k user 12 Nov 14:32   M  <span style="color: #e5c07b;">model.py</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-section">
+                <div class="exercise-header">
+                    <div class="exercise-number">2</div>
+                    <h4>AI Project Organization</h4>
+                </div>
+                <div class="code-example">
+                    <pre><code class="language-bash"># View project structure
+exa --tree --level=3
+
+# Monitor Git changes
+exa -l --git
+
+# Find large model files
+exa -l --sort=size --reverse
+
+# Check recent modifications
+exa -l --sort=modified --reverse
+
+# View only Python files
+exa -l *.py
+
+# Group by file type
+exa -l --group-directories-first --sort=extension</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Monitoring Tools -->
+        <section class="mb-5">
+            <h2 class="mb-4"><i class="fas fa-tachometer-alt text-danger"></i> System Monitoring - htop & iotop</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>htop - Interactive Process Viewer</h3>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Launch htop
+htop
+
+# Sort by CPU usage
+htop -s PERCENT_CPU
+
+# Sort by memory usage
+htop -s PERCENT_MEM
+
+# Filter by user
+htop -u username
+
+# Tree view of processes
+htop -t</code></pre>
+                    </div>
+                    
+                    <h4 class="mt-3">Key Bindings in htop</h4>
+                    <div class="cheat-sheet">
+                        <ul class="list-unstyled">
+                            <li><kbd>F1</kbd> - Help</li>
+                            <li><kbd>F2</kbd> - Setup</li>
+                            <li><kbd>F3</kbd> - Search</li>
+                            <li><kbd>F4</kbd> - Filter</li>
+                            <li><kbd>F5</kbd> - Tree view</li>
+                            <li><kbd>F6</kbd> - Sort by</li>
+                            <li><kbd>F9</kbd> - Kill process</li>
+                            <li><kbd>F10</kbd> - Quit</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h3>iotop - I/O Monitoring</h3>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Launch iotop (requires sudo)
+sudo iotop
+
+# Only show processes with I/O activity
+sudo iotop -o
+
+# Batch mode (non-interactive)
+sudo iotop -b
+
+# Show accumulated I/O
+sudo iotop -a
+
+# Show specific processes
+sudo iotop -p PID1,PID2</code></pre>
+                    </div>
+                    
+                    <h4 class="mt-3">Key Bindings in iotop</h4>
+                    <div class="cheat-sheet">
+                        <ul class="list-unstyled">
+                            <li><kbd>o</kbd> - Toggle showing only active processes</li>
+                            <li><kbd>r</kbd> - Reverse sort order</li>
+                            <li><kbd>a</kbd> - Toggle accumulated mode</li>
+                            <li><kbd>p</kbd> - Toggle process/thread mode</li>
+                            <li><kbd>q</kbd> - Quit</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="monitoring-dashboard">
+                <h4 style="color: #00ff00; margin-bottom: 1rem;">System Monitoring Dashboard</h4>
+                <div class="metric-row">
+                    <span>CPU Usage:</span>
+                    <span>74%</span>
+                </div>
+                <div class="metric-bar">
+                    <div class="metric-fill" style="width: 74%;"></div>
+                </div>
+                <div class="metric-row">
+                    <span>Memory Usage:</span>
+                    <span>68%</span>
+                </div>
+                <div class="metric-bar">
+                    <div class="metric-fill" style="width: 68%;"></div>
+                </div>
+                <div class="metric-row">
+                    <span>Disk I/O:</span>
+                    <span>23%</span>
+                </div>
+                <div class="metric-bar">
+                    <div class="metric-fill" style="width: 23%;"></div>
+                </div>
+            </div>
+
+            <div class="exercise-section">
+                <div class="exercise-header">
+                    <div class="exercise-number">3</div>
+                    <h4>AI Training Monitoring</h4>
+                </div>
+                <div class="code-example">
+                    <pre><code class="language-bash"># Monitor training processes
+htop -u $USER
+
+# Check GPU processes (if nvidia-smi available)
+watch -n 1 nvidia-smi
+
+# Monitor I/O for data loading
+sudo iotop -o
+
+# Check memory usage during training
+htop -s PERCENT_MEM
+
+# Monitor specific training process
+htop -p $(pgrep -f "python.*train.py")
+
+# Real-time disk usage
+watch -n 1 df -h</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- jq - JSON Processing -->
+        <section class="mb-5">
+            <h2 class="mb-4"><i class="fas fa-database text-success"></i> jq - Command-line JSON processor</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Basic Operations</h3>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Pretty print JSON
+echo '{"name":"model","version":1}' | jq '.'
+
+# Extract specific field
+echo '{"name":"model","version":1}' | jq '.name'
+
+# Get array elements
+echo '[1,2,3,4,5]' | jq '.[2]'
+
+# Get array length
+echo '[1,2,3,4,5]' | jq 'length'
+
+# Filter arrays
+echo '[1,2,3,4,5]' | jq '.[] | select(. > 3)'</code></pre>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h3>Advanced Filtering</h3>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Extract nested fields
+jq '.config.model.layers' config.json
+
+# Map over arrays
+jq '.models[] | .name' models.json
+
+# Group by field
+jq 'group_by(.type)' data.json
+
+# Sort arrays
+jq 'sort_by(.score)' results.json
+
+# Combine multiple files
+jq -s '.[0] + .[1]' file1.json file2.json</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="api-card">
+                <h4>AI API Response Processing</h4>
+                <p>Common jq patterns for AI/ML API responses:</p>
+                <div class="json-highlight">
+                    <pre><code># Extract model predictions
+curl -X POST api/predict -d @data.json | jq '.predictions[]'
+
+# Get confidence scores
+curl api/models | jq '.[] | select(.accuracy > 0.9) | .name'
+
+# Format training metrics
+jq '.epochs[] | {epoch: .number, loss: .train_loss, val_loss: .val_loss}' metrics.json
+
+# Extract hyperparameters
+jq '.config | {lr: .learning_rate, batch_size: .batch_size, epochs: .epochs}' config.json</code></pre>
+                </div>
+            </div>
+
+            <div class="exercise-section">
+                <div class="exercise-header">
+                    <div class="exercise-number">4</div>
+                    <h4>AI Configuration Management</h4>
+                </div>
+                <div class="code-example">
+                    <pre><code class="language-bash"># Parse model configuration
+jq '.model.architecture' config.json
+
+# Extract hyperparameters
+jq '.training | {lr: .learning_rate, epochs: .epochs, batch_size: .batch_size}' config.json
+
+# Validate configuration
+jq 'has("model") and has("training") and has("data")' config.json
+
+# Update configuration
+jq '.training.learning_rate = 0.001' config.json > new_config.json
+
+# Compare configurations
+jq -s '.[0].training.learning_rate == .[1].training.learning_rate' config1.json config2.json
+
+# Extract dataset info
+jq '.data | {train_size: .train.size, val_size: .validation.size, test_size: .test.size}' data_config.json</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- curl & wget - HTTP Clients -->
+        <section class="mb-5">
+            <h2 class="mb-4"><i class="fas fa-globe text-info"></i> curl & wget - HTTP Clients for API Testing</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>curl - Transfer data with URLs</h3>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Basic GET request
+curl https://api.example.com/models
+
+# POST request with data
+curl -X POST -H "Content-Type: application/json" \
+  -d '{"model": "gpt-3"}' \
+  https://api.example.com/predict
+
+# Download file
+curl -O https://example.com/dataset.zip
+
+# Follow redirects
+curl -L https://example.com/redirect
+
+# Save response to file
+curl -o response.json https://api.example.com/data</code></pre>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h3>wget - Download files from web</h3>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Download file
+wget https://example.com/dataset.zip
+
+# Download recursively
+wget -r https://example.com/datasets/
+
+# Continue incomplete downloads
+wget -c https://example.com/large_file.tar.gz
+
+# Download with custom user agent
+wget --user-agent="AI-Bot/1.0" https://api.example.com/data
+
+# Download in background
+wget -b https://example.com/large_dataset.tar.gz</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow-diagram">
+                <h4>API Testing Workflow</h4>
+                <div class="mt-3">
+                    <span class="workflow-step">1. Send Request</span>
+                    <i class="fas fa-arrow-right workflow-arrow"></i>
+                    <span class="workflow-step">2. Process Response</span>
+                    <i class="fas fa-arrow-right workflow-arrow"></i>
+                    <span class="workflow-step">3. Parse JSON</span>
+                    <i class="fas fa-arrow-right workflow-arrow"></i>
+                    <span class="workflow-step">4. Validate</span>
+                </div>
+            </div>
+
+            <div class="exercise-section">
+                <div class="exercise-header">
+                    <div class="exercise-number">5</div>
+                    <h4>AI API Testing & Model Deployment</h4>
+                </div>
+                <div class="code-example">
+                    <pre><code class="language-bash"># Test model inference API
+curl -X POST -H "Content-Type: application/json" \
+  -d '{"text": "Hello world", "model": "bert-base"}' \
+  http://localhost:5000/predict | jq '.'
+
+# Check model health
+curl -s http://localhost:5000/health | jq '.status'
+
+# Upload training data
+curl -X POST -F "file=@training_data.csv" \
+  http://localhost:5000/upload
+
+# Download pre-trained model
+wget -O model.bin https://huggingface.co/model/pytorch_model.bin
+
+# Test batch inference
+curl -X POST -H "Content-Type: application/json" \
+  -d @batch_requests.json \
+  http://localhost:5000/batch_predict | jq '.results[]'
+
+# Monitor API performance
+curl -w "@curl-format.txt" -o /dev/null -s http://localhost:5000/predict</code></pre>
+                </div>
+            </div>
+
+            <div class="cheat-sheet">
+                <h5>curl Performance Testing Format</h5>
+                <pre><code># Save as curl-format.txt
+     time_namelookup:  %{time_namelookup}\n
+        time_connect:  %{time_connect}\n
+     time_appconnect:  %{time_appconnect}\n
+    time_pretransfer:  %{time_pretransfer}\n
+       time_redirect:  %{time_redirect}\n
+  time_starttransfer:  %{time_starttransfer}\n
+                     ----------\n
+          time_total:  %{time_total}\n</code></pre>
+            </div>
+        </section>
+
+        <!-- Integration Workflows -->
+        <section class="mb-5">
+            <h2 class="mb-4">AI Development Workflows</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Data Pipeline Monitoring</h3>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Monitor data processing
+watch -n 1 'exa -l data/ | head -10'
+
+# Check processing logs
+bat -f processing.log | tail -20
+
+# Monitor system resources during ETL
+htop -s PERCENT_CPU &
+sudo iotop -o &
+
+# Validate processed data
+find data/processed -name "*.json" -exec jq empty {} \;</code></pre>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h3>Model Training Pipeline</h3>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Pre-training system check
+htop -s PERCENT_MEM
+
+# Monitor training progress
+tail -f training.log | bat --paging=never -l log
+
+# Check model checkpoints
+exa -l --sort=modified checkpoints/
+
+# Validate model outputs
+curl -X POST -d @test_input.json localhost:5000/predict | jq '.confidence'</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-section">
+                <div class="exercise-header">
+                    <div class="exercise-number">6</div>
+                    <h4>Complete AI Development Workflow</h4>
+                </div>
+                <div class="code-example">
+                    <pre><code class="language-bash">#!/bin/bash
+# ai-workflow.sh - Complete AI development monitoring script
+
+# 1. System check
+echo "=== System Status ==="
+htop -b -n 1 | head -20
+
+# 2. Data validation
+echo "=== Data Validation ==="
+find data/ -name "*.json" -exec jq empty {} \; 2>&1 | grep -v "parse error" | wc -l
+
+# 3. Configuration review
+echo "=== Configuration ==="
+bat config.json | jq '.model.architecture, .training.learning_rate'
+
+# 4. Model training
+echo "=== Starting Training ==="
+python train.py &
+TRAIN_PID=$!
+
+# 5. Monitor training process
+while kill -0 $TRAIN_PID 2>/dev/null; do
+    echo "Training process $TRAIN_PID is running..."
+    htop -p $TRAIN_PID -b -n 1 | head -10
+    sleep 10
+done
+
+# 6. Validate results
+echo "=== Training Complete ==="
+exa -l --sort=modified models/
+bat training.log | tail -10
+
+# 7. Test deployment
+echo "=== Testing Deployment ==="
+curl -X POST -d @test_input.json localhost:5000/predict | jq '.'</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progressive Exercises -->
+        <section class="mb-5">
+            <h2 class="mb-4">Progressive Exercises</h2>
+            
+            <div class="accordion" id="exerciseAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#beginner">
+                            Beginner Level - Basic Tool Usage
+                        </button>
+                    </h2>
+                    <div id="beginner" class="accordion-collapse collapse show" data-bs-parent="#exerciseAccordion">
+                        <div class="accordion-body">
+                            <ol>
+                                <li>Use <code>bat</code> to view a Python file with syntax highlighting</li>
+                                <li>Use <code>exa</code> to list files in tree format with git status</li>
+                                <li>Launch <code>htop</code> and find the most CPU-intensive process</li>
+                                <li>Use <code>jq</code> to pretty-print a JSON configuration file</li>
+                                <li>Download a file using <code>curl</code> and save it locally</li>
+                            </ol>
+                            <details class="mt-3">
+                                <summary><strong>Solutions</strong></summary>
+                                <div class="code-example">
+                                    <pre><code class="language-bash"># 1. View Python file with syntax highlighting
+bat model.py
+
+# 2. Tree view with git status
+exa --tree --git
+
+# 3. Find CPU-intensive process
+htop -s PERCENT_CPU
+
+# 4. Pretty-print JSON
+jq '.' config.json
+
+# 5. Download file with curl
+curl -O https://example.com/dataset.zip</code></pre>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#intermediate">
+                            Intermediate Level - Tool Integration
+                        </button>
+                    </h2>
+                    <div id="intermediate" class="accordion-collapse collapse" data-bs-parent="#exerciseAccordion">
+                        <div class="accordion-body">
+                            <ol>
+                                <li>Create a script that monitors training processes using <code>htop</code></li>
+                                <li>Use <code>jq</code> to extract and modify configuration values</li>
+                                <li>Set up a data pipeline that processes JSON files</li>
+                                <li>Create API test scripts using <code>curl</code> and <code>jq</code></li>
+                                <li>Monitor I/O during data loading with <code>iotop</code></li>
+                            </ol>
+                            <details class="mt-3">
+                                <summary><strong>Solutions</strong></summary>
+                                <div class="code-example">
+                                    <pre><code class="language-bash"># 1. Monitor training processes
+watch -n 5 'htop -u $USER -b -n 1 | grep python'
+
+# 2. Extract and modify config
+jq '.training.learning_rate = 0.001' config.json > new_config.json
+
+# 3. Process JSON files
+for file in data/*.json; do
+    jq '.processed = true' "$file" > "processed_$file"
+done
+
+# 4. API testing script
+curl -X POST -d @test_data.json localhost:5000/predict | jq '.confidence > 0.8'
+
+# 5. Monitor I/O during data loading
+sudo iotop -o -d 1</code></pre>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#advanced">
+                            Advanced Level - Complete Workflows
+                        </button>
+                    </h2>
+                    <div id="advanced" class="accordion-collapse collapse" data-bs-parent="#exerciseAccordion">
+                        <div class="accordion-body">
+                            <ol>
+                                <li>Build a comprehensive monitoring dashboard script</li>
+                                <li>Create automated deployment pipeline with health checks</li>
+                                <li>Implement real-time log analysis with filtering</li>
+                                <li>Set up automated model validation pipeline</li>
+                                <li>Create performance benchmarking suite</li>
+                            </ol>
+                            <details class="mt-3">
+                                <summary><strong>Solutions</strong></summary>
+                                <div class="code-example">
+                                    <pre><code class="language-bash"># 1. Monitoring dashboard
+#!/bin/bash
+while true; do
+    clear
+    echo "=== AI Training Dashboard ==="
+    echo "System Status:"
+    htop -b -n 1 | head -5
+    echo "GPU Status:"
+    nvidia-smi --query-gpu=temperature.gpu,utilization.gpu,memory.used --format=csv,noheader,nounits
+    echo "Recent Logs:"
+    tail -5 training.log
+    sleep 5
+done
+
+# 2. Deployment pipeline
+#!/bin/bash
+# Deploy model
+curl -X POST -F "model=@model.bin" localhost:5000/deploy
+
+# Health check
+for i in {1..10}; do
+    health=$(curl -s localhost:5000/health | jq -r '.status')
+    if [ "$health" == "healthy" ]; then
+        echo "Deployment successful"
+        break
+    fi
+    sleep 2
+done
+
+# 3. Real-time log analysis
+tail -f training.log | while read line; do
+    echo "$line" | jq -r 'select(.level == "ERROR") | .message'
+done
+
+# 4. Model validation pipeline
+for model in models/*.bin; do
+    echo "Validating $model"
+    curl -X POST -F "model=@$model" -F "data=@test_data.json" \
+        localhost:5000/validate | jq '.accuracy'
+done
+
+# 5. Performance benchmarking
+#!/bin/bash
+echo "Performance Benchmark Results:"
+for concurrency in 1 5 10 20; do
+    echo "Testing with $concurrency concurrent requests:"
+    curl -w "@curl-format.txt" -H "Content-Type: application/json" \
+        -d @benchmark_data.json -s localhost:5000/predict > /dev/null
+done</code></pre>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Command Reference -->
+        <section class="mb-5">
+            <h2 class="mb-4">Quick Reference Cheat Sheet</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="cheat-sheet">
+                        <h5><i class="fas fa-cat text-primary"></i> bat</h5>
+                        <pre><code class="language-bash"># Basic usage
+bat file.py              # View with syntax highlighting
+bat -n file.py           # Show line numbers
+bat -A file.py           # Show all characters
+bat -r 10:20 file.py     # Show specific lines
+bat -H 15 file.py        # Highlight line 15
+bat --theme=GitHub file.py # Use specific theme
+bat --paging=never file.py # Disable paging</code></pre>
+                    </div>
+                    
+                    <div class="cheat-sheet">
+                        <h5><i class="fas fa-list text-warning"></i> exa</h5>
+                        <pre><code class="language-bash"># Basic usage
+exa                      # Basic listing
+exa -l                   # Long format
+exa -a                   # Show hidden files
+exa -lh                  # Human readable sizes
+exa --tree               # Tree view
+exa -l --git             # Show git status
+exa -l --sort=size       # Sort by size
+exa --group-directories-first # Group dirs first</code></pre>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="cheat-sheet">
+                        <h5><i class="fas fa-database text-success"></i> jq</h5>
+                        <pre><code class="language-bash"># Basic usage
+jq '.'                   # Pretty print
+jq '.field'              # Extract field
+jq '.[]'                 # Array elements
+jq 'length'              # Array/object length
+jq '.[] | select(.>3)'   # Filter elements
+jq 'map(.field)'         # Transform array
+jq 'group_by(.type)'     # Group by field
+jq 'sort_by(.score)'     # Sort by field</code></pre>
+                    </div>
+                    
+                    <div class="cheat-sheet">
+                        <h5><i class="fas fa-globe text-info"></i> curl</h5>
+                        <pre><code class="language-bash"># Basic usage
+curl url                 # GET request
+curl -X POST url         # POST request
+curl -d "data" url       # Send data
+curl -H "header" url     # Add header
+curl -o file url         # Save to file
+curl -O url              # Save with original name
+curl -L url              # Follow redirects
+curl -w "@format.txt" url # Custom format output</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Best Practices -->
+        <section class="mb-5">
+            <h2 class="mb-4">Best Practices for AI Development</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-check-circle"></i> Do's</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Use <code>bat</code> for quick file inspection with syntax highlighting</li>
+                                <li>Monitor system resources with <code>htop</code> during training</li>
+                                <li>Validate JSON configurations with <code>jq</code> before use</li>
+                                <li>Set up aliases for frequently used tool combinations</li>
+                                <li>Use <code>iotop</code> to identify I/O bottlenecks in data pipelines</li>
+                                <li>Test APIs thoroughly with <code>curl</code> before deployment</li>
+                                <li>Create monitoring scripts for long-running processes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0"><i class="fas fa-times-circle"></i> Don'ts</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Don't use <code>cat</code> when <code>bat</code> provides better output</li>
+                                <li>Don't ignore system monitoring during resource-intensive tasks</li>
+                                <li>Don't parse JSON with text tools when <code>jq</code> is available</li>
+                                <li>Don't run <code>iotop</code> without sudo (it needs root privileges)</li>
+                                <li>Don't forget to handle errors in API requests</li>
+                                <li>Don't use <code>wget</code> for API testing (use <code>curl</code> instead)</li>
+                                <li>Don't overwhelm APIs with too many concurrent requests</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Benchmarks -->
+        <section class="mb-5">
+            <h2 class="mb-4">Performance Benchmarks</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>File Operations</h3>
+                    <div class="performance-comparison">
+                        <div class="mb-3">
+                            <label>cat large_file.json</label>
+                            <div class="performance-bar">
+                                <div class="performance-fill fast" style="width: 95%;">
+                                    <span>0.02s</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>bat large_file.json</label>
+                            <div class="performance-bar">
+                                <div class="performance-fill fast" style="width: 85%;">
+                                    <span>0.15s</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>ls -la</label>
+                            <div class="performance-bar">
+                                <div class="performance-fill fast" style="width: 90%;">
+                                    <span>0.01s</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>exa -la</label>
+                            <div class="performance-bar">
+                                <div class="performance-fill fast" style="width: 80%;">
+                                    <span>0.05s</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <h3>JSON Processing</h3>
+                    <div class="performance-comparison">
+                        <div class="mb-3">
+                            <label>grep + sed + awk</label>
+                            <div class="performance-bar">
+                                <div class="performance-fill slow" style="width: 30%;">
+                                    <span>2.5s</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>jq processing</label>
+                            <div class="performance-bar">
+                                <div class="performance-fill fast" style="width: 95%;">
+                                    <span>0.08s</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Python script</label>
+                            <div class="performance-bar">
+                                <div class="performance-fill medium" style="width: 60%;">
+                                    <span>0.45s</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Terminal Simulator -->
+        <section class="mb-5">
+            <h2 class="mb-4">Try It Yourself - Interactive Terminal</h2>
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-terminal"></i> Terminal Simulator</h5>
+                </div>
+                <div class="card-body">
+                    <div id="terminal-output" class="terminal-demo">
+                        <div class="content">
+                            <div style="color: #61dafb;">user@ai-dev:~$</div>
+                            <div id="terminal-content" style="color: #d4d4d4;">
+                                Type commands to try the tools! Examples:<br>
+                                • bat example.py<br>
+                                • exa -l --git<br>
+                                • echo '{"name": "model", "version": 1}' | jq '.'<br>
+                                • curl -s https://api.github.com/users/octocat | jq '.name'
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" id="terminal-input" placeholder="Enter command...">
+                            <button class="btn btn-primary" onclick="executeCommand()">Run</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 AI Terminal Tutor. Mastering modern CLI tools for AI development.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="../js/terminal-simulator.js"></script>
+    <script src="../js/lesson-manager.js"></script>
+    <script>
+        // Terminal simulator functionality
+        function executeCommand() {
+            const input = document.getElementById('terminal-input');
+            const output = document.getElementById('terminal-content');
+            const command = input.value.trim();
+            
+            if (!command) return;
+            
+            // Simulate command execution
+            const responses = {
+                'bat example.py': `<span style="color: #98c379;">#!/usr/bin/env python3</span><br><span style="color: #61dafb;">import</span> <span style="color: #e5c07b;">torch</span><br><span style="color: #61dafb;">import</span> <span style="color: #e5c07b;">torch.nn</span> <span style="color: #61dafb;">as</span> <span style="color: #e5c07b;">nn</span><br><br><span style="color: #61dafb;">class</span> <span style="color: #e5c07b;">SimpleModel</span>(<span style="color: #e5c07b;">nn.Module</span>):<br>    <span style="color: #61dafb;">def</span> <span style="color: #e5c07b;">__init__</span>(<span style="color: #e06c75;">self</span>):<br>        <span style="color: #e5c07b;">super</span>().<span style="color: #e5c07b;">__init__</span>()<br>        <span style="color: #e06c75;">self</span>.<span style="color: #e5c07b;">linear</span> = <span style="color: #e5c07b;">nn.Linear</span>(<span style="color: #d19a66;">10</span>, <span style="color: #d19a66;">1</span>)`,
+                'exa -l --git': `<span style="color: #98c379;">Permissions Size User Date Modified Git Name</span><br><span style="color: #d4d4d4;">.rw-r--r--  1.2k user 12 Nov 14:30   M </span><span style="color: #98c379;">config.json</span><br><span style="color: #d4d4d4;">.rw-r--r--  2.1k user 12 Nov 14:31   M </span><span style="color: #e5c07b;">model.py</span><br><span style="color: #d4d4d4;">.rw-r--r--  4.5k user 12 Nov 14:32   M </span><span style="color: #e5c07b;">train.py</span><br><span style="color: #d4d4d4;">drwxr-xr-x     - user 12 Nov 14:30   -- </span><span style="color: #61dafb;">data/</span>`,
+                'echo \'{"name": "model", "version": 1}\' | jq \'.\'': `<span style="color: #98c379;">{</span><br>  <span style="color: #61dafb;">"name"</span>: <span style="color: #98c379;">"model"</span>,<br>  <span style="color: #61dafb;">"version"</span>: <span style="color: #d19a66;">1</span><br><span style="color: #98c379;">}</span>`,
+                'htop': `<span style="color: #98c379;">Tasks: 245 total, 1 running, 244 sleeping</span><br><span style="color: #98c379;">Load average: 0.45 0.32 0.28</span><br><span style="color: #98c379;">CPU: 15.2%usr 8.3%sys 0.0%nic 76.5%idle</span><br><span style="color: #98c379;">Mem: 8.1G total, 5.2G used, 2.9G free</span><br><span style="color: #d4d4d4;">PID  USER     CPU% MEM%  COMMAND</span><br><span style="color: #d4d4d4;">1234 user     45.2 12.1  python train.py</span><br><span style="color: #d4d4d4;">5678 user     12.3  8.4  jupyter notebook</span>`,
+                'curl -s https://api.github.com/users/octocat | jq \'.name\'': `<span style="color: #98c379;">"The Octocat"</span>`
+            };
+            
+            // Add command to output
+            output.innerHTML += `<br><span style="color: #61dafb;">user@ai-dev:~$</span> ${command}<br>`;
+            
+            // Add response
+            if (responses[command]) {
+                output.innerHTML += responses[command] + '<br>';
+            } else {
+                output.innerHTML += `<span style="color: #e06c75;">Command not found: ${command}</span><br>`;
+            }
+            
+            // Clear input
+            input.value = '';
+            
+            // Scroll to bottom
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        // Handle Enter key
+        document.getElementById('terminal-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                executeCommand();
+            }
+        });
+        
+        // Animate metric bars
+        function animateMetrics() {
+            const bars = document.querySelectorAll('.metric-fill');
+            bars.forEach(bar => {
+                const width = Math.random() * 100;
+                bar.style.width = width + '%';
+            });
+        }
+        
+        // Update metrics every 2 seconds
+        setInterval(animateMetrics, 2000);
+    </script>
+</body>
+</html>

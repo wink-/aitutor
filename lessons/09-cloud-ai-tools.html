@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 9: Cloud Platform CLI Tools for AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/lessons.css">
+    <link rel="stylesheet" href="../terminal-simulator.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <nav class="sidebar">
+                    <div class="sidebar-header">
+                        <h3>Cloud AI Tools</h3>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link" href="#aws-cli">AWS CLI</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#gcp-cli">Google Cloud CLI</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#azure-cli">Azure CLI</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#kubernetes">Kubernetes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#docker">Docker</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#ssh-remote">SSH & Remote Dev</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#optimization">Optimization</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#troubleshooting">Troubleshooting</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-9">
+                <main class="main-content">
+                    <div class="lesson-header">
+                        <h1>Lesson 9: Cloud Platform CLI Tools for AI</h1>
+                        <p class="lead">Master the command-line tools for deploying and managing AI models on major cloud platforms. Learn how to efficiently work with AWS, GCP, Azure, Kubernetes, and Docker for scalable AI deployments.</p>
+                    </div>
+
+                    <section id="aws-cli" class="lesson-section">
+                        <h2>1. AWS CLI for AI Workloads</h2>
+                        
+                        <h3>Installation and Configuration</h3>
+                        <div class="code-block">
+                            <pre><code># Install AWS CLI
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+# Configure credentials
+aws configure
+# Enter: Access Key ID, Secret Access Key, Region, Output format
+
+# Verify installation
+aws --version
+aws sts get-caller-identity</code></pre>
+                        </div>
+
+                        <h3>SageMaker Operations</h3>
+                        <div class="code-block">
+                            <pre><code># Create a SageMaker notebook instance
+aws sagemaker create-notebook-instance \
+    --notebook-instance-name my-ai-notebook \
+    --instance-type ml.t3.medium \
+    --role-arn arn:aws:iam::123456789012:role/MySageMakerRole
+
+# List training jobs
+aws sagemaker list-training-jobs \
+    --sort-by CreationTime \
+    --sort-order Descending
+
+# Deploy a model endpoint
+aws sagemaker create-endpoint \
+    --endpoint-name my-model-endpoint \
+    --endpoint-config-name my-endpoint-config
+
+# Monitor training job
+aws sagemaker describe-training-job \
+    --training-job-name my-training-job \
+    --query '{Status:TrainingJobStatus, Metrics:FinalMetricDataList}'
+
+# Stop training job
+aws sagemaker stop-training-job \
+    --training-job-name my-training-job</code></pre>
+                        </div>
+
+                        <h3>EC2 for GPU Instances</h3>
+                        <div class="code-block">
+                            <pre><code># Launch GPU instance for deep learning
+aws ec2 run-instances \
+    --image-id ami-0abcdef1234567890 \
+    --instance-type p3.2xlarge \
+    --key-name my-key-pair \
+    --security-groups my-sg \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=AI-GPU-Instance}]'
+
+# Check GPU instance status
+aws ec2 describe-instances \
+    --filters "Name=instance-type,Values=p3.*,p4.*,g4dn.*" \
+    --query 'Reservations[*].Instances[*].[InstanceId,State.Name,InstanceType]'
+
+# Create spot instance request
+aws ec2 request-spot-instances \
+    --spot-price "0.50" \
+    --instance-count 1 \
+    --type "one-time" \
+    --launch-specification file://spot-specification.json
+
+# SSH into instance
+ssh -i ~/.ssh/my-key.pem ubuntu@ec2-xx-xx-xx-xx.compute-1.amazonaws.com</code></pre>
+                        </div>
+
+                        <h3>S3 for Model Storage</h3>
+                        <div class="code-block">
+                            <pre><code># Create bucket for models
+aws s3 mb s3://my-ai-models-bucket
+
+# Upload model artifacts
+aws s3 cp model.tar.gz s3://my-ai-models-bucket/models/v1/
+
+# Sync training data
+aws s3 sync ./training-data s3://my-ai-models-bucket/data/ \
+    --exclude "*.tmp" \
+    --include "*.csv"
+
+# Download model with progress
+aws s3 cp s3://my-ai-models-bucket/models/v1/model.tar.gz . \
+    --progress
+
+# Set lifecycle policy for old models
+aws s3api put-bucket-lifecycle-configuration \
+    --bucket my-ai-models-bucket \
+    --lifecycle-configuration file://lifecycle.json
+
+# Enable versioning
+aws s3api put-bucket-versioning \
+    --bucket my-ai-models-bucket \
+    --versioning-configuration Status=Enabled</code></pre>
+                        </div>
+
+                        <div class="terminal-simulator" id="aws-demo">
+                            <div class="terminal-header">
+                                <span class="title">AWS CLI Demo</span>
+                                <div class="controls">
+                                    <button class="btn btn-sm btn-success" onclick="runAWSDemo()">Run Demo</button>
+                                    <button class="btn btn-sm btn-secondary" onclick="clearTerminal('aws-demo')">Clear</button>
+                                </div>
+                            </div>
+                            <div class="terminal-body">
+                                <div class="terminal-output" id="aws-demo-output"></div>
+                            </div>
+                        </div>
+
+                        <div class="exercise-card">
+                            <h3>Exercise: Deploy a PyTorch Model on AWS</h3>
+                            <p>Complete end-to-end deployment of a PyTorch model using AWS services.</p>
+                            <div class="code-block">
+                                <pre><code># 1. Package your model
+tar -czvf model.tar.gz model.pth inference.py requirements.txt
+
+# 2. Upload to S3
+aws s3 cp model.tar.gz s3://my-models/pytorch/
+
+# 3. Create SageMaker model
+aws sagemaker create-model \
+    --model-name pytorch-classifier \
+    --primary-container Image=763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-inference:1.12.0-gpu-py38,ModelDataUrl=s3://my-models/pytorch/model.tar.gz \
+    --execution-role-arn arn:aws:iam::123456789012:role/SageMakerRole
+
+# 4. Create endpoint configuration
+aws sagemaker create-endpoint-config \
+    --endpoint-config-name pytorch-config \
+    --production-variants VariantName=AllTraffic,ModelName=pytorch-classifier,InitialInstanceCount=1,InstanceType=ml.g4dn.xlarge
+
+# 5. Deploy endpoint
+aws sagemaker create-endpoint \
+    --endpoint-name pytorch-endpoint \
+    --endpoint-config-name pytorch-config
+
+# 6. Test endpoint
+aws sagemaker-runtime invoke-endpoint \
+    --endpoint-name pytorch-endpoint \
+    --content-type application/json \
+    --body '{"inputs": [[1,2,3,4,5]]}' \
+    output.json</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="gcp-cli" class="lesson-section">
+                        <h2>2. Google Cloud CLI for AI</h2>
+                        
+                        <h3>Setup and Authentication</h3>
+                        <div class="code-block">
+                            <pre><code># Install gcloud CLI
+curl https://sdk.cloud.google.com | bash
+exec -l $SHELL
+
+# Initialize and authenticate
+gcloud init
+gcloud auth login
+gcloud config set project my-ai-project
+
+# Enable necessary APIs
+gcloud services enable aiplatform.googleapis.com
+gcloud services enable compute.googleapis.com
+gcloud services enable storage.googleapis.com</code></pre>
+                        </div>
+
+                        <h3>Vertex AI Operations</h3>
+                        <div class="code-block">
+                            <pre><code># Submit training job
+gcloud ai custom-jobs create \
+    --display-name=my-training-job \
+    --config=training-config.yaml \
+    --region=us-central1
+
+# List models
+gcloud ai models list --region=us-central1
+
+# Deploy model to endpoint
+gcloud ai endpoints deploy-model ENDPOINT_ID \
+    --region=us-central1 \
+    --model=MODEL_ID \
+    --display-name=my-deployment \
+    --machine-type=n1-standard-4 \
+    --accelerator=type=nvidia-tesla-t4,count=1
+
+# Monitor training
+gcloud ai custom-jobs describe JOB_ID \
+    --region=us-central1 \
+    --format="get(state,trainingTaskMetadata)"
+
+# Create AutoML dataset
+gcloud ai datasets create \
+    --display-name=my-dataset \
+    --metadata-schema-uri=gs://google-cloud-aiplatform/schema/dataset/metadata/image_1.0.0.yaml \
+    --region=us-central1</code></pre>
+                        </div>
+
+                        <h3>Compute Engine GPU Setup</h3>
+                        <div class="code-block">
+                            <pre><code># Create GPU VM instance
+gcloud compute instances create gpu-instance \
+    --machine-type=n1-standard-8 \
+    --accelerator=type=nvidia-tesla-v100,count=2 \
+    --image-family=pytorch-latest-gpu \
+    --image-project=deeplearning-platform-release \
+    --maintenance-policy=TERMINATE \
+    --boot-disk-size=100GB \
+    --zone=us-central1-a
+
+# SSH with port forwarding for Jupyter
+gcloud compute ssh gpu-instance \
+    --zone=us-central1-a \
+    -- -L 8888:localhost:8888
+
+# Install NVIDIA drivers (if needed)
+gcloud compute ssh gpu-instance --command="
+    sudo apt-get update
+    sudo apt-get install -y nvidia-driver-470
+    sudo reboot
+"
+
+# Create instance template for scaling
+gcloud compute instance-templates create gpu-template \
+    --machine-type=n1-standard-4 \
+    --accelerator=type=nvidia-tesla-t4,count=1 \
+    --image-family=pytorch-latest-gpu \
+    --image-project=deeplearning-platform-release</code></pre>
+                        </div>
+
+                        <h3>Storage Operations</h3>
+                        <div class="code-block">
+                            <pre><code># Create bucket
+gsutil mb -l us-central1 gs://my-ai-data
+
+# Upload dataset
+gsutil -m cp -r ./dataset/* gs://my-ai-data/training/
+
+# Download with parallelism
+gsutil -m cp -r gs://my-ai-data/results/* ./local-results/
+
+# Set up versioning for models
+gsutil versioning set on gs://my-ai-models
+
+# Stream logs
+gsutil cp gs://my-ai-logs/training.log - | tail -f
+
+# Set lifecycle policy
+gsutil lifecycle set lifecycle.json gs://my-ai-data</code></pre>
+                        </div>
+
+                        <div class="terminal-simulator" id="gcp-demo">
+                            <div class="terminal-header">
+                                <span class="title">GCP CLI Demo</span>
+                                <div class="controls">
+                                    <button class="btn btn-sm btn-success" onclick="runGCPDemo()">Run Demo</button>
+                                    <button class="btn btn-sm btn-secondary" onclick="clearTerminal('gcp-demo')">Clear</button>
+                                </div>
+                            </div>
+                            <div class="terminal-body">
+                                <div class="terminal-output" id="gcp-demo-output"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="azure-cli" class="lesson-section">
+                        <h2>3. Azure CLI for AI</h2>
+                        
+                        <h3>Setup and Authentication</h3>
+                        <div class="code-block">
+                            <pre><code># Install Azure CLI
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+# Login to Azure
+az login
+
+# Set subscription
+az account set --subscription "my-subscription"
+
+# Create resource group
+az group create --name my-ai-rg --location eastus
+
+# Install ML extension
+az extension add --name ml</code></pre>
+                        </div>
+
+                        <h3>Azure ML Operations</h3>
+                        <div class="code-block">
+                            <pre><code># Create ML workspace
+az ml workspace create \
+    --resource-group my-ai-rg \
+    --name my-ml-workspace \
+    --location eastus
+
+# Create compute cluster
+az ml compute create \
+    --resource-group my-ai-rg \
+    --workspace-name my-ml-workspace \
+    --name gpu-cluster \
+    --type amlcompute \
+    --size Standard_NC6 \
+    --max-instances 4 \
+    --min-instances 0
+
+# Submit training job
+az ml job create \
+    --resource-group my-ai-rg \
+    --workspace-name my-ml-workspace \
+    --file training-job.yml
+
+# List jobs
+az ml job list \
+    --resource-group my-ai-rg \
+    --workspace-name my-ml-workspace
+
+# Deploy model
+az ml online-endpoint create \
+    --resource-group my-ai-rg \
+    --workspace-name my-ml-workspace \
+    --name my-endpoint \
+    --file endpoint.yml</code></pre>
+                        </div>
+
+                        <h3>Azure Container Instances</h3>
+                        <div class="code-block">
+                            <pre><code># Create container instance
+az container create \
+    --resource-group my-ai-rg \
+    --name ai-container \
+    --image myregistry.azurecr.io/ai-model:latest \
+    --cpu 2 \
+    --memory 4 \
+    --ports 8080 \
+    --environment-variables MODEL_PATH=/models/latest
+
+# List containers
+az container list --resource-group my-ai-rg
+
+# Get container logs
+az container logs \
+    --resource-group my-ai-rg \
+    --name ai-container
+
+# Execute command in container
+az container exec \
+    --resource-group my-ai-rg \
+    --name ai-container \
+    --exec-command "/bin/bash"</code></pre>
+                        </div>
+                    </section>
+
+                    <section id="kubernetes" class="lesson-section">
+                        <h2>4. Kubernetes for AI Deployments</h2>
+                        
+                        <h3>kubectl Setup</h3>
+                        <div class="code-block">
+                            <pre><code># Install kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+# Configure kubeconfig
+kubectl config use-context my-ai-cluster
+kubectl config set-context --current --namespace=ai-workloads
+
+# Verify cluster connection
+kubectl cluster-info
+kubectl get nodes</code></pre>
+                        </div>
+
+                        <h3>Deploying AI Models</h3>
+                        <div class="code-block">
+                            <pre><code># Create deployment manifest
+cat > model-deployment.yaml << 'EOF'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-model-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ai-model
+  template:
+    metadata:
+      labels:
+        app: ai-model
+    spec:
+      containers:
+      - name: model-server
+        image: myregistry/ai-model:v1.0
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+            memory: "8Gi"
+            cpu: "4"
+          requests:
+            nvidia.com/gpu: 1
+            memory: "4Gi"
+            cpu: "2"
+        env:
+        - name: MODEL_PATH
+          value: "/models/latest"
+        volumeMounts:
+        - name: model-storage
+          mountPath: /models
+      volumes:
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: model-pvc
+EOF
+
+# Deploy
+kubectl apply -f model-deployment.yaml
+
+# Check deployment status
+kubectl rollout status deployment/ai-model-server
+
+# Scale deployment
+kubectl scale deployment ai-model-server --replicas=5
+
+# View logs
+kubectl logs -f deployment/ai-model-server --tail=100</code></pre>
+                        </div>
+
+                        <h3>Managing GPU Resources</h3>
+                        <div class="code-block">
+                            <pre><code># Check GPU nodes
+kubectl get nodes -l accelerator=nvidia-tesla-v100
+
+# View GPU allocation
+kubectl describe nodes | grep -A 5 "nvidia.com/gpu"
+
+# Create GPU job
+cat > gpu-training-job.yaml << 'EOF'
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: model-training
+spec:
+  template:
+    spec:
+      containers:
+      - name: trainer
+        image: tensorflow/tensorflow:latest-gpu
+        command: ["python", "train.py"]
+        resources:
+          limits:
+            nvidia.com/gpu: 2
+            memory: "16Gi"
+          requests:
+            nvidia.com/gpu: 2
+            memory: "8Gi"
+        volumeMounts:
+        - name: data-volume
+          mountPath: /data
+      volumes:
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: training-data-pvc
+      restartPolicy: Never
+  backoffLimit: 3
+EOF
+
+kubectl apply -f gpu-training-job.yaml
+
+# Monitor job
+kubectl describe job model-training
+kubectl logs job/model-training -f</code></pre>
+                        </div>
+
+                        <h3>Service Exposure and Ingress</h3>
+                        <div class="code-block">
+                            <pre><code># Create service
+kubectl expose deployment ai-model-server \
+    --type=LoadBalancer \
+    --port=80 \
+    --target-port=8080
+
+# Get endpoint
+kubectl get service ai-model-server
+
+# Port forward for local testing
+kubectl port-forward service/ai-model-server 8080:80
+
+# Create ingress for HTTPS
+cat > model-ingress.yaml << 'EOF'
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ai-model-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+  - hosts:
+    - api.myaimodel.com
+    secretName: ai-model-tls
+  rules:
+  - host: api.myaimodel.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ai-model-server
+            port:
+              number: 80
+EOF
+
+kubectl apply -f model-ingress.yaml
+
+# Install NGINX Ingress Controller
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml</code></pre>
+                        </div>
+
+                        <div class="terminal-simulator" id="k8s-demo">
+                            <div class="terminal-header">
+                                <span class="title">Kubernetes Demo</span>
+                                <div class="controls">
+                                    <button class="btn btn-sm btn-success" onclick="runK8sDemo()">Run Demo</button>
+                                    <button class="btn btn-sm btn-secondary" onclick="clearTerminal('k8s-demo')">Clear</button>
+                                </div>
+                            </div>
+                            <div class="terminal-body">
+                                <div class="terminal-output" id="k8s-demo-output"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="docker" class="lesson-section">
+                        <h2>5. Docker for AI Containers</h2>
+                        
+                        <h3>Building AI Images</h3>
+                        <div class="code-block">
+                            <pre><code># Dockerfile for PyTorch model
+cat > Dockerfile << 'EOF'
+FROM pytorch/pytorch:1.12.0-cuda11.3-cudnn8-runtime
+
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy model and code
+COPY model/ ./model/
+COPY serve.py .
+
+# Create non-root user
+RUN useradd -m -u 1000 modeluser
+USER modeluser
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Run server
+CMD ["python", "serve.py"]
+EOF
+
+# Build with BuildKit for better caching
+DOCKER_BUILDKIT=1 docker build -t my-ai-model:v1 .
+
+# Multi-stage build for smaller images
+cat > Dockerfile.multistage << 'EOF'
+# Build stage
+FROM python:3.9 AS builder
+WORKDIR /build
+COPY requirements.txt .
+RUN pip install --user -r requirements.txt
+
+# Runtime stage
+FROM python:3.9-slim
+WORKDIR /app
+COPY --from=builder /root/.local /root/.local
+COPY . .
+ENV PATH=/root/.local/bin:$PATH
+CMD ["python", "app.py"]
+EOF
+
+# Build multi-stage image
+docker build -f Dockerfile.multistage -t my-ai-model:slim .</code></pre>
+                        </div>
+
+                        <h3>Running GPU Containers</h3>
+                        <div class="code-block">
+                            <pre><code># Run with GPU support
+docker run --gpus all -it tensorflow/tensorflow:latest-gpu nvidia-smi
+
+# Run with specific GPUs
+docker run --gpus '"device=0,1"' -it pytorch/pytorch:latest-gpu
+
+# Mount volumes for data and models
+docker run --gpus all \
+    -v $(pwd)/data:/data \
+    -v $(pwd)/models:/models \
+    -p 8888:8888 \
+    -e JUPYTER_ENABLE_LAB=yes \
+    my-ai-notebook
+
+# Resource limits
+docker run --gpus all \
+    --memory="16g" \
+    --cpus="8" \
+    --shm-size="8g" \
+    --ulimit memlock=-1 \
+    --ulimit stack=67108864 \
+    my-training-image
+
+# Run in detached mode with restart policy
+docker run -d --gpus all \
+    --restart=unless-stopped \
+    --name ai-model-server \
+    -p 8080:8080 \
+    my-ai-model:v1</code></pre>
+                        </div>
+
+                        <h3>Container Orchestration</h3>
+                        <div class="code-block">
+                            <pre><code># Docker Compose for AI stack
+cat > docker-compose.yml << 'EOF'
+version: '3.8'
+
+services:
+  model-server:
+    build: .
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/models
+      - ./data:/data
+    environment:
+      - MODEL_PATH=/models/latest
+      - CUDA_VISIBLE_DEVICES=0
+    depends_on:
+      - redis
+      - monitoring
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  monitoring:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+
+volumes:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+EOF
+
+# Run stack
+docker-compose up -d
+
+# View logs
+docker-compose logs -f model-server
+
+# Scale service
+docker-compose up -d --scale model-server=3
+
+# Update service
+docker-compose up -d --force-recreate model-server</code></pre>
+                        </div>
+
+                        <div class="exercise-card">
+                            <h3>Exercise: Containerized ML Pipeline</h3>
+                            <p>Create a complete containerized machine learning pipeline with Docker Compose.</p>
+                            <div class="code-block">
+                                <pre><code># Create pipeline structure
+mkdir ml-pipeline && cd ml-pipeline
+mkdir {data-processor,model-trainer,model-server,monitoring}
+
+# Data processor Dockerfile
+cat > data-processor/Dockerfile << 'EOF'
+FROM python:3.9-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY process_data.py .
+CMD ["python", "process_data.py"]
+EOF
+
+# Model trainer Dockerfile
+cat > model-trainer/Dockerfile << 'EOF'
+FROM pytorch/pytorch:latest-gpu
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY train_model.py .
+CMD ["python", "train_model.py"]
+EOF
+
+# Complete pipeline compose file
+cat > docker-compose.pipeline.yml << 'EOF'
+version: '3.8'
+services:
+  data-processor:
+    build: ./data-processor
+    volumes:
+      - ./data:/data
+      - ./processed:/processed
+    environment:
+      - INPUT_PATH=/data
+      - OUTPUT_PATH=/processed
+
+  model-trainer:
+    build: ./model-trainer
+    depends_on:
+      - data-processor
+    volumes:
+      - ./processed:/data
+      - ./models:/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  model-server:
+    build: ./model-server
+    depends_on:
+      - model-trainer
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./models:/models
+
+  monitoring:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+EOF
+
+# Run pipeline
+docker-compose -f docker-compose.pipeline.yml up --build</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="ssh-remote" class="lesson-section">
+                        <h2>6. SSH and Remote Development</h2>
+                        
+                        <h3>SSH Configuration</h3>
+                        <div class="code-block">
+                            <pre><code># Configure SSH for cloud instances
+cat >> ~/.ssh/config << 'EOF'
+Host ai-gpu-server
+    HostName 34.125.67.89
+    User ubuntu
+    IdentityFile ~/.ssh/ai-key.pem
+    LocalForward 8888 localhost:8888
+    LocalForward 6006 localhost:6006
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+
+Host ai-cluster-*
+    User admin
+    IdentityFile ~/.ssh/cluster-key
+    ProxyJump bastion.example.com
+    StrictHostKeyChecking no
+
+Host bastion.example.com
+    User admin
+    IdentityFile ~/.ssh/bastion-key
+    Port 22
+EOF
+
+# SSH with X11 forwarding for GUI
+ssh -X ai-gpu-server
+
+# SOCKS proxy for full access
+ssh -D 8080 ai-gpu-server
+
+# SSH with multiple port forwards
+ssh -L 8888:localhost:8888 \
+    -L 6006:localhost:6006 \
+    -L 8080:localhost:8080 \
+    ai-gpu-server</code></pre>
+                        </div>
+
+                        <h3>Remote Development Setup</h3>
+                        <div class="code-block">
+                            <pre><code># Install development environment
+ssh ai-gpu-server << 'ENDSSH'
+# Update system
+sudo apt-get update && sudo apt-get upgrade -y
+
+# Install CUDA toolkit
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
+sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.0-1_all.deb
+sudo dpkg -i cuda-keyring_1.0-1_all.deb
+sudo apt-get update
+sudo apt-get -y install cuda
+
+# Install Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER
+
+# Install Miniconda
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/miniconda
+echo 'export PATH="$HOME/miniconda/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+
+# Create AI environment
+conda create -n ai-env python=3.9 -y
+conda activate ai-env
+conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
+
+# Install development tools
+pip install jupyterlab tensorboard wandb
+ENDSSH</code></pre>
+                        </div>
+
+                        <h3>File Synchronization</h3>
+                        <div class="code-block">
+                            <pre><code># Sync code with rsync
+rsync -avz --exclude='.git' --exclude='*.pyc' --exclude='__pycache__' \
+    ./my-ai-project/ ai-gpu-server:~/projects/my-ai-project/
+
+# Watch for changes and sync
+while inotifywait -r -e modify,create,delete ./src; do
+    rsync -avz ./src/ ai-gpu-server:~/projects/my-ai-project/src/
+done
+
+# Two-way sync with unison
+unison ~/local-project ssh://ai-gpu-server//home/ubuntu/remote-project \
+    -auto -batch -ignore "Path .git" -ignore "Path __pycache__"
+
+# Mount remote filesystem
+sshfs ai-gpu-server:/home/ubuntu/projects ~/remote-projects \
+    -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3
+
+# Sync with exclusions
+rsync -avz --exclude-from=.rsyncignore \
+    ./local-project/ ai-gpu-server:~/remote-project/</code></pre>
+                        </div>
+
+                        <h3>Remote Jupyter Setup</h3>
+                        <div class="code-block">
+                            <pre><code># Start Jupyter on remote server
+ssh ai-gpu-server << 'ENDSSH'
+# Generate config
+jupyter lab --generate-config
+
+# Set password
+jupyter lab password
+
+# Configure for remote access
+echo "c.ServerApp.ip = '0.0.0.0'" >> ~/.jupyter/jupyter_lab_config.py
+echo "c.ServerApp.open_browser = False" >> ~/.jupyter/jupyter_lab_config.py
+echo "c.ServerApp.port = 8888" >> ~/.jupyter/jupyter_lab_config.py
+echo "c.ServerApp.allow_remote_access = True" >> ~/.jupyter/jupyter_lab_config.py
+
+# Start with systemd service
+cat > ~/.config/systemd/user/jupyter.service << 'EOF'
+[Unit]
+Description=Jupyter Lab
+
+[Service]
+Type=simple
+PIDFile=/run/user/1000/jupyter.pid
+ExecStart=/home/ubuntu/miniconda/bin/jupyter lab --config=/home/ubuntu/.jupyter/jupyter_lab_config.py
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
+EOF
+
+systemctl --user enable jupyter.service
+systemctl --user start jupyter.service
+ENDSSH
+
+# Access locally via SSH tunnel
+ssh -NL 8888:localhost:8888 ai-gpu-server</code></pre>
+                        </div>
+                    </section>
+
+                    <section id="optimization" class="lesson-section">
+                        <h2>7. Performance Optimization Tips</h2>
+                        
+                        <h3>Cloud Cost Optimization</h3>
+                        <div class="code-block">
+                            <pre><code># AWS Spot Instances for training
+aws ec2 request-spot-instances \
+    --spot-price "0.50" \
+    --instance-count 1 \
+    --type "one-time" \
+    --launch-specification file://spot-spec.json
+
+# Auto-shutdown script
+cat > auto-shutdown.sh << 'EOF'
+#!/bin/bash
+# Check if training is complete
+if [ -f /tmp/training_complete ]; then
+    # Save final model
+    aws s3 cp /models/final_model.pth s3://my-models/
+    sudo shutdown -h now
+fi
+
+# Check idle time
+IDLE_TIME=$(uptime | awk '{print $1}' | sed 's/,//')
+if [ "$IDLE_TIME" -gt 3600 ]; then
+    logger "Instance idle for over 1 hour, shutting down"
+    sudo shutdown -h now
+fi
+EOF
+
+# Schedule instance stop
+aws ec2 create-tags --resources i-1234567890abcdef0 \
+    --tags Key=AutoStop,Value=1800
+
+# GCP preemptible instances
+gcloud compute instances create preemptible-trainer \
+    --preemptible \
+    --machine-type=n1-standard-4 \
+    --accelerator=type=nvidia-tesla-t4,count=1 \
+    --image-family=pytorch-latest-gpu \
+    --image-project=deeplearning-platform-release</code></pre>
+                        </div>
+
+                        <h3>Resource Monitoring</h3>
+                        <div class="code-block">
+                            <pre><code># Monitor GPU utilization across instances
+for instance in $(aws ec2 describe-instances \
+    --filters "Name=tag:Type,Values=GPU" \
+    --query 'Reservations[*].Instances[*].PublicIpAddress' \
+    --output text); do
+    echo "=== Instance: $instance ==="
+    ssh ubuntu@$instance "nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv"
+done
+
+# Cloud cost tracking
+aws ce get-cost-and-usage \
+    --time-period Start=2024-01-01,End=2024-01-31 \
+    --granularity DAILY \
+    --metrics "UnblendedCost" \
+    --filter file://gpu-filter.json
+
+# GCP cost monitoring
+gcloud billing budgets list \
+    --billing-account=BILLING_ACCOUNT_ID
+
+# Set up budget alerts
+gcloud billing budgets create \
+    --billing-account=BILLING_ACCOUNT_ID \
+    --display-name="AI Training Budget" \
+    --budget-amount=1000USD \
+    --threshold-rule=percent:0.8,basis:CURRENT_SPEND</code></pre>
+                        </div>
+
+                        <h3>Batch Processing and Scaling</h3>
+                        <div class="code-block">
+                            <pre><code># Parallel training jobs
+cat > parallel-train.sh << 'EOF'
+#!/bin/bash
+EXPERIMENTS=("config1.yaml" "config2.yaml" "config3.yaml")
+JOBS=()
+
+for config in "${EXPERIMENTS[@]}"; do
+    echo "Submitting job for $config"
+    
+    # AWS Batch
+    job_id=$(aws batch submit-job \
+        --job-name "training-$(basename $config .yaml)" \
+        --job-queue training-queue \
+        --job-definition training-job-def \
+        --parameters config="$config" \
+        --query 'jobId' --output text)
+    
+    JOBS+=($job_id)
+    echo "Submitted job: $job_id"
+done
+
+# Wait for all jobs to complete
+for job_id in "${JOBS[@]}"; do
+    echo "Waiting for job $job_id"
+    aws batch wait job-finished --jobs "$job_id"
+done
+
+echo "All training jobs completed"
+EOF
+
+# Kubernetes job array
+cat > job-array.yaml << 'EOF'
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: training-job-array
+spec:
+  completions: 3
+  parallelism: 3
+  template:
+    spec:
+      containers:
+      - name: trainer
+        image: my-training-image:latest
+        command: ["python", "train.py"]
+        env:
+        - name: JOB_COMPLETION_INDEX
+          value: "$(JOB_COMPLETION_INDEX)"
+        - name: CONFIG_FILE
+          value: "config$(JOB_COMPLETION_INDEX).yaml"
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+      restartPolicy: Never
+EOF
+
+kubectl apply -f job-array.yaml
+
+# Distributed training setup
+docker run --gpus all --network host \
+    -e MASTER_ADDR=192.168.1.100 \
+    -e MASTER_PORT=29500 \
+    -e WORLD_SIZE=4 \
+    -e RANK=0 \
+    -e NCCL_DEBUG=INFO \
+    my-distributed-training</code></pre>
+                        </div>
+                    </section>
+
+                    <section id="troubleshooting" class="lesson-section">
+                        <h2>8. Troubleshooting Guide</h2>
+                        
+                        <h3>Common Issues and Solutions</h3>
+                        <div class="code-block">
+                            <pre><code># GPU not detected
+# Check NVIDIA driver
+nvidia-smi
+# If fails, reinstall drivers
+sudo apt-get purge nvidia-*
+sudo apt-get autoremove
+sudo apt-get install nvidia-driver-470
+sudo reboot
+
+# CUDA version mismatch
+# Check versions
+nvcc --version
+python -c "import torch; print(torch.version.cuda)"
+# Install matching CUDA toolkit
+
+# Docker GPU issues
+# Check nvidia-docker runtime
+docker run --rm --gpus all nvidia/cuda:11.0-base nvidia-smi
+
+# If fails, reinstall nvidia-docker
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+curl -s -L https://nvidia.github.io/nvidia-docker/ubuntu18.04/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+sudo apt-get update
+sudo apt-get install nvidia-docker2
+sudo systemctl restart docker
+
+# Out of memory errors
+# Monitor memory usage
+watch -n 1 nvidia-smi
+# Reduce batch size or use gradient accumulation
+
+# SSH connection drops
+# Use tmux or screen
+tmux new -s training
+# Reattach after disconnect
+tmux attach -t training
+
+# Slow data transfer
+# Use compression
+rsync -avz --compress-level=9 large-dataset/ remote:/data/
+# Or use parallel transfers
+find . -name "*.tar" | parallel -j 4 scp {} remote:/data/</code></pre>
+                        </div>
+
+                        <h3>Debugging Network Issues</h3>
+                        <div class="code-block">
+                            <pre><code># Test connectivity
+curl -I https://storage.googleapis.com
+nslookup s3.amazonaws.com
+ping 8.8.8.8
+
+# Check firewall rules
+# AWS
+aws ec2 describe-security-groups --group-ids sg-12345678
+
+# GCP
+gcloud compute firewall-rules list
+
+# Azure
+az network nsg rule list --resource-group my-rg --nsg-name my-nsg
+
+# Debug Kubernetes networking
+kubectl run debug --image=nicolaka/netshoot -it --rm
+# Inside pod:
+nslookup kubernetes.default
+curl model-service:8080/health
+
+# Check DNS resolution
+kubectl exec -it debug -- nslookup google.com
+kubectl exec -it debug -- dig kubernetes.default.svc.cluster.local
+
+# Test service connectivity
+kubectl run test-pod --image=curlimages/curl --rm -it -- sh
+curl http://model-service:8080/health</code></pre>
+                        </div>
+
+                        <h3>Performance Debugging</h3>
+                        <div class="code-block">
+                            <pre><code># Profile container performance
+docker stats --no-stream
+docker exec -it container-name htop
+
+# Check container resource limits
+docker inspect container-name | grep -A 10 "Resources"
+
+# Monitor Kubernetes resource usage
+kubectl top nodes
+kubectl top pods
+
+# Check for throttling
+kubectl describe node node-name | grep -A 5 "Allocated resources"
+
+# Debug slow model inference
+# Add timing to your model
+import time
+start_time = time.time()
+output = model(input_data)
+inference_time = time.time() - start_time
+print(f"Inference time: {inference_time:.4f}s")
+
+# Check model loading time
+import torch
+start_time = time.time()
+model = torch.load('model.pth')
+load_time = time.time() - start_time
+print(f"Model load time: {load_time:.4f}s")</code></pre>
+                        </div>
+                    </section>
+
+                    <div class="exercise-card">
+                        <h3>Final Challenge: Multi-Cloud AI Deployment</h3>
+                        <p>Deploy the same AI model across AWS, GCP, and Azure with monitoring and cost optimization.</p>
+                        <ol>
+                            <li>Package a PyTorch model for deployment</li>
+                            <li>Deploy on AWS SageMaker with auto-scaling</li>
+                            <li>Deploy on GCP Vertex AI with GPU support</li>
+                            <li>Deploy on Azure ML with container instances</li>
+                            <li>Set up monitoring and alerting for all deployments</li>
+                            <li>Implement cost optimization strategies</li>
+                            <li>Create a comparison report of performance and costs</li>
+                        </ol>
+                    </div>
+
+                    <nav class="lesson-nav">
+                        <a href="08-ai-frameworks.html" class="btn btn-outline-secondary">
+                            ← Previous: AI Framework CLIs
+                        </a>
+                        <a href="10-ai-monitoring.html" class="btn btn-outline-primary">
+                            Next: AI Monitoring & Debugging →
+                        </a>
+                    </nav>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../terminal-simulator.js"></script>
+    <script>
+        // Terminal simulator functions
+        function runAWSDemo() {
+            const terminal = document.getElementById('aws-demo-output');
+            const commands = [
+                { cmd: 'aws configure list', 
+                  output: '      Name                    Value             Type    Location\n      ----                    -----             ----    --------\n   profile                <not set>             None    None\naccess_key     ****************ABCD  config-file    ~/.aws/config\nsecret_key     ****************efgh  config-file    ~/.aws/config\n    region                us-east-1      config-file    ~/.aws/config' },
+                { cmd: 'aws s3 ls', 
+                  output: '2024-01-15 10:30:45 my-ai-models-bucket\n2024-01-15 10:31:02 my-training-data-bucket' },
+                { cmd: 'aws sagemaker list-training-jobs --max-items 3',
+                  output: '{\n    "TrainingJobSummaries": [\n        {\n            "TrainingJobName": "pytorch-training-2024-01-15-10-30-45",\n            "TrainingJobStatus": "Completed",\n            "CreationTime": "2024-01-15T10:30:45.000Z"\n        }\n    ]\n}' }
+            ];
+            
+            simulateTerminalSession(terminal, commands);
+        }
+
+        function runGCPDemo() {
+            const terminal = document.getElementById('gcp-demo-output');
+            const commands = [
+                { cmd: 'gcloud config list', 
+                  output: '[core]\naccount = user@example.com\nproject = my-ai-project\n\n[compute]\nregion = us-central1\nzone = us-central1-a' },
+                { cmd: 'gsutil ls', 
+                  output: 'gs://my-ai-data/\ngs://my-ai-models/' },
+                { cmd: 'gcloud ai models list --region=us-central1',
+                  output: 'DISPLAY_NAME: pytorch-classifier\nMODEL_ID: 1234567890123456789\nCREATE_TIME: 2024-01-15T10:30:45Z' }
+            ];
+            
+            simulateTerminalSession(terminal, commands);
+        }
+
+        function runK8sDemo() {
+            const terminal = document.getElementById('k8s-demo-output');
+            const commands = [
+                { cmd: 'kubectl get nodes', 
+                  output: 'NAME                         STATUS   ROLES    AGE   VERSION\ngke-cluster-default-pool-1   Ready    <none>   1d    v1.25.0\ngke-cluster-default-pool-2   Ready    <none>   1d    v1.25.0' },
+                { cmd: 'kubectl get pods', 
+                  output: 'NAME                               READY   STATUS    RESTARTS   AGE\nai-model-server-7d4b5c6f8d-abc12   1/1     Running   0          5m\nai-model-server-7d4b5c6f8d-def34   1/1     Running   0          5m' },
+                { cmd: 'kubectl get svc',
+                  output: 'NAME              TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)          AGE\nai-model-server   LoadBalancer   10.0.1.100      35.123.45.67    80:30080/TCP     5m' }
+            ];
+            
+            simulateTerminalSession(terminal, commands);
+        }
+
+        function simulateTerminalSession(terminal, commands) {
+            terminal.innerHTML = '';
+            let delay = 0;
+            
+            commands.forEach((command, index) => {
+                setTimeout(() => {
+                    // Add command prompt
+                    const promptElement = document.createElement('div');
+                    promptElement.className = 'terminal-prompt';
+                    promptElement.innerHTML = `<span class="prompt-symbol">$</span> ${command.cmd}`;
+                    terminal.appendChild(promptElement);
+                    
+                    // Add output with typing effect
+                    setTimeout(() => {
+                        const outputElement = document.createElement('div');
+                        outputElement.className = 'terminal-output';
+                        outputElement.innerHTML = command.output.replace(/\n/g, '<br>');
+                        terminal.appendChild(outputElement);
+                        
+                        // Scroll to bottom
+                        terminal.scrollTop = terminal.scrollHeight;
+                    }, 500);
+                }, delay);
+                
+                delay += 2000;
+            });
+        }
+
+        function clearTerminal(terminalId) {
+            const terminal = document.getElementById(terminalId + '-output');
+            terminal.innerHTML = '';
+        }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Update active nav item on scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.lesson-section');
+            const navLinks = document.querySelectorAll('.sidebar .nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 60) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

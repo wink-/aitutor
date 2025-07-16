@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Terminal Tutor - Master Terminal-Based AI Coding</title>
+    <meta name="description" content="Learn terminal-based AI coding with interactive lessons on zsh, tmux, Neovim, and CLI tools for modern AI development.">
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/main.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fas fa-terminal me-2"></i>AI Terminal Tutor</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#lessons">Lessons</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#progress">Progress</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light btn-sm ms-2" id="theme-toggle">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section bg-primary text-white py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">Master Terminal-Based AI Coding</h1>
+                    <p class="lead mb-4">Transform from GUI-dependent to terminal-proficient AI developer. Learn zsh, tmux, Neovim, and essential CLI tools through interactive lessons.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#lessons" class="btn btn-light btn-lg">Start Learning</a>
+                        <a href="#about" class="btn btn-outline-light btn-lg">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="terminal-preview bg-dark rounded p-4 mt-4 mt-lg-0">
+                        <div class="terminal-header mb-3">
+                            <span class="terminal-dot bg-danger"></span>
+                            <span class="terminal-dot bg-warning"></span>
+                            <span class="terminal-dot bg-success"></span>
+                        </div>
+                        <div class="terminal-content">
+                            <div class="terminal-line">
+                                <span class="text-success">user@ai-dev</span>:<span class="text-info">~/project</span>$ nvim model.py
+                            </div>
+                            <div class="terminal-line">
+                                <span class="text-success">user@ai-dev</span>:<span class="text-info">~/project</span>$ tmux new-session -d -s training
+                            </div>
+                            <div class="terminal-line">
+                                <span class="text-success">user@ai-dev</span>:<span class="text-info">~/project</span>$ python train.py --gpu 0
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lessons Section -->
+    <section id="lessons" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Learning Path</h2>
+            <div class="row">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 lesson-card">
+                        <div class="card-body">
+                            <div class="lesson-icon mb-3">
+                                <i class="fas fa-shell fa-2x text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Foundation</h5>
+                            <p class="card-text">Master zsh, tmux, and essential CLI tools for terminal productivity.</p>
+                            <div class="progress mb-3">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <span class="badge bg-success">4 Lessons</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 lesson-card">
+                        <div class="card-body">
+                            <div class="lesson-icon mb-3">
+                                <i class="fas fa-code fa-2x text-success"></i>
+                            </div>
+                            <h5 class="card-title">Editor Transition</h5>
+                            <p class="card-text">Learn Neovim with LSP, plugins, and AI integration for coding efficiency.</p>
+                            <div class="progress mb-3">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <span class="badge bg-info">6 Lessons</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 lesson-card">
+                        <div class="card-body">
+                            <div class="lesson-icon mb-3">
+                                <i class="fas fa-robot fa-2x text-warning"></i>
+                            </div>
+                            <h5 class="card-title">AI Workflows</h5>
+                            <p class="card-text">Cloud CLI tools, Jupyter console, and model monitoring for AI development.</p>
+                            <div class="progress mb-3">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <span class="badge bg-warning">4 Lessons</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 lesson-card">
+                        <div class="card-body">
+                            <div class="lesson-icon mb-3">
+                                <i class="fas fa-cogs fa-2x text-danger"></i>
+                            </div>
+                            <h5 class="card-title">Advanced Integration</h5>
+                            <p class="card-text">Automation, custom scripts, and advanced workflows for AI projects.</p>
+                            <div class="progress mb-3">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <span class="badge bg-danger">5 Lessons</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="lessons/" class="btn btn-primary btn-lg">View All Lessons</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Why Terminal-Based AI Coding?</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="text-center">
+                        <i class="fas fa-lightning-bolt fa-3x text-primary mb-3"></i>
+                        <h4>Lightning Fast</h4>
+                        <p>Navigate, edit, and execute commands at the speed of thought with keyboard shortcuts and muscle memory.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="text-center">
+                        <i class="fas fa-server fa-3x text-success mb-3"></i>
+                        <h4>Remote Ready</h4>
+                        <p>Seamlessly work on cloud GPUs and remote servers where GUI tools aren't available.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="text-center">
+                        <i class="fas fa-tools fa-3x text-info mb-3"></i>
+                        <h4>Powerful Tools</h4>
+                        <p>Access specialized AI development tools, monitoring, and automation capabilities.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Progress Section -->
+    <section id="progress" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Your Progress</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Overall Progress</h5>
+                            <div class="progress mb-3" style="height: 20px;">
+                                <div class="progress-bar" role="progressbar" style="width: 0%" id="overall-progress">0%</div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col-3">
+                                    <h6>Lessons</h6>
+                                    <span class="h4 text-primary" id="lessons-completed">0</span>/<span id="total-lessons">19</span>
+                                </div>
+                                <div class="col-3">
+                                    <h6>Exercises</h6>
+                                    <span class="h4 text-success" id="exercises-completed">0</span>/<span id="total-exercises">45</span>
+                                </div>
+                                <div class="col-3">
+                                    <h6>Time Spent</h6>
+                                    <span class="h4 text-info" id="time-spent">0h</span>
+                                </div>
+                                <div class="col-3">
+                                    <h6>Streak</h6>
+                                    <span class="h4 text-warning" id="streak">0</span> days
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-5 bg-dark text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2 class="mb-4">About This Course</h2>
+                    <p class="lead">This interactive course transforms GUI-dependent developers into terminal-proficient AI coding experts through hands-on lessons and practical exercises.</p>
+                    <p>Based on proven learning progressions, you'll master the essential tools used by professional AI developers working with cloud GPUs, remote servers, and large-scale projects.</p>
+                </div>
+                <div class="col-lg-6">
+                    <h3 class="mb-3">What You'll Learn</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> zsh and oh-my-zsh configuration</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> tmux for session management</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Neovim with modern plugins</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Essential CLI tools (ripgrep, fd, fzf)</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Cloud platform CLI tools</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> AI development workflows</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Automation and productivity scripts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-light py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2024 AI Terminal Tutor. Open source tutorial for terminal-based AI development.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-decoration-none me-3">GitHub</a>
+                    <a href="#" class="text-decoration-none me-3">Documentation</a>
+                    <a href="#" class="text-decoration-none">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5.3 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/main.js"></script>
+    <script src="js/lesson-manager.js"></script>
+</body>
+</html>

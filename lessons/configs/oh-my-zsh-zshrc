@@ -1,0 +1,289 @@
+# Enhanced Oh-My-Zsh Configuration
+# Comprehensive .zshrc for productivity
+
+# Oh-My-Zsh installation path
+export ZSH="$HOME/.oh-my-zsh"
+
+# Theme configuration
+ZSH_THEME="agnoster"
+
+# Plugin configuration
+plugins=(
+  git
+  z
+  docker
+  python
+  npm
+  sudo
+  web-search
+  colored-man-pages
+  command-not-found
+  extract
+  history-substring-search
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
+
+# Oh-My-Zsh settings
+CASE_SENSITIVE="false"
+HYPHEN_INSENSITIVE="true"
+DISABLE_AUTO_UPDATE="false"
+DISABLE_UPDATE_PROMPT="false"
+UPDATE_ZSH_DAYS=7
+DISABLE_MAGIC_FUNCTIONS="false"
+DISABLE_LS_COLORS="false"
+DISABLE_AUTO_TITLE="false"
+ENABLE_CORRECTION="true"
+COMPLETION_WAITING_DOTS="true"
+DISABLE_UNTRACKED_FILES_DIRTY="false"
+HIST_STAMPS="yyyy-mm-dd"
+
+# Custom directory for plugins and themes
+ZSH_CUSTOM="$ZSH/custom"
+
+# Load Oh-My-Zsh
+source $ZSH/oh-my-zsh.sh
+
+# User configuration
+export EDITOR='code'
+export ARCHFLAGS="-arch x86_64"
+
+# Enhanced history
+HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
+setopt SHARE_HISTORY
+setopt APPEND_HISTORY
+setopt INC_APPEND_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_REDUCE_BLANKS
+
+# Enhanced completion
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu select
+zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
+zstyle ':completion:*:warnings' format '%BSorry, no matches for: %d%b'
+
+# Custom aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias ~='cd ~'
+alias c='clear'
+alias h='history'
+alias j='jobs -l'
+alias path='echo -e ${PATH//:/\\n}'
+alias now='date +"%T"'
+alias today='date +"%A, %B %d, %Y"'
+
+# Git aliases (additional to plugin)
+alias glog='git log --oneline --graph --decorate --all'
+alias gundo='git reset --soft HEAD~1'
+alias gclean='git clean -fd'
+alias gstash='git stash --include-untracked'
+alias gstatus='git status -sb'
+alias gdiff='git diff --color-words'
+
+# Development aliases
+alias py='python3'
+alias pip='pip3'
+alias serve='python3 -m http.server'
+alias json='python3 -m json.tool'
+alias weather='curl wttr.in'
+alias myip='curl ipinfo.io/ip'
+alias localip='ipconfig getifaddr en0'
+
+# NPM aliases (additional to plugin)
+alias nrs='npm run start'
+alias nrb='npm run build'
+alias nrt='npm run test'
+alias nrd='npm run dev'
+alias ni='npm install'
+alias nid='npm install --save-dev'
+alias nig='npm install -g'
+alias nls='npm list --depth=0'
+alias nod='npm outdated'
+alias nup='npm update'
+
+# Docker aliases (additional to plugin)
+alias dclean='docker system prune -af'
+alias dps='docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"'
+alias dlogs='docker logs -f'
+alias dexec='docker exec -it'
+alias dstop='docker stop $(docker ps -q)'
+alias drm='docker rm $(docker ps -aq)'
+
+# System aliases
+alias df='df -h'
+alias du='du -h'
+alias free='free -h'
+alias ps='ps aux'
+alias top='top -o cpu'
+alias ports='netstat -tuln'
+alias listening='lsof -i'
+
+# Safety aliases
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='rm -i'
+alias mkdir='mkdir -p'
+
+# Custom functions
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+newproject() {
+    if [ -z "$1" ]; then
+        echo "Usage: newproject <project-name>"
+        return 1
+    fi
+    
+    mkdir -p ~/projects/$1
+    cd ~/projects/$1
+    git init
+    touch README.md
+    echo "# $1" > README.md
+    echo "Project $1 created in ~/projects/$1"
+}
+
+backup() {
+    if [ -z "$1" ]; then
+        echo "Usage: backup <file-or-directory>"
+        return 1
+    fi
+    
+    local backup_name="${1%/}.backup.$(date +%Y%m%d_%H%M%S)"
+    cp -r "$1" "$backup_name"
+    echo "Backed up $1 to $backup_name"
+}
+
+findreplace() {
+    if [ "$#" -ne 2 ]; then
+        echo "Usage: findreplace 'old_text' 'new_text'"
+        return 1
+    fi
+    
+    find . -type f -name "*.py" -o -name "*.js" -o -name "*.txt" -o -name "*.md" | \
+    xargs sed -i "s/$1/$2/g"
+    echo "Replaced '$1' with '$2' in all matching files"
+}
+
+search() {
+    if [ -z "$1" ]; then
+        echo "Usage: search <pattern> [directory]"
+        return 1
+    fi
+    local dir="${2:-.}"
+    grep -r "$1" "$dir" --include="*.py" --include="*.js" --include="*.txt" --include="*.md"
+}
+
+sysinfo() {
+    echo "=== System Information ==="
+    echo "User: $(whoami)"
+    echo "Hostname: $(hostname)"
+    echo "OS: $(uname -s)"
+    echo "Kernel: $(uname -r)"
+    echo "Uptime: $(uptime)"
+    echo "Date: $(date)"
+    echo "Shell: $SHELL"
+    echo "Terminal: $TERM"
+    echo "Oh-My-Zsh: $ZSH_VERSION"
+    echo "Theme: $ZSH_THEME"
+}
+
+# Git workflow helpers
+gitflow() {
+    case $1 in
+        "start")
+            git checkout -b "feature/$2"
+            echo "Started feature branch: feature/$2"
+            ;;
+        "finish")
+            git checkout main
+            git merge --no-ff "feature/$2"
+            git branch -d "feature/$2"
+            echo "Finished feature branch: feature/$2"
+            ;;
+        *)
+            echo "Usage: gitflow {start|finish} <feature-name>"
+            ;;
+    esac
+}
+
+# Quick deployment function
+deploy() {
+    if [ -z "$1" ]; then
+        echo "Usage: deploy <environment>"
+        return 1
+    fi
+    
+    echo "Deploying to $1..."
+    git push origin main
+    
+    case $1 in
+        "staging")
+            echo "Triggering staging deployment..."
+            # Add your staging deployment commands here
+            ;;
+        "production")
+            echo "Triggering production deployment..."
+            # Add your production deployment commands here
+            ;;
+        *)
+            echo "Unknown environment: $1"
+            ;;
+    esac
+}
+
+# Virtual environment helper
+newenv() {
+    if [ -z "$1" ]; then
+        echo "Usage: newenv <environment-name>"
+        return 1
+    fi
+    python3 -m venv "$1"
+    source "$1/bin/activate"
+    pip install --upgrade pip
+    echo "Virtual environment $1 created and activated"
+}
+
+# PATH additions
+export PATH="$HOME/bin:$PATH"
+export PATH="/usr/local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+
+# Node.js and npm
+export PATH="$HOME/.npm-global/bin:$PATH"
+
+# Python
+export PATH="$HOME/.local/bin:$PATH"
+
+# Load additional configurations
+[ -f ~/.zsh_local ] && source ~/.zsh_local
+[ -f ~/.zsh_aliases ] && source ~/.zsh_aliases
+
+# Plugin configurations
+# zsh-autosuggestions
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=244"
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+
+# zsh-syntax-highlighting
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
+
+# fzf integration (if installed)
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Welcome message
+echo "🚀 Oh-My-Zsh loaded with theme: $ZSH_THEME"
+echo "📦 Plugins: ${plugins[@]}"
+echo "💡 Type 'sysinfo' for system information"

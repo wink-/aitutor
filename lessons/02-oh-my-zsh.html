@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 2: Oh-My-Zsh - AI Terminal Tutor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/lessons.css">
+    <link rel="stylesheet" href="../terminal-simulator.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-terminal"></i> AI Terminal Tutor
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="../index.html#lessons">Lessons</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Breadcrumb Navigation -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="01-zsh-basics.html">Zsh Basics</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Oh-My-Zsh</li>
+                    </ol>
+                </nav>
+
+                <!-- Lesson Header -->
+                <div class="card mb-4 shadow">
+                    <div class="card-body bg-light">
+                        <h1 class="card-title h2 mb-3">
+                            <i class="fas fa-magic text-primary"></i> Lesson 2: Oh-My-Zsh
+                        </h1>
+                        <p class="lead mb-4">Supercharge your terminal experience with Oh-My-Zsh - the delightful framework for managing your zsh configuration with themes, plugins, and powerful features.</p>
+                        
+                        <!-- Learning Objectives -->
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading"><i class="fas fa-bullseye"></i> Learning Objectives</h5>
+                            <ul class="mb-0">
+                                <li>Install and configure Oh-My-Zsh framework</li>
+                                <li>Explore and customize themes for enhanced visuals</li>
+                                <li>Master essential plugins for productivity</li>
+                                <li>Create custom plugins and functions</li>
+                                <li>Optimize your terminal workflow</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 1: What is Oh-My-Zsh? -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-star"></i> What is Oh-My-Zsh?</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Oh-My-Zsh is an open-source, community-driven framework for managing your zsh configuration. It comes bundled with thousands of helpful functions, plugins, and themes that make your terminal experience more productive and enjoyable.</p>
+                        
+                        <h5 class="mt-4">Key Features:</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul>
+                                    <li><strong>300+ Plugins:</strong> Git, Docker, AWS, Python, and more</li>
+                                    <li><strong>150+ Themes:</strong> Beautiful, customizable prompts</li>
+                                    <li><strong>Auto-updates:</strong> Stay current with latest features</li>
+                                    <li><strong>Easy configuration:</strong> Simple .zshrc management</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul>
+                                    <li><strong>Aliases:</strong> Hundreds of time-saving shortcuts</li>
+                                    <li><strong>Auto-completion:</strong> Intelligent tab completion</li>
+                                    <li><strong>History:</strong> Enhanced command history features</li>
+                                    <li><strong>Community:</strong> Active development and support</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-success mt-3">
+                            <i class="fas fa-info-circle"></i> <strong>Did you know?</strong> Oh-My-Zsh was created by Robby Russell in 2009 and has become one of the most popular terminal frameworks with over 150,000 GitHub stars!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Installation -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-download"></i> Installing Oh-My-Zsh</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i> <strong>Prerequisites:</strong> Make sure you have zsh installed and set as your default shell before proceeding.
+                        </div>
+
+                        <h5>Method 1: Using curl (Recommended)</h5>
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre>sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"</pre>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Method 2: Using wget</h5>
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre>sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"</pre>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Method 3: Manual Installation</h5>
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre># Clone the repository
+git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
+
+# Create a new zsh configuration file
+cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+
+# Change your default shell to zsh
+chsh -s $(which zsh)</pre>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info mt-3">
+                            <i class="fas fa-lightbulb"></i> <strong>Installation Notes:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>The installer will backup your existing <code>~/.zshrc</code> file</li>
+                                <li>You'll need to restart your terminal or run <code>source ~/.zshrc</code></li>
+                                <li>If you encounter permission issues, you may need to use <code>sudo</code></li>
+                            </ul>
+                        </div>
+
+                        <!-- Interactive Exercise -->
+                        <div class="try-it-yourself">
+                            <div class="try-it-header">
+                                <i class="fas fa-terminal try-it-icon"></i>
+                                <h5 class="try-it-title">Try it yourself!</h5>
+                            </div>
+                            <p>Let's verify your Oh-My-Zsh installation and explore the basic structure:</p>
+                            <button class="btn btn-primary" onclick="openTerminal('# Check Oh-My-Zsh installation\necho $ZSH\n\n# List Oh-My-Zsh directory structure\nls -la ~/.oh-my-zsh/\n\n# Check current theme\necho $ZSH_THEME\n\n# View available plugins\nls ~/.oh-my-zsh/plugins/ | head -20')">
+                                <i class="fas fa-play"></i> Check Installation
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Themes -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-palette"></i> Themes: Customizing Your Prompt</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Themes change the appearance of your terminal prompt. Oh-My-Zsh comes with over 150 built-in themes, each offering different information and visual styles.</p>
+
+                        <h5>Popular Themes</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card bg-dark text-light mb-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title">robbyrussell (default)</h6>
+                                        <code class="terminal-line">➜ ~ git:(main) ✗</code>
+                                        <p class="card-text mt-2"><small>Clean, minimal with git status</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-dark text-light mb-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title">agnoster</h6>
+                                        <code class="terminal-line">⚡ user@hostname ~/project git:main ✗</code>
+                                        <p class="card-text mt-2"><small>Powerline-style with segments</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card bg-dark text-light mb-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title">powerlevel10k</h6>
+                                        <code class="terminal-line">╭─ user@hostname ~/project git:main ✗ 10s<br>╰─❯</code>
+                                        <p class="card-text mt-2"><small>Highly customizable, fast</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-dark text-light mb-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title">spaceship</h6>
+                                        <code class="terminal-line">🚀 ~/project git:main ✗ node:16.14.0<br>❯</code>
+                                        <p class="card-text mt-2"><small>Modern with runtime versions</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Changing Themes</h5>
+                        <p>To change your theme, edit the <code>ZSH_THEME</code> variable in your <code>~/.zshrc</code> file:</p>
+                        
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre># Edit your .zshrc file
+nano ~/.zshrc
+
+# Find and modify the ZSH_THEME line
+ZSH_THEME="agnoster"
+
+# Save and reload
+source ~/.zshrc</pre>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Installing External Themes</h5>
+                        <p>For themes not included with Oh-My-Zsh (like Powerlevel10k):</p>
+                        
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre># Install Powerlevel10k
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+# Set the theme in .zshrc
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+# Reload and configure
+source ~/.zshrc
+p10k configure</pre>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Exercise -->
+                        <div class="try-it-yourself mt-4">
+                            <div class="try-it-header">
+                                <i class="fas fa-terminal try-it-icon"></i>
+                                <h5 class="try-it-title">Theme Explorer</h5>
+                            </div>
+                            <p>Try different themes and see how they change your prompt:</p>
+                            <button class="btn btn-primary" onclick="openTerminal('# List available themes\nls ~/.oh-my-zsh/themes/ | head -20\n\n# Try different themes (backup first)\ncp ~/.zshrc ~/.zshrc.backup\n\n# Change theme temporarily\nZSH_THEME=\"bira\" && source ~/.zshrc\necho \"Current theme: $ZSH_THEME\"\n\n# Try another theme\nZSH_THEME=\"ys\" && source ~/.zshrc\necho \"Current theme: $ZSH_THEME\"')">
+                                <i class="fas fa-play"></i> Explore Themes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Essential Plugins -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-plug"></i> Essential Plugins</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Plugins add functionality to your zsh shell. Here are the most useful plugins for daily development work:</p>
+
+                        <h5>Core Productivity Plugins</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-info mb-3">
+                                    <div class="card-header bg-info text-white">
+                                        <h6 class="mb-0">git</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">Git aliases and functions</p>
+                                        <small class="text-muted">
+                                            <code>ga</code> → <code>git add</code><br>
+                                            <code>gco</code> → <code>git checkout</code><br>
+                                            <code>gst</code> → <code>git status</code>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-info mb-3">
+                                    <div class="card-header bg-info text-white">
+                                        <h6 class="mb-0">z</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">Jump to directories by frequency</p>
+                                        <small class="text-muted">
+                                            <code>z proj</code> → Jump to project directory<br>
+                                            <code>z -l</code> → List all entries
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-info mb-3">
+                                    <div class="card-header bg-info text-white">
+                                        <h6 class="mb-0">zsh-autosuggestions</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">Command suggestions based on history</p>
+                                        <small class="text-muted">
+                                            Gray text appears as you type<br>
+                                            Press <code>→</code> to accept
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-info mb-3">
+                                    <div class="card-header bg-info text-white">
+                                        <h6 class="mb-0">zsh-syntax-highlighting</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">Syntax highlighting for commands</p>
+                                        <small class="text-muted">
+                                            Valid commands in green<br>
+                                            Invalid commands in red
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Development Plugins</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card border-success mb-3">
+                                    <div class="card-header bg-success text-white">
+                                        <h6 class="mb-0">docker</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">Docker aliases and completion</p>
+                                        <small class="text-muted"><code>dps</code>, <code>dex</code>, <code>drm</code></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-success mb-3">
+                                    <div class="card-header bg-success text-white">
+                                        <h6 class="mb-0">python</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">Python development helpers</p>
+                                        <small class="text-muted">Virtual env shortcuts</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-success mb-3">
+                                    <div class="card-header bg-success text-white">
+                                        <h6 class="mb-0">npm</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">NPM completion and aliases</p>
+                                        <small class="text-muted"><code>npmg</code>, <code>npms</code>, <code>npmi</code></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Configuring Plugins</h5>
+                        <p>To enable plugins, edit the <code>plugins</code> array in your <code>~/.zshrc</code>:</p>
+                        
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre># Edit ~/.zshrc
+plugins=(
+  git
+  z
+  docker
+  python
+  npm
+  sudo
+  web-search
+  colored-man-pages
+  command-not-found
+)</pre>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Installing External Plugins</h5>
+                        <p>For plugins not included with Oh-My-Zsh:</p>
+                        
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre># Install zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+# Install zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+# Add to plugins array in .zshrc
+plugins=(
+  git
+  z
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
+
+# Reload configuration
+source ~/.zshrc</pre>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Exercise -->
+                        <div class="try-it-yourself mt-4">
+                            <div class="try-it-header">
+                                <i class="fas fa-terminal try-it-icon"></i>
+                                <h5 class="try-it-title">Plugin Testing</h5>
+                            </div>
+                            <p>Test some popular plugins and their features:</p>
+                            <button class="btn btn-primary" onclick="openTerminal('# Test git plugin aliases\necho \"Git aliases from plugin:\"\nalias | grep git | head -10\n\n# Test z plugin (requires usage history)\necho \"\\nUsing z plugin:\"\n# z will work after visiting directories\ncd /tmp && cd ~ && cd /tmp\nz ~  # Should jump to home\n\n# Test web-search plugin\necho \"\\nWeb search plugin:\"\necho \"Try: google search term\"\necho \"Try: stackoverflow zsh plugin\"')">
+                                <i class="fas fa-play"></i> Test Plugins
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5: Advanced Configuration -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-cogs"></i> Advanced Configuration</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5>Complete .zshrc Configuration</h5>
+                        <p>Here's a well-configured .zshrc file with Oh-My-Zsh optimizations:</p>
+                        
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                    <button class="code-download-btn" onclick="downloadConfig('zshrc')">
+                                        <i class="fas fa-download"></i> Download
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre># ~/.zshrc - Enhanced Oh-My-Zsh Configuration
+
+# Oh-My-Zsh installation path
+export ZSH="$HOME/.oh-my-zsh"
+
+# Theme configuration
+ZSH_THEME="agnoster"
+
+# Plugin configuration
+plugins=(
+  git
+  z
+  docker
+  python
+  npm
+  sudo
+  web-search
+  colored-man-pages
+  command-not-found
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
+
+# Oh-My-Zsh settings
+CASE_SENSITIVE="false"
+HYPHEN_INSENSITIVE="true"
+DISABLE_AUTO_UPDATE="false"
+DISABLE_UPDATE_PROMPT="false"
+UPDATE_ZSH_DAYS=7
+DISABLE_MAGIC_FUNCTIONS="false"
+DISABLE_LS_COLORS="false"
+DISABLE_AUTO_TITLE="false"
+ENABLE_CORRECTION="true"
+COMPLETION_WAITING_DOTS="true"
+DISABLE_UNTRACKED_FILES_DIRTY="false"
+HIST_STAMPS="yyyy-mm-dd"
+
+# Custom directory for plugins and themes
+ZSH_CUSTOM="$ZSH/custom"
+
+# Load Oh-My-Zsh
+source $ZSH/oh-my-zsh.sh
+
+# User configuration
+export EDITOR='code'
+export ARCHFLAGS="-arch x86_64"
+
+# Enhanced history
+HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
+setopt SHARE_HISTORY
+setopt APPEND_HISTORY
+setopt INC_APPEND_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_REDUCE_BLANKS
+
+# Enhanced completion
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu select
+zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
+zstyle ':completion:*:warnings' format '%BSorry, no matches for: %d%b'
+
+# Custom aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias ~='cd ~'
+alias c='clear'
+alias h='history'
+alias j='jobs -l'
+alias path='echo -e ${PATH//:/\\n}'
+alias now='date +"%T"'
+alias today='date +"%A, %B %d, %Y"'
+
+# Git aliases (additional to plugin)
+alias glog='git log --oneline --graph --decorate --all'
+alias gundo='git reset --soft HEAD~1'
+alias gclean='git clean -fd'
+alias gstash='git stash --include-untracked'
+
+# Development aliases
+alias py='python3'
+alias pip='pip3'
+alias serve='python3 -m http.server'
+alias json='python3 -m json.tool'
+alias weather='curl wttr.in'
+alias myip='curl ipinfo.io/ip'
+
+# Docker aliases (additional to plugin)
+alias dclean='docker system prune -af'
+alias dps='docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"'
+alias dlogs='docker logs -f'
+
+# Custom functions
+mkcd() { mkdir -p "$1" && cd "$1" }
+extract() {
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2)   tar xjf $1     ;;
+            *.tar.gz)    tar xzf $1     ;;
+            *.bz2)       bunzip2 $1     ;;
+            *.rar)       unrar e $1     ;;
+            *.gz)        gunzip $1      ;;
+            *.tar)       tar xf $1      ;;
+            *.tbz2)      tar xjf $1     ;;
+            *.tgz)       tar xzf $1     ;;
+            *.zip)       unzip $1       ;;
+            *.Z)         uncompress $1  ;;
+            *.7z)        7z x $1        ;;
+            *)           echo "'$1' cannot be extracted via extract()" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+# Enhanced search function
+search() {
+    grep -r "$1" . --include="*.py" --include="*.js" --include="*.txt" --include="*.md"
+}
+
+# Git branch in prompt (if not using a theme that shows it)
+parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+
+# PATH additions
+export PATH="$HOME/bin:$PATH"
+export PATH="/usr/local/bin:$PATH"
+
+# Node.js and npm
+export PATH="$HOME/.npm-global/bin:$PATH"
+
+# Python
+export PATH="$HOME/.local/bin:$PATH"
+
+# Load additional configurations
+[ -f ~/.zsh_local ] && source ~/.zsh_local
+[ -f ~/.zsh_aliases ] && source ~/.zsh_aliases
+
+# Plugin configurations
+# zsh-autosuggestions
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=244"
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+
+# fzf integration (if installed)
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh</pre>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Custom Plugin Development</h5>
+                        <p>Create your own plugins for specific workflows:</p>
+                        
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre># Create a custom plugin directory
+mkdir -p ~/.oh-my-zsh/custom/plugins/mydevtools
+
+# Create plugin file
+cat > ~/.oh-my-zsh/custom/plugins/mydevtools/mydevtools.plugin.zsh << 'EOF'
+# My Development Tools Plugin
+
+# Quick project setup
+newproject() {
+    if [ -z "$1" ]; then
+        echo "Usage: newproject <project-name>"
+        return 1
+    fi
+    
+    mkdir -p ~/projects/$1
+    cd ~/projects/$1
+    git init
+    touch README.md
+    echo "# $1" > README.md
+    echo "Project $1 created in ~/projects/$1"
+}
+
+# Quick backup
+backup() {
+    if [ -z "$1" ]; then
+        echo "Usage: backup <file-or-directory>"
+        return 1
+    fi
+    
+    local backup_name="${1%/}.backup.$(date +%Y%m%d_%H%M%S)"
+    cp -r "$1" "$backup_name"
+    echo "Backed up $1 to $backup_name"
+}
+
+# Find and replace in multiple files
+findreplace() {
+    if [ "$#" -ne 2 ]; then
+        echo "Usage: findreplace 'old_text' 'new_text'"
+        return 1
+    fi
+    
+    find . -type f -name "*.py" -o -name "*.js" -o -name "*.txt" -o -name "*.md" | \
+    xargs sed -i "s/$1/$2/g"
+    echo "Replaced '$1' with '$2' in all matching files"
+}
+
+# Git workflow helpers
+gitflow() {
+    case $1 in
+        "start")
+            git checkout -b "feature/$2"
+            echo "Started feature branch: feature/$2"
+            ;;
+        "finish")
+            git checkout main
+            git merge --no-ff "feature/$2"
+            git branch -d "feature/$2"
+            echo "Finished feature branch: feature/$2"
+            ;;
+        *)
+            echo "Usage: gitflow {start|finish} <feature-name>"
+            ;;
+    esac
+}
+EOF
+
+# Add to plugins array in .zshrc
+plugins=(... mydevtools)</pre>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info mt-3">
+                            <i class="fas fa-lightbulb"></i> <strong>Performance Tips:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Only enable plugins you actually use</li>
+                                <li>Use <code>omz update</code> to keep Oh-My-Zsh current</li>
+                                <li>Profile startup time with <code>omz diagnostic</code></li>
+                                <li>Consider lazy loading for heavy plugins</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 6: Workflow Examples -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-workflow"></i> Practical Workflow Examples</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5>Web Development Workflow</h5>
+                        <p>Optimized setup for web developers:</p>
+                        
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre># Web development plugins
+plugins=(
+  git
+  z
+  npm
+  node
+  yarn
+  docker
+  vscode
+  web-search
+  colored-man-pages
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
+
+# Web development aliases
+alias nrs='npm run start'
+alias nrb='npm run build'
+alias nrt='npm run test'
+alias nrd='npm run dev'
+alias ni='npm install'
+alias nid='npm install --save-dev'
+alias nig='npm install -g'
+alias nls='npm list --depth=0'
+alias nod='npm outdated'
+alias nup='npm update'
+
+# Quick project commands
+alias serve='python3 -m http.server 8000'
+alias liveserver='live-server --port=8080'
+alias reactapp='npx create-react-app'
+alias vueapp='vue create'
+alias nextapp='npx create-next-app'</pre>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">DevOps Workflow</h5>
+                        <p>Essential tools for DevOps and system administration:</p>
+                        
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre># DevOps plugins
+plugins=(
+  git
+  z
+  docker
+  docker-compose
+  kubectl
+  terraform
+  aws
+  ansible
+  systemd
+  ssh-agent
+  gpg-agent
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
+
+# DevOps aliases
+alias k='kubectl'
+alias kgp='kubectl get pods'
+alias kgs='kubectl get services'
+alias kgd='kubectl get deployments'
+alias kaf='kubectl apply -f'
+alias kdf='kubectl delete -f'
+alias klf='kubectl logs -f'
+
+# Docker compose shortcuts
+alias dcup='docker-compose up -d'
+alias dcdown='docker-compose down'
+alias dcps='docker-compose ps'
+alias dclogs='docker-compose logs -f'
+alias dcbuild='docker-compose build'
+
+# System monitoring
+alias htop='htop'
+alias df='df -h'
+alias du='du -h'
+alias free='free -h'
+alias ports='netstat -tuln'
+alias listening='lsof -i'
+
+# Quick deployment functions
+deploy() {
+    echo "Deploying $1..."
+    git push origin main
+    ssh $1 "cd /var/www/app && git pull && docker-compose restart"
+}
+
+backup-db() {
+    timestamp=$(date +%Y%m%d_%H%M%S)
+    docker exec database pg_dump -U user dbname > backup_${timestamp}.sql
+    echo "Database backed up to backup_${timestamp}.sql"
+}</pre>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Data Science Workflow</h5>
+                        <p>Optimized for data scientists and analysts:</p>
+                        
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre># Data science plugins
+plugins=(
+  git
+  z
+  python
+  pip
+  virtualenv
+  conda
+  jupyter
+  docker
+  aws
+  web-search
+  colored-man-pages
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
+
+# Python/Data Science aliases
+alias py='python3'
+alias ipy='ipython'
+alias jn='jupyter notebook'
+alias jl='jupyter lab'
+alias activate='source venv/bin/activate'
+alias deactivate='deactivate'
+alias pipreqs='pipreqs --force'
+alias pipfreeze='pip freeze > requirements.txt'
+alias pipinstall='pip install -r requirements.txt'
+
+# Conda aliases
+alias cenv='conda env list'
+alias cact='conda activate'
+alias cdeact='conda deactivate'
+alias cinstall='conda install'
+alias cupdate='conda update --all'
+
+# Data processing shortcuts
+alias csvhead='head -n 5'
+alias csvtail='tail -n 5'
+alias csvcount='wc -l'
+alias csvcolumns='head -n 1'
+
+# Quick data exploration
+explore() {
+    echo "File: $1"
+    echo "Lines: $(wc -l < $1)"
+    echo "First 5 lines:"
+    head -n 5 "$1"
+    echo "Last 5 lines:"
+    tail -n 5 "$1"
+}
+
+# Virtual environment helper
+newenv() {
+    if [ -z "$1" ]; then
+        echo "Usage: newenv <environment-name>"
+        return 1
+    fi
+    python3 -m venv "$1"
+    source "$1/bin/activate"
+    pip install --upgrade pip
+    echo "Virtual environment $1 created and activated"
+}</pre>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Exercise -->
+                        <div class="try-it-yourself mt-4">
+                            <div class="try-it-header">
+                                <i class="fas fa-terminal try-it-icon"></i>
+                                <h5 class="try-it-title">Workflow Setup Challenge</h5>
+                            </div>
+                            <p>Set up a workflow for your development stack:</p>
+                            <button class="btn btn-primary" onclick="openTerminal('# Choose your workflow setup\necho \"Select your development focus:\"\necho \"1. Web Development\"\necho \"2. DevOps/Infrastructure\"\necho \"3. Data Science\"\necho \"4. General Development\"\n\n# Example: Web development setup\necho \"\\n=== Web Development Setup ===\"\necho \"Installing useful plugins...\"\necho \"plugins=(git z npm node yarn docker vscode web-search)\"\n\n# Test some aliases\necho \"\\n=== Testing aliases ===\"\necho \"npm aliases:\"\nalias | grep npm\n\necho \"\\n=== Testing git plugin ===\"\necho \"git aliases:\"\nalias | grep git | head -10')">
+                                <i class="fas fa-play"></i> Setup Workflow
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 7: Troubleshooting -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-warning text-dark">
+                        <h3 class="h5 mb-0"><i class="fas fa-wrench"></i> Troubleshooting Common Issues</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5>1. Slow Startup Performance</h5>
+                        <p><strong>Problem:</strong> Terminal takes too long to start</p>
+                        <p><strong>Solutions:</strong></p>
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre># Profile startup time
+time zsh -i -c exit
+
+# Check which plugins are slowest
+zsh -i -c 'omz diagnostic'
+
+# Disable unnecessary plugins
+plugins=(git z)  # Start minimal
+
+# Lazy load heavy plugins
+if [[ -n "$VSCODE_PID" ]]; then
+    plugins+=(vscode)
+fi</pre>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">2. Plugin Not Working</h5>
+                        <p><strong>Problem:</strong> Plugin features not available</p>
+                        <p><strong>Solutions:</strong></p>
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre># Check if plugin is properly loaded
+echo $plugins
+
+# Verify plugin exists
+ls ~/.oh-my-zsh/plugins/PLUGIN_NAME
+
+# Check for plugin dependencies
+# (some plugins require external tools)
+
+# Reload configuration
+source ~/.zshrc
+
+# For external plugins, check installation
+ls ~/.oh-my-zsh/custom/plugins/</pre>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">3. Theme Issues</h5>
+                        <p><strong>Problem:</strong> Theme not displaying correctly</p>
+                        <p><strong>Solutions:</strong></p>
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre># Check current theme
+echo $ZSH_THEME
+
+# Test with default theme
+ZSH_THEME="robbyrussell"
+source ~/.zshrc
+
+# For powerline themes, install fonts
+# Install Powerline fonts or Nerd Fonts
+git clone https://github.com/powerline/fonts.git --depth=1
+cd fonts && ./install.sh && cd .. && rm -rf fonts
+
+# Check terminal font settings
+echo "Make sure your terminal uses a powerline font"</pre>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">4. Auto-completion Issues</h5>
+                        <p><strong>Problem:</strong> Tab completion not working</p>
+                        <p><strong>Solutions:</strong></p>
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre># Rebuild completion cache
+rm -f ~/.zcompdump*
+autoload -U compinit && compinit
+
+# Check if completion is enabled
+echo $fpath
+
+# Fix permissions if needed
+compaudit | xargs chmod g-w
+
+# For specific command completion
+# Install completion files in ~/.oh-my-zsh/custom/completions/</pre>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">5. Oh-My-Zsh Update Issues</h5>
+                        <p><strong>Problem:</strong> Updates fail or break configuration</p>
+                        <p><strong>Solutions:</strong></p>
+                        <div class="lesson-code-block">
+                            <div class="code-header">
+                                <span class="code-language">bash</span>
+                                <div class="code-actions">
+                                    <button class="code-copy-btn" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-content">
+<pre># Manual update
+cd ~/.oh-my-zsh
+git pull origin master
+
+# Force update if needed
+omz update --force
+
+# Backup before updates
+cp ~/.zshrc ~/.zshrc.backup
+
+# Reset to clean state if needed
+cd ~/.oh-my-zsh
+git reset --hard HEAD</pre>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> <strong>Pro Tips:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Always backup your .zshrc before major changes</li>
+                                <li>Test new plugins in a separate terminal session first</li>
+                                <li>Use <code>omz reload</code> instead of <code>source ~/.zshrc</code> when possible</li>
+                                <li>Join the Oh-My-Zsh community for help and new plugins</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-check-circle"></i> Lesson Summary</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Congratulations! You've mastered Oh-My-Zsh and can now create a powerful terminal environment. Key takeaways:</p>
+                        <ul>
+                            <li>Oh-My-Zsh transforms your terminal with themes, plugins, and enhanced functionality</li>
+                            <li>Choose themes that match your workflow and provide useful information</li>
+                            <li>Select plugins based on your development stack and daily tasks</li>
+                            <li>Custom configurations and plugins can be tailored to your specific needs</li>
+                            <li>Regular maintenance keeps your setup optimized and current</li>
+                        </ul>
+                        
+                        <div class="mt-4">
+                            <h5>Next Steps:</h5>
+                            <p>Continue your terminal mastery with advanced multiplexing and session management!</p>
+                            <a href="03-tmux-basics.html" class="btn btn-primary">
+                                <i class="fas fa-arrow-right"></i> Next Lesson: Tmux Basics
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Final Practice -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-graduation-cap"></i> Final Practice Challenge</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Create your perfect terminal setup:</p>
+                        <ol>
+                            <li>Choose and configure a theme that fits your workflow</li>
+                            <li>Install and configure 5-7 plugins relevant to your work</li>
+                            <li>Create custom aliases and functions</li>
+                            <li>Set up a custom plugin for your specific needs</li>
+                            <li>Optimize for performance and usability</li>
+                        </ol>
+                        <button class="btn btn-info" onclick="openTerminal('# Ultimate Oh-My-Zsh Setup Challenge\necho \"🚀 Creating your perfect terminal setup...\"\n\n# 1. Backup current config\ncp ~/.zshrc ~/.zshrc.challenge.backup\n\n# 2. Start with a clean slate\necho \"# My Ultimate Zsh Config\" > ~/.zshrc\necho \"export ZSH=\\\"$HOME/.oh-my-zsh\\\"\" >> ~/.zshrc\necho \"ZSH_THEME=\\\"agnoster\\\"\" >> ~/.zshrc\n\n# 3. Add essential plugins\necho \"plugins=(git z docker python npm web-search colored-man-pages zsh-autosuggestions zsh-syntax-highlighting)\" >> ~/.zshrc\n\n# 4. Load Oh-My-Zsh\necho \"source \\$ZSH/oh-my-zsh.sh\" >> ~/.zshrc\n\n# 5. Add custom aliases\necho \"alias work=\\\"cd ~/projects\\\"\" >> ~/.zshrc\necho \"alias ll=\\\"ls -alF\\\"\" >> ~/.zshrc\necho \"alias ..=\\\"cd ..\\\"\" >> ~/.zshrc\n\n# 6. Test the setup\nsource ~/.zshrc\necho \"\\n✅ Setup complete! Test your new configuration.\"')">
+                            <i class="fas fa-play"></i> Ultimate Setup Challenge
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <div class="lesson-navigation">
+                    <a href="01-zsh-basics.html" class="nav-button prev">
+                        <i class="fas fa-arrow-left"></i> Previous: Zsh Basics
+                    </a>
+                    <a href="03-tmux-basics.html" class="nav-button next">
+                        Next: Tmux Basics <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 AI Terminal Tutor. Built with Bootstrap and love for the command line.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/terminal-simulator.js"></script>
+    <script src="../js/lesson-manager.js"></script>
+    <script>
+        // Initialize terminal simulator
+        const terminal = new TerminalSimulator('terminal-container');
+        
+        // Terminal interaction function
+        function openTerminal(commands) {
+            // Create modal or expand terminal section
+            const modal = document.createElement('div');
+            modal.innerHTML = `
+                <div class="modal fade" id="terminalModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Interactive Terminal</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="terminal-container" style="min-height: 400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            const terminalModal = new bootstrap.Modal(document.getElementById('terminalModal'));
+            terminalModal.show();
+            
+            // Initialize terminal in modal
+            setTimeout(() => {
+                const modalTerminal = new TerminalSimulator('terminal-container');
+                modalTerminal.executeCommand(commands);
+            }, 300);
+        }
+        
+        // Code copy functionality
+        function copyCode(button) {
+            const codeBlock = button.closest('.lesson-code-block').querySelector('pre');
+            const text = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const icon = button.querySelector('i');
+                const originalClass = icon.className;
+                
+                icon.className = 'fas fa-check';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    icon.className = originalClass;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+        
+        // Configuration download functionality
+        function downloadConfig(type) {
+            const configs = {
+                'zshrc': `# Enhanced Oh-My-Zsh Configuration
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="agnoster"
+plugins=(git z docker python npm sudo web-search colored-man-pages command-not-found zsh-autosuggestions zsh-syntax-highlighting)
+source $ZSH/oh-my-zsh.sh
+export EDITOR='code'
+# Add your custom configurations here...`
+            };
+            
+            const content = configs[type] || '';
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            
+            a.href = url;
+            a.download = `.${type}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Lesson progress tracking
+        let lessonProgress = {
+            sections: ['intro', 'installation', 'themes', 'plugins', 'advanced', 'workflow', 'troubleshooting'],
+            completed: []
+        };
+        
+        // Track section completion
+        function markSectionComplete(section) {
+            if (!lessonProgress.completed.includes(section)) {
+                lessonProgress.completed.push(section);
+                localStorage.setItem('oh-my-zsh-progress', JSON.stringify(lessonProgress));
+            }
+        }
+        
+        // Load progress on page load
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('oh-my-zsh-progress');
+            if (saved) {
+                lessonProgress = JSON.parse(saved);
+            }
+        });
+    </script>
+</body>
+</html>

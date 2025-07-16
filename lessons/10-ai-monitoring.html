@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 10: AI Monitoring & Debugging</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/lessons.css">
+    <link rel="stylesheet" href="../terminal-simulator.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <nav class="sidebar">
+                    <div class="sidebar-header">
+                        <h3>AI Monitoring & Debugging</h3>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link" href="#tensorboard">TensorBoard CLI</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#wandb">Weights & Biases</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#gpu-monitoring">GPU Monitoring</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#jupyter-tools">Jupyter Tools</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#log-analysis">Log Analysis</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#profiling">Performance Profiling</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#debugging">Debugging Strategies</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#troubleshooting">Troubleshooting</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-9">
+                <main class="main-content">
+                    <div class="lesson-header">
+                        <h1>Lesson 10: AI Monitoring & Debugging</h1>
+                        <p class="lead">Master command-line tools for monitoring, debugging, and optimizing AI models in production. Learn to use TensorBoard, Weights & Biases, GPU monitoring tools, and advanced debugging techniques.</p>
+                    </div>
+
+                    <section id="tensorboard" class="lesson-section">
+                        <h2>1. TensorBoard from Command Line</h2>
+                        
+                        <h3>Basic TensorBoard Operations</h3>
+                        <div class="code-block">
+                            <pre><code># Start TensorBoard server
+tensorboard --logdir=./logs --port=6006 --host=0.0.0.0
+
+# Multiple experiment directories
+tensorboard --logdir=experiments:./experiments,baseline:./baseline
+
+# With specific plugins
+tensorboard --logdir=./logs --load_fast=false --plugins profile,histogram
+
+# Serve on custom path
+tensorboard --logdir=./logs --path_prefix=/tensorboard/
+
+# Auto-reload with file watching
+tensorboard --logdir=./logs --reload_interval=1</code></pre>
+                        </div>
+
+                        <h3>Remote TensorBoard Setup</h3>
+                        <div class="code-block">
+                            <pre><code># SSH tunnel to remote TensorBoard
+ssh -L 6006:localhost:6006 user@remote-gpu-server
+
+# On remote server
+tensorboard --logdir=/remote/logs --bind_all
+
+# With authentication
+tensorboard --logdir=./logs --port=6006 --load_fast=false \
+    --auth_providers=ldap \
+    --auth_ldap_server=ldap://company.com</code></pre>
+                        </div>
+
+                        <h3>TensorBoard CLI Tools</h3>
+                        <div class="code-block">
+                            <pre><code># Export scalars to CSV
+tensorboard --logdir=./logs --export_scalars=./scalars.csv
+
+# Compare multiple runs
+tensorboard --logdir=run1:./run1,run2:./run2,run3:./run3
+
+# Filter by tags
+tensorboard --logdir=./logs --tag_filter="loss.*,accuracy.*"
+
+# Dev mode for development
+tensorboard --logdir=./logs --debugger_port=6064 --dev</code></pre>
+                        </div>
+
+                        <div class="terminal-simulator" id="tensorboard-demo">
+                            <div class="terminal-header">
+                                <span class="title">TensorBoard Demo</span>
+                                <div class="controls">
+                                    <button class="btn btn-sm btn-success" onclick="runTensorBoardDemo()">Run Demo</button>
+                                    <button class="btn btn-sm btn-secondary" onclick="clearTerminal('tensorboard-demo')">Clear</button>
+                                </div>
+                            </div>
+                            <div class="terminal-body">
+                                <div class="terminal-output" id="tensorboard-demo-output"></div>
+                            </div>
+                        </div>
+
+                        <div class="exercise-card">
+                            <h3>Exercise: Multi-Experiment Monitoring</h3>
+                            <p>Set up TensorBoard to monitor multiple ML experiments simultaneously.</p>
+                            <div class="code-block">
+                                <pre><code># Create experiment structure
+mkdir -p experiments/{experiment_1,experiment_2,experiment_3}/logs
+
+# Generate sample logs (Python script)
+cat > generate_logs.py << 'EOF'
+import torch
+from torch.utils.tensorboard import SummaryWriter
+import numpy as np
+
+experiments = ['experiment_1', 'experiment_2', 'experiment_3']
+for exp in experiments:
+    writer = SummaryWriter(f'experiments/{exp}/logs')
+    
+    # Simulate training metrics
+    for epoch in range(100):
+        # Different learning curves for each experiment
+        if exp == 'experiment_1':
+            loss = 2.0 * np.exp(-epoch/50) + 0.1 * np.random.random()
+            acc = 1 - np.exp(-epoch/30) + 0.05 * np.random.random()
+        elif exp == 'experiment_2':
+            loss = 1.5 * np.exp(-epoch/30) + 0.1 * np.random.random()
+            acc = 1 - np.exp(-epoch/40) + 0.05 * np.random.random()
+        else:
+            loss = 3.0 * np.exp(-epoch/70) + 0.1 * np.random.random()
+            acc = 1 - np.exp(-epoch/50) + 0.05 * np.random.random()
+        
+        writer.add_scalar('Loss/Train', loss, epoch)
+        writer.add_scalar('Accuracy/Train', acc, epoch)
+        
+        # Add histograms
+        weights = np.random.normal(0, 1, (100, 50))
+        writer.add_histogram('Weights/Layer1', weights, epoch)
+    
+    writer.close()
+EOF
+
+python generate_logs.py
+
+# Launch TensorBoard with multiple experiments
+tensorboard --logdir=experiments --port=6006</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="wandb" class="lesson-section">
+                        <h2>2. Weights & Biases CLI</h2>
+                        
+                        <h3>Setup and Authentication</h3>
+                        <div class="code-block">
+                            <pre><code># Install wandb
+pip install wandb
+
+# Login to W&B
+wandb login
+
+# Set default entity and project
+wandb init --project my-ai-project --entity my-team
+
+# Offline mode for restricted environments
+wandb offline</code></pre>
+                        </div>
+
+                        <h3>Experiment Tracking</h3>
+                        <div class="code-block">
+                            <pre><code># Initialize run with config
+wandb init --project deep-learning --config config.yaml
+
+# Log metrics from command line
+wandb log --step 100 --json '{"loss": 0.5, "accuracy": 0.85}'
+
+# Sync offline runs
+wandb sync ./wandb/offline-run-*
+
+# Download artifacts
+wandb artifact get my-team/my-project/model:latest --root ./downloaded-model
+
+# Upload artifacts
+wandb artifact put dataset.zip --name training-data --type dataset</code></pre>
+                        </div>
+
+                        <h3>Run Management</h3>
+                        <div class="code-block">
+                            <pre><code># List runs
+wandb runs --project my-project --entity my-team
+
+# Get run details
+wandb run my-team/my-project/run-id
+
+# Download run files
+wandb restore my-team/my-project/run-id
+
+# Delete runs
+wandb delete-run my-team/my-project/run-id
+
+# Export runs to CSV
+wandb export --project my-project --format csv --output runs.csv</code></pre>
+                        </div>
+
+                        <h3>Sweep Management</h3>
+                        <div class="code-block">
+                            <pre><code># Create sweep configuration
+cat > sweep.yaml << 'EOF'
+program: train.py
+method: bayes
+metric:
+  name: val_accuracy
+  goal: maximize
+parameters:
+  learning_rate:
+    distribution: log_uniform_values
+    min: 0.0001
+    max: 0.1
+  batch_size:
+    values: [16, 32, 64, 128]
+  optimizer:
+    values: ["adam", "sgd", "rmsprop"]
+EOF
+
+# Create sweep
+wandb sweep sweep.yaml
+
+# Run sweep agent
+wandb agent my-team/my-project/sweep-id
+
+# List sweeps
+wandb sweeps --project my-project
+
+# Stop sweep
+wandb sweep --stop my-team/my-project/sweep-id</code></pre>
+                        </div>
+
+                        <div class="exercise-card">
+                            <h3>Exercise: Hyperparameter Sweep</h3>
+                            <p>Set up an automated hyperparameter sweep for a neural network.</p>
+                            <div class="code-block">
+                                <pre><code># Create training script with wandb integration
+cat > train_with_wandb.py << 'EOF'
+import wandb
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader, TensorDataset
+import numpy as np
+
+def train_model():
+    # Initialize wandb
+    wandb.init()
+    config = wandb.config
+    
+    # Generate synthetic data
+    X = torch.randn(1000, 10)
+    y = torch.sum(X, dim=1).unsqueeze(1)
+    dataset = TensorDataset(X, y)
+    dataloader = DataLoader(dataset, batch_size=config.batch_size)
+    
+    # Create model
+    model = nn.Sequential(
+        nn.Linear(10, config.hidden_size),
+        nn.ReLU(),
+        nn.Linear(config.hidden_size, 1)
+    )
+    
+    # Optimizer
+    if config.optimizer == 'adam':
+        optimizer = optim.Adam(model.parameters(), lr=config.learning_rate)
+    elif config.optimizer == 'sgd':
+        optimizer = optim.SGD(model.parameters(), lr=config.learning_rate)
+    else:
+        optimizer = optim.RMSprop(model.parameters(), lr=config.learning_rate)
+    
+    criterion = nn.MSELoss()
+    
+    # Training loop
+    for epoch in range(100):
+        epoch_loss = 0
+        for batch_x, batch_y in dataloader:
+            optimizer.zero_grad()
+            outputs = model(batch_x)
+            loss = criterion(outputs, batch_y)
+            loss.backward()
+            optimizer.step()
+            epoch_loss += loss.item()
+        
+        # Log metrics
+        avg_loss = epoch_loss / len(dataloader)
+        wandb.log({"epoch": epoch, "loss": avg_loss})
+    
+    # Log final model
+    wandb.save("model.pth")
+    torch.save(model.state_dict(), "model.pth")
+
+if __name__ == "__main__":
+    train_model()
+EOF
+
+# Run single training
+python train_with_wandb.py</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="gpu-monitoring" class="lesson-section">
+                        <h2>3. GPU Monitoring Tools</h2>
+                        
+                        <h3>nvidia-smi Commands</h3>
+                        <div class="code-block">
+                            <pre><code># Basic GPU info
+nvidia-smi
+
+# Continuous monitoring
+nvidia-smi -l 1
+
+# Query specific metrics
+nvidia-smi --query-gpu=index,name,memory.used,memory.total,utilization.gpu --format=csv
+
+# Monitor processes
+nvidia-smi --query-compute-apps=pid,name,used_memory --format=csv
+
+# Performance monitoring
+nvidia-smi --query-gpu=timestamp,name,pci.bus_id,driver_version,pstate,pcie.link.gen.current,pcie.link.width.current,temperature.gpu,utilization.gpu,utilization.memory,memory.total,memory.free,memory.used --format=csv -l 1
+
+# Set persistence mode
+sudo nvidia-smi -pm 1
+
+# Set power limit
+sudo nvidia-smi -pl 250</code></pre>
+                        </div>
+
+                        <h3>nvtop - Interactive GPU Monitor</h3>
+                        <div class="code-block">
+                            <pre><code># Install nvtop
+sudo apt install nvtop
+
+# Or from source
+git clone https://github.com/Syllo/nvtop.git
+cd nvtop
+mkdir build && cd build
+cmake ..
+make
+sudo make install
+
+# Run nvtop
+nvtop
+
+# Save configuration
+nvtop --save-config
+
+# Different color schemes
+nvtop --colorscheme 0  # Default
+nvtop --colorscheme 1  # Alternative</code></pre>
+                        </div>
+
+                        <h3>GPU Monitoring Scripts</h3>
+                        <div class="code-block">
+                            <pre><code># GPU utilization logger
+cat > gpu_monitor.sh << 'EOF'
+#!/bin/bash
+LOG_FILE="gpu_utilization.log"
+INTERVAL=5
+
+echo "timestamp,gpu_id,gpu_name,utilization_gpu,memory_used,memory_total,temperature" > $LOG_FILE
+
+while true; do
+    timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    nvidia-smi --query-gpu=index,name,utilization.gpu,memory.used,memory.total,temperature.gpu --format=csv,noheader,nounits | \
+    while IFS=',' read -r gpu_id gpu_name util_gpu mem_used mem_total temp; do
+        echo "$timestamp,$gpu_id,$gpu_name,$util_gpu,$mem_used,$mem_total,$temp" >> $LOG_FILE
+    done
+    sleep $INTERVAL
+done
+EOF
+
+chmod +x gpu_monitor.sh
+./gpu_monitor.sh &
+
+# GPU alert system
+cat > gpu_alert.py << 'EOF'
+#!/usr/bin/env python3
+import subprocess
+import time
+import smtplib
+from email.mime.text import MIMEText
+
+def check_gpu_usage():
+    result = subprocess.run(['nvidia-smi', '--query-gpu=utilization.gpu,memory.used,memory.total', '--format=csv,noheader,nounits'], 
+                          capture_output=True, text=True)
+    
+    lines = result.stdout.strip().split('\n')
+    alerts = []
+    
+    for i, line in enumerate(lines):
+        util, mem_used, mem_total = line.split(', ')
+        util = float(util)
+        mem_used = float(mem_used)
+        mem_total = float(mem_total)
+        mem_percent = (mem_used / mem_total) * 100
+        
+        if util > 90:
+            alerts.append(f"GPU {i}: High utilization ({util}%)")
+        if mem_percent > 95:
+            alerts.append(f"GPU {i}: High memory usage ({mem_percent:.1f}%)")
+    
+    return alerts
+
+def send_alert(message):
+    # Configure your email settings here
+    pass
+
+# Monitor loop
+while True:
+    alerts = check_gpu_usage()
+    if alerts:
+        for alert in alerts:
+            print(f"ALERT: {alert}")
+            # send_alert(alert)
+    time.sleep(60)
+EOF
+
+python3 gpu_alert.py</code></pre>
+                        </div>
+
+                        <div class="terminal-simulator" id="gpu-monitor-demo">
+                            <div class="terminal-header">
+                                <span class="title">GPU Monitoring Demo</span>
+                                <div class="controls">
+                                    <button class="btn btn-sm btn-success" onclick="runGPUMonitorDemo()">Run Demo</button>
+                                    <button class="btn btn-sm btn-secondary" onclick="clearTerminal('gpu-monitor-demo')">Clear</button>
+                                </div>
+                            </div>
+                            <div class="terminal-body">
+                                <div class="terminal-output" id="gpu-monitor-demo-output"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="jupyter-tools" class="lesson-section">
+                        <h2>4. Jupyter Console and Terminal Tools</h2>
+                        
+                        <h3>Jupyter Console</h3>
+                        <div class="code-block">
+                            <pre><code># Start Jupyter console
+jupyter console
+
+# With specific kernel
+jupyter console --kernel=python3
+
+# Connect to existing kernel
+jupyter console --existing kernel-12345.json
+
+# With custom config
+jupyter console --config=my_jupyter_config.py
+
+# Generate config file
+jupyter console --generate-config</code></pre>
+                        </div>
+
+                        <h3>nbterm - Terminal Notebook Interface</h3>
+                        <div class="code-block">
+                            <pre><code># Install nbterm
+pip install nbterm
+
+# Run notebook in terminal
+nbterm my_notebook.ipynb
+
+# Create new notebook
+nbterm --new
+
+# With specific kernel
+nbterm --kernel python3 my_notebook.ipynb
+
+# Read-only mode
+nbterm --read-only my_notebook.ipynb</code></pre>
+                        </div>
+
+                        <h3>Notebook Management</h3>
+                        <div class="code-block">
+                            <pre><code># Convert notebook to script
+jupyter nbconvert --to script my_notebook.ipynb
+
+# Execute notebook from command line
+jupyter nbconvert --to notebook --execute my_notebook.ipynb
+
+# Run notebook and save output
+jupyter nbconvert --to html --execute my_notebook.ipynb
+
+# Extract outputs
+jupyter nbconvert --to python --template basic my_notebook.ipynb
+
+# Clean notebook outputs
+jupyter nbconvert --to notebook --clear-output my_notebook.ipynb
+
+# Batch process notebooks
+find . -name "*.ipynb" -exec jupyter nbconvert --to html {} \;</code></pre>
+                        </div>
+
+                        <h3>Jupyter Lab Extensions</h3>
+                        <div class="code-block">
+                            <pre><code># Install JupyterLab extensions
+pip install jupyterlab-git
+pip install jupyterlab-system-monitor
+pip install jupyterlab-tensorboard
+
+# Enable extensions
+jupyter labextension install @jupyter-widgets/jupyterlab-manager
+jupyter labextension install jupyterlab-tensorboard
+
+# List extensions
+jupyter labextension list
+
+# Update extensions
+jupyter labextension update --all
+
+# Build JupyterLab
+jupyter lab build</code></pre>
+                        </div>
+
+                        <div class="exercise-card">
+                            <h3>Exercise: Notebook Automation Pipeline</h3>
+                            <p>Create an automated pipeline for running and monitoring Jupyter notebooks.</p>
+                            <div class="code-block">
+                                <pre><code># Create a sample analysis notebook
+cat > analysis_template.ipynb << 'EOF'
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns\n",
+    "from datetime import datetime\n",
+    "\n",
+    "# Parameters\n",
+    "data_path = 'data.csv'\n",
+    "output_path = 'results/'"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Load and analyze data\n",
+    "df = pd.read_csv(data_path)\n",
+    "print(f'Data shape: {df.shape}')\n",
+    "print(f'Analysis run at: {datetime.now()}')\n",
+    "\n",
+    "# Basic statistics\n",
+    "df.describe()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Visualizations\n",
+    "plt.figure(figsize=(12, 6))\n",
+    "plt.subplot(1, 2, 1)\n",
+    "sns.histplot(df.iloc[:, 0])\n",
+    "plt.title('Distribution of First Column')\n",
+    "\n",
+    "plt.subplot(1, 2, 2)\n",
+    "sns.boxplot(data=df.iloc[:, :5])\n",
+    "plt.title('Box Plot of First 5 Columns')\n",
+    "\n",
+    "plt.tight_layout()\n",
+    "plt.savefig(f'{output_path}/analysis_plots.png')\n",
+    "plt.show()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
+EOF
+
+# Create automation script
+cat > run_notebook_pipeline.sh << 'EOF'
+#!/bin/bash
+
+NOTEBOOK_DIR="./notebooks"
+RESULTS_DIR="./results"
+LOG_FILE="pipeline.log"
+
+# Create directories
+mkdir -p $RESULTS_DIR
+
+# Function to log messages
+log_message() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a $LOG_FILE
+}
+
+# Function to run notebook
+run_notebook() {
+    local notebook=$1
+    local output_name=$(basename "$notebook" .ipynb)
+    
+    log_message "Starting execution of $notebook"
+    
+    # Execute notebook
+    jupyter nbconvert --to notebook --execute "$notebook" \
+        --output "$RESULTS_DIR/${output_name}_executed.ipynb" \
+        --ExecutePreprocessor.timeout=3600
+    
+    if [ $? -eq 0 ]; then
+        log_message "Successfully executed $notebook"
+        
+        # Generate HTML report
+        jupyter nbconvert --to html \
+            "$RESULTS_DIR/${output_name}_executed.ipynb" \
+            --output "$RESULTS_DIR/${output_name}_report.html"
+        
+        log_message "Generated HTML report for $notebook"
+    else
+        log_message "ERROR: Failed to execute $notebook"
+        return 1
+    fi
+}
+
+# Run all notebooks
+log_message "Starting notebook pipeline"
+
+for notebook in $NOTEBOOK_DIR/*.ipynb; do
+    if [ -f "$notebook" ]; then
+        run_notebook "$notebook"
+    fi
+done
+
+log_message "Pipeline completed"
+EOF
+
+chmod +x run_notebook_pipeline.sh</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="log-analysis" class="lesson-section">
+                        <h2>5. Log Analysis with Terminal Tools</h2>
+                        
+                        <h3>Advanced Log Processing</h3>
+                        <div class="code-block">
+                            <pre><code># Real-time log monitoring
+tail -f training.log | grep -E "(ERROR|WARN|loss|accuracy)"
+
+# Multi-file log monitoring
+multitail -f training.log -f validation.log -f system.log
+
+# Parse structured logs
+jq '.level, .message, .timestamp' < application.log
+
+# Filter logs by time range
+awk '/2024-01-15 10:00:00/,/2024-01-15 11:00:00/' training.log
+
+# Extract metrics from logs
+grep "Epoch" training.log | awk '{print $2, $4, $6}' > metrics.csv
+
+# Log rotation and compression
+logrotate -f /etc/logrotate.conf</code></pre>
+                        </div>
+
+                        <h3>Log Analysis Scripts</h3>
+                        <div class="code-block">
+                            <pre><code># Training metrics extractor
+cat > extract_metrics.py << 'EOF'
+#!/usr/bin/env python3
+import re
+import json
+import pandas as pd
+from datetime import datetime
+
+def parse_training_log(log_file):
+    metrics = []
+    
+    with open(log_file, 'r') as f:
+        for line in f:
+            # Parse different log formats
+            if 'Epoch' in line:
+                # Example: "Epoch 10/100 - loss: 0.5 - accuracy: 0.85"
+                match = re.search(r'Epoch (\d+)/(\d+).*loss:\s*([\d.]+).*accuracy:\s*([\d.]+)', line)
+                if match:
+                    epoch, total_epochs, loss, accuracy = match.groups()
+                    metrics.append({
+                        'epoch': int(epoch),
+                        'total_epochs': int(total_epochs),
+                        'loss': float(loss),
+                        'accuracy': float(accuracy)
+                    })
+            
+            elif 'INFO' in line and 'step' in line:
+                # Example: "INFO - step: 1000, loss: 0.3, lr: 0.001"
+                match = re.search(r'step:\s*(\d+).*loss:\s*([\d.]+).*lr:\s*([\d.e-]+)', line)
+                if match:
+                    step, loss, lr = match.groups()
+                    metrics.append({
+                        'step': int(step),
+                        'loss': float(loss),
+                        'learning_rate': float(lr)
+                    })
+    
+    return metrics
+
+def generate_report(metrics):
+    if not metrics:
+        return "No metrics found in log file"
+    
+    df = pd.DataFrame(metrics)
+    
+    report = f"""
+Training Metrics Report
+=======================
+Total training steps: {len(df)}
+Final loss: {df['loss'].iloc[-1]:.4f}
+Best loss: {df['loss'].min():.4f}
+Average loss: {df['loss'].mean():.4f}
+"""
+    
+    if 'accuracy' in df.columns:
+        report += f"""
+Final accuracy: {df['accuracy'].iloc[-1]:.4f}
+Best accuracy: {df['accuracy'].max():.4f}
+Average accuracy: {df['accuracy'].mean():.4f}
+"""
+    
+    return report
+
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) < 2:
+        print("Usage: python extract_metrics.py <log_file>")
+        sys.exit(1)
+    
+    log_file = sys.argv[1]
+    metrics = parse_training_log(log_file)
+    
+    # Save metrics to CSV
+    if metrics:
+        pd.DataFrame(metrics).to_csv('extracted_metrics.csv', index=False)
+        print(f"Extracted {len(metrics)} metric entries")
+    
+    # Generate report
+    print(generate_report(metrics))
+EOF
+
+# Error analysis script
+cat > analyze_errors.py << 'EOF'
+#!/usr/bin/env python3
+import re
+import sys
+from collections import Counter
+from datetime import datetime
+
+def analyze_error_log(log_file):
+    error_patterns = {
+        'CUDA_ERROR': r'CUDA.*error|cuda.*error',
+        'MEMORY_ERROR': r'out of memory|memory.*error',
+        'TIMEOUT': r'timeout|timed out',
+        'NETWORK_ERROR': r'network.*error|connection.*error',
+        'FILE_ERROR': r'file.*not found|permission denied',
+        'IMPORT_ERROR': r'import.*error|module.*not found'
+    }
+    
+    error_counts = Counter()
+    error_details = []
+    
+    with open(log_file, 'r') as f:
+        for line_num, line in enumerate(f, 1):
+            line_lower = line.lower()
+            
+            for error_type, pattern in error_patterns.items():
+                if re.search(pattern, line_lower):
+                    error_counts[error_type] += 1
+                    error_details.append({
+                        'line': line_num,
+                        'type': error_type,
+                        'content': line.strip()
+                    })
+    
+    return error_counts, error_details
+
+def generate_error_report(error_counts, error_details):
+    print("Error Analysis Report")
+    print("=" * 20)
+    
+    if not error_counts:
+        print("No errors found in log file")
+        return
+    
+    print(f"Total errors found: {sum(error_counts.values())}")
+    print("\nError breakdown:")
+    
+    for error_type, count in error_counts.most_common():
+        print(f"  {error_type}: {count}")
+    
+    print("\nRecent errors:")
+    for error in error_details[-10:]:  # Show last 10 errors
+        print(f"  Line {error['line']}: {error['type']}")
+        print(f"    {error['content']}")
+        print()
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python analyze_errors.py <log_file>")
+        sys.exit(1)
+    
+    log_file = sys.argv[1]
+    error_counts, error_details = analyze_error_log(log_file)
+    generate_error_report(error_counts, error_details)
+EOF</code></pre>
+                        </div>
+
+                        <h3>Log Visualization</h3>
+                        <div class="code-block">
+                            <pre><code># Generate log visualization
+cat > visualize_logs.py << 'EOF'
+#!/usr/bin/env python3
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+from datetime import datetime
+import numpy as np
+
+def plot_training_metrics(csv_file):
+    df = pd.read_csv(csv_file)
+    
+    fig, axes = plt.subplots(2, 2, figsize=(15, 10))
+    
+    # Loss over time
+    if 'loss' in df.columns:
+        axes[0, 0].plot(df.index, df['loss'])
+        axes[0, 0].set_title('Training Loss')
+        axes[0, 0].set_xlabel('Step')
+        axes[0, 0].set_ylabel('Loss')
+        axes[0, 0].grid(True)
+    
+    # Accuracy over time
+    if 'accuracy' in df.columns:
+        axes[0, 1].plot(df.index, df['accuracy'])
+        axes[0, 1].set_title('Training Accuracy')
+        axes[0, 1].set_xlabel('Step')
+        axes[0, 1].set_ylabel('Accuracy')
+        axes[0, 1].grid(True)
+    
+    # Learning rate
+    if 'learning_rate' in df.columns:
+        axes[1, 0].plot(df.index, df['learning_rate'])
+        axes[1, 0].set_title('Learning Rate')
+        axes[1, 0].set_xlabel('Step')
+        axes[1, 0].set_ylabel('Learning Rate')
+        axes[1, 0].set_yscale('log')
+        axes[1, 0].grid(True)
+    
+    # Loss distribution
+    if 'loss' in df.columns:
+        axes[1, 1].hist(df['loss'], bins=50, alpha=0.7)
+        axes[1, 1].set_title('Loss Distribution')
+        axes[1, 1].set_xlabel('Loss')
+        axes[1, 1].set_ylabel('Frequency')
+        axes[1, 1].grid(True)
+    
+    plt.tight_layout()
+    plt.savefig('training_metrics.png', dpi=300, bbox_inches='tight')
+    plt.show()
+
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) < 2:
+        print("Usage: python visualize_logs.py <metrics_csv>")
+        sys.exit(1)
+    
+    csv_file = sys.argv[1]
+    plot_training_metrics(csv_file)
+EOF
+
+# Real-time metrics dashboard
+cat > metrics_dashboard.py << 'EOF'
+#!/usr/bin/env python3
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+import time
+
+class MetricsDashboard:
+    def __init__(self, log_file):
+        self.log_file = log_file
+        self.fig, self.axes = plt.subplots(2, 2, figsize=(12, 8))
+        self.fig.suptitle('Real-time Training Metrics')
+        
+        # Initialize plots
+        self.loss_line, = self.axes[0, 0].plot([], [], 'b-')
+        self.acc_line, = self.axes[0, 1].plot([], [], 'g-')
+        self.lr_line, = self.axes[1, 0].plot([], [], 'r-')
+        
+        self.setup_axes()
+        
+    def setup_axes(self):
+        self.axes[0, 0].set_title('Loss')
+        self.axes[0, 0].set_xlabel('Step')
+        self.axes[0, 0].set_ylabel('Loss')
+        self.axes[0, 0].grid(True)
+        
+        self.axes[0, 1].set_title('Accuracy')
+        self.axes[0, 1].set_xlabel('Step')
+        self.axes[0, 1].set_ylabel('Accuracy')
+        self.axes[0, 1].grid(True)
+        
+        self.axes[1, 0].set_title('Learning Rate')
+        self.axes[1, 0].set_xlabel('Step')
+        self.axes[1, 0].set_ylabel('Learning Rate')
+        self.axes[1, 0].set_yscale('log')
+        self.axes[1, 0].grid(True)
+        
+        # GPU utilization (placeholder)
+        self.axes[1, 1].set_title('GPU Utilization')
+        self.axes[1, 1].set_xlabel('Time')
+        self.axes[1, 1].set_ylabel('Utilization %')
+        self.axes[1, 1].grid(True)
+    
+    def update_plots(self, frame):
+        try:
+            # Read latest metrics
+            df = pd.read_csv('extracted_metrics.csv')
+            
+            if len(df) > 0:
+                # Update loss plot
+                if 'loss' in df.columns:
+                    self.loss_line.set_data(df.index, df['loss'])
+                    self.axes[0, 0].relim()
+                    self.axes[0, 0].autoscale_view()
+                
+                # Update accuracy plot
+                if 'accuracy' in df.columns:
+                    self.acc_line.set_data(df.index, df['accuracy'])
+                    self.axes[0, 1].relim()
+                    self.axes[0, 1].autoscale_view()
+                
+                # Update learning rate plot
+                if 'learning_rate' in df.columns:
+                    self.lr_line.set_data(df.index, df['learning_rate'])
+                    self.axes[1, 0].relim()
+                    self.axes[1, 0].autoscale_view()
+        
+        except Exception as e:
+            print(f"Error updating plots: {e}")
+        
+        return self.loss_line, self.acc_line, self.lr_line
+    
+    def start(self):
+        ani = animation.FuncAnimation(
+            self.fig, self.update_plots, interval=1000, blit=False
+        )
+        plt.tight_layout()
+        plt.show()
+
+if __name__ == "__main__":
+    import sys
+    log_file = sys.argv[1] if len(sys.argv) > 1 else "training.log"
+    dashboard = MetricsDashboard(log_file)
+    dashboard.start()
+EOF</code></pre>
+                        </div>
+                    </section>
+
+                    <section id="profiling" class="lesson-section">
+                        <h2>6. Performance Profiling</h2>
+                        
+                        <h3>Python Profiling Tools</h3>
+                        <div class="code-block">
+                            <pre><code># Profile with cProfile
+python -m cProfile -o profile_output.prof train.py
+
+# Analyze profile with snakeviz
+pip install snakeviz
+snakeviz profile_output.prof
+
+# Line-by-line profiling
+pip install line_profiler
+kernprof -l -v train.py
+
+# Memory profiling
+pip install memory_profiler
+python -m memory_profiler train.py
+
+# Profile GPU memory
+pip install pytorch-memlab
+python -m pytorch_memlab.profile train.py</code></pre>
+                        </div>
+
+                        <h3>PyTorch Profiling</h3>
+                        <div class="code-block">
+                            <pre><code># PyTorch profiler
+cat > profile_pytorch.py << 'EOF'
+import torch
+import torch.nn as nn
+import torch.profiler
+import torchvision.models as models
+
+def profile_model():
+    model = models.resnet50()
+    inputs = torch.randn(10, 3, 224, 224)
+    
+    with torch.profiler.profile(
+        schedule=torch.profiler.schedule(wait=1, warmup=1, active=3),
+        on_trace_ready=torch.profiler.tensorboard_trace_handler('./log/resnet50'),
+        record_shapes=True,
+        profile_memory=True,
+        with_stack=True
+    ) as prof:
+        for step in range(6):
+            outputs = model(inputs)
+            prof.step()
+    
+    print(prof.key_averages().table(sort_by="cuda_time_total", row_limit=10))
+
+if __name__ == "__main__":
+    profile_model()
+EOF
+
+python profile_pytorch.py
+
+# View in TensorBoard
+tensorboard --logdir=./log</code></pre>
+                        </div>
+
+                        <h3>System Resource Monitoring</h3>
+                        <div class="code-block">
+                            <pre><code># CPU and memory monitoring
+top -p $(pgrep python) -d 1
+
+# Detailed process monitoring
+htop
+
+# I/O monitoring
+iotop -a
+
+# Network monitoring
+nethogs
+
+# Disk usage monitoring
+du -sh * | sort -hr
+
+# Real-time system stats
+cat > system_monitor.py << 'EOF'
+#!/usr/bin/env python3
+import psutil
+import time
+import json
+from datetime import datetime
+
+def get_system_stats():
+    stats = {
+        'timestamp': datetime.now().isoformat(),
+        'cpu_percent': psutil.cpu_percent(interval=1),
+        'memory': {
+            'total': psutil.virtual_memory().total,
+            'available': psutil.virtual_memory().available,
+            'used': psutil.virtual_memory().used,
+            'percent': psutil.virtual_memory().percent
+        },
+        'disk': {
+            'total': psutil.disk_usage('/').total,
+            'used': psutil.disk_usage('/').used,
+            'free': psutil.disk_usage('/').free,
+            'percent': psutil.disk_usage('/').percent
+        },
+        'network': {
+            'bytes_sent': psutil.net_io_counters().bytes_sent,
+            'bytes_recv': psutil.net_io_counters().bytes_recv
+        }
+    }
+    
+    # GPU stats (if available)
+    try:
+        import pynvml
+        pynvml.nvmlInit()
+        gpu_count = pynvml.nvmlDeviceGetCount()
+        stats['gpu'] = []
+        
+        for i in range(gpu_count):
+            handle = pynvml.nvmlDeviceGetHandleByIndex(i)
+            gpu_info = {
+                'id': i,
+                'name': pynvml.nvmlDeviceGetName(handle).decode('utf-8'),
+                'memory_used': pynvml.nvmlDeviceGetMemoryInfo(handle).used,
+                'memory_total': pynvml.nvmlDeviceGetMemoryInfo(handle).total,
+                'utilization': pynvml.nvmlDeviceGetUtilizationRates(handle).gpu,
+                'temperature': pynvml.nvmlDeviceGetTemperature(handle, pynvml.NVML_TEMPERATURE_GPU)
+            }
+            stats['gpu'].append(gpu_info)
+    except ImportError:
+        pass
+    
+    return stats
+
+def main():
+    log_file = 'system_stats.log'
+    
+    while True:
+        stats = get_system_stats()
+        
+        # Write to log file
+        with open(log_file, 'a') as f:
+            f.write(json.dumps(stats) + '\n')
+        
+        # Print current stats
+        print(f"CPU: {stats['cpu_percent']:.1f}% | "
+              f"Memory: {stats['memory']['percent']:.1f}% | "
+              f"Disk: {stats['disk']['percent']:.1f}%")
+        
+        if 'gpu' in stats:
+            for gpu in stats['gpu']:
+                mem_percent = (gpu['memory_used'] / gpu['memory_total']) * 100
+                print(f"GPU {gpu['id']}: {gpu['utilization']}% | "
+                      f"Memory: {mem_percent:.1f}% | "
+                      f"Temp: {gpu['temperature']}°C")
+        
+        time.sleep(5)
+
+if __name__ == "__main__":
+    main()
+EOF
+
+python system_monitor.py</code></pre>
+                        </div>
+                    </section>
+
+                    <section id="debugging" class="lesson-section">
+                        <h2>7. Debugging Strategies</h2>
+                        
+                        <h3>Remote Debugging</h3>
+                        <div class="code-block">
+                            <pre><code># Remote debugging with pdb
+python -m pdb train.py
+
+# Remote debugging with ipdb
+pip install ipdb
+python -m ipdb train.py
+
+# Remote debugging with debugpy (VS Code)
+pip install debugpy
+python -m debugpy --listen 5678 --wait-for-client train.py
+
+# Attach to running process
+python -m debugpy --listen 5678 --pid 12345</code></pre>
+                        </div>
+
+                        <h3>Distributed Training Debugging</h3>
+                        <div class="code-block">
+                            <pre><code># Debug distributed training
+cat > debug_distributed.py << 'EOF'
+import torch
+import torch.distributed as dist
+import torch.multiprocessing as mp
+import os
+
+def debug_worker(rank, world_size):
+    os.environ['MASTER_ADDR'] = 'localhost'
+    os.environ['MASTER_PORT'] = '12355'
+    
+    # Initialize the process group
+    dist.init_process_group(
+        backend='nccl',
+        init_method='env://',
+        world_size=world_size,
+        rank=rank
+    )
+    
+    print(f"Worker {rank} initialized")
+    
+    # Debug tensor operations
+    tensor = torch.randn(2, 3).cuda(rank)
+    print(f"Worker {rank} tensor: {tensor}")
+    
+    # All-reduce operation
+    dist.all_reduce(tensor)
+    print(f"Worker {rank} after all_reduce: {tensor}")
+    
+    # Clean up
+    dist.destroy_process_group()
+
+def main():
+    world_size = 2
+    mp.spawn(debug_worker, args=(world_size,), nprocs=world_size, join=True)
+
+if __name__ == "__main__":
+    main()
+EOF
+
+# Run with debugging
+NCCL_DEBUG=INFO python debug_distributed.py</code></pre>
+                        </div>
+
+                        <h3>Model Debugging Tools</h3>
+                        <div class="code-block">
+                            <pre><code># Model architecture debugging
+cat > debug_model.py << 'EOF'
+import torch
+import torch.nn as nn
+import torchsummary
+
+def debug_model_architecture():
+    model = nn.Sequential(
+        nn.Linear(784, 512),
+        nn.ReLU(),
+        nn.Dropout(0.2),
+        nn.Linear(512, 256),
+        nn.ReLU(),
+        nn.Dropout(0.2),
+        nn.Linear(256, 10)
+    )
+    
+    # Print model summary
+    torchsummary.summary(model, (784,))
+    
+    # Check model parameters
+    total_params = sum(p.numel() for p in model.parameters())
+    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    
+    print(f"Total parameters: {total_params:,}")
+    print(f"Trainable parameters: {trainable_params:,}")
+    
+    # Debug forward pass
+    x = torch.randn(32, 784)
+    
+    # Hook to capture intermediate outputs
+    activations = {}
+    def get_activation(name):
+        def hook(model, input, output):
+            activations[name] = output.detach()
+        return hook
+    
+    # Register hooks
+    model[0].register_forward_hook(get_activation('layer1'))
+    model[3].register_forward_hook(get_activation('layer2'))
+    
+    # Forward pass
+    output = model(x)
+    
+    # Check activations
+    for name, activation in activations.items():
+        print(f"{name}: shape={activation.shape}, mean={activation.mean():.4f}, std={activation.std():.4f}")
+
+if __name__ == "__main__":
+    debug_model_architecture()
+EOF
+
+# Gradient debugging
+cat > debug_gradients.py << 'EOF'
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
+def debug_gradients():
+    model = nn.Sequential(
+        nn.Linear(10, 5),
+        nn.ReLU(),
+        nn.Linear(5, 1)
+    )
+    
+    criterion = nn.MSELoss()
+    optimizer = optim.Adam(model.parameters(), lr=0.01)
+    
+    # Sample data
+    x = torch.randn(32, 10)
+    y = torch.randn(32, 1)
+    
+    # Forward pass
+    output = model(x)
+    loss = criterion(output, y)
+    
+    # Backward pass
+    loss.backward()
+    
+    # Check gradients
+    print("Gradient analysis:")
+    for name, param in model.named_parameters():
+        if param.grad is not None:
+            grad_norm = param.grad.data.norm(2)
+            print(f"{name}: grad_norm={grad_norm:.6f}, shape={param.grad.shape}")
+            
+            # Check for vanishing/exploding gradients
+            if grad_norm < 1e-6:
+                print(f"  WARNING: Vanishing gradient in {name}")
+            elif grad_norm > 1e3:
+                print(f"  WARNING: Exploding gradient in {name}")
+        else:
+            print(f"{name}: No gradient")
+
+if __name__ == "__main__":
+    debug_gradients()
+EOF</code></pre>
+                        </div>
+                    </section>
+
+                    <section id="troubleshooting" class="lesson-section">
+                        <h2>8. Troubleshooting Common Issues</h2>
+                        
+                        <h3>Memory Issues</h3>
+                        <div class="code-block">
+                            <pre><code># Debug CUDA out of memory
+cat > debug_cuda_memory.py << 'EOF'
+import torch
+import gc
+
+def debug_cuda_memory():
+    if torch.cuda.is_available():
+        print(f"CUDA devices: {torch.cuda.device_count()}")
+        for i in range(torch.cuda.device_count()):
+            print(f"Device {i}: {torch.cuda.get_device_name(i)}")
+            print(f"  Memory allocated: {torch.cuda.memory_allocated(i) / 1024**2:.1f} MB")
+            print(f"  Memory cached: {torch.cuda.memory_reserved(i) / 1024**2:.1f} MB")
+    
+    # Force garbage collection
+    gc.collect()
+    torch.cuda.empty_cache()
+    
+    # Monitor memory usage
+    def memory_usage_hook(module, input, output):
+        if torch.cuda.is_available():
+            print(f"Memory after {module.__class__.__name__}: "
+                  f"{torch.cuda.memory_allocated() / 1024**2:.1f} MB")
+    
+    return memory_usage_hook
+
+# Use smaller batch sizes
+def adaptive_batch_size(model, loss_fn, initial_batch_size=32):
+    batch_size = initial_batch_size
+    
+    while batch_size > 1:
+        try:
+            # Test with current batch size
+            x = torch.randn(batch_size, 784).cuda()
+            y = torch.randn(batch_size, 10).cuda()
+            
+            output = model(x)
+            loss = loss_fn(output, y)
+            loss.backward()
+            
+            print(f"Batch size {batch_size} works")
+            return batch_size
+            
+        except RuntimeError as e:
+            if "out of memory" in str(e):
+                batch_size //= 2
+                torch.cuda.empty_cache()
+                print(f"Reduced batch size to {batch_size}")
+            else:
+                raise e
+    
+    raise RuntimeError("Cannot find suitable batch size")
+
+if __name__ == "__main__":
+    debug_cuda_memory()
+EOF
+
+# Memory profiling script
+cat > memory_profiler.py << 'EOF'
+import tracemalloc
+import torch
+import time
+
+def profile_memory_usage():
+    tracemalloc.start()
+    
+    # Your training code here
+    model = torch.nn.Linear(1000, 1000).cuda()
+    
+    for i in range(10):
+        x = torch.randn(100, 1000).cuda()
+        y = model(x)
+        loss = y.sum()
+        loss.backward()
+        
+        if i % 5 == 0:
+            current, peak = tracemalloc.get_traced_memory()
+            print(f"Step {i}: Current memory: {current / 1024**2:.1f} MB, "
+                  f"Peak: {peak / 1024**2:.1f} MB")
+    
+    tracemalloc.stop()
+
+if __name__ == "__main__":
+    profile_memory_usage()
+EOF</code></pre>
+                        </div>
+
+                        <h3>Training Issues</h3>
+                        <div class="code-block">
+                            <pre><code># Debug training convergence
+cat > debug_training.py << 'EOF'
+import torch
+import torch.nn as nn
+import matplotlib.pyplot as plt
+import numpy as np
+
+def debug_training_convergence():
+    # Create simple model
+    model = nn.Sequential(
+        nn.Linear(2, 10),
+        nn.ReLU(),
+        nn.Linear(10, 1)
+    )
+    
+    # Generate synthetic data
+    torch.manual_seed(42)
+    X = torch.randn(1000, 2)
+    y = (X[:, 0] + X[:, 1] > 0).float().unsqueeze(1)
+    
+    criterion = nn.BCEWithLogitsLoss()
+    
+    # Test different optimizers
+    optimizers = {
+        'SGD': torch.optim.SGD(model.parameters(), lr=0.01),
+        'Adam': torch.optim.Adam(model.parameters(), lr=0.01),
+        'AdamW': torch.optim.AdamW(model.parameters(), lr=0.01)
+    }
+    
+    for opt_name, optimizer in optimizers.items():
+        # Reset model
+        model.apply(lambda m: m.reset_parameters() if hasattr(m, 'reset_parameters') else None)
+        
+        losses = []
+        
+        for epoch in range(100):
+            optimizer.zero_grad()
+            output = model(X)
+            loss = criterion(output, y)
+            loss.backward()
+            
+            # Check for NaN gradients
+            nan_grads = any(torch.isnan(p.grad).any() for p in model.parameters() if p.grad is not None)
+            if nan_grads:
+                print(f"NaN gradients detected at epoch {epoch} with {opt_name}")
+                break
+            
+            optimizer.step()
+            losses.append(loss.item())
+            
+            if epoch % 20 == 0:
+                print(f"{opt_name} - Epoch {epoch}: Loss = {loss.item():.4f}")
+        
+        plt.plot(losses, label=opt_name)
+    
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.title('Training Convergence Comparison')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+if __name__ == "__main__":
+    debug_training_convergence()
+EOF
+
+# Learning rate finder
+cat > lr_finder.py << 'EOF'
+import torch
+import torch.nn as nn
+import matplotlib.pyplot as plt
+import numpy as np
+
+def find_learning_rate(model, train_loader, criterion, init_lr=1e-8, final_lr=10, beta=0.98):
+    num_batches = len(train_loader)
+    lr_multiplier = (final_lr / init_lr) ** (1 / num_batches)
+    
+    optimizer = torch.optim.SGD(model.parameters(), lr=init_lr)
+    
+    lrs = []
+    losses = []
+    avg_loss = 0
+    best_loss = float('inf')
+    
+    for batch_idx, (data, target) in enumerate(train_loader):
+        # Forward pass
+        optimizer.zero_grad()
+        output = model(data)
+        loss = criterion(output, target)
+        
+        # Compute smoothed loss
+        avg_loss = beta * avg_loss + (1 - beta) * loss.item()
+        smoothed_loss = avg_loss / (1 - beta ** (batch_idx + 1))
+        
+        # Stop if loss is exploding
+        if smoothed_loss > 4 * best_loss:
+            break
+        
+        if smoothed_loss < best_loss:
+            best_loss = smoothed_loss
+        
+        # Store values
+        lrs.append(optimizer.param_groups[0]['lr'])
+        losses.append(smoothed_loss)
+        
+        # Backward pass
+        loss.backward()
+        optimizer.step()
+        
+        # Update learning rate
+        for param_group in optimizer.param_groups:
+            param_group['lr'] *= lr_multiplier
+    
+    return lrs, losses
+
+def plot_lr_finder(lrs, losses):
+    plt.figure(figsize=(10, 6))
+    plt.subplot(1, 2, 1)
+    plt.plot(lrs, losses)
+    plt.xlabel('Learning Rate')
+    plt.ylabel('Loss')
+    plt.title('Learning Rate vs Loss')
+    plt.xscale('log')
+    plt.grid(True)
+    
+    plt.subplot(1, 2, 2)
+    # Find the steepest descent
+    min_gradient_idx = np.argmin(np.gradient(losses))
+    suggested_lr = lrs[min_gradient_idx]
+    
+    plt.plot(lrs, losses)
+    plt.axvline(x=suggested_lr, color='r', linestyle='--', 
+                label=f'Suggested LR: {suggested_lr:.2e}')
+    plt.xlabel('Learning Rate')
+    plt.ylabel('Loss')
+    plt.title('Learning Rate Finder')
+    plt.xscale('log')
+    plt.legend()
+    plt.grid(True)
+    
+    plt.tight_layout()
+    plt.show()
+    
+    return suggested_lr
+
+if __name__ == "__main__":
+    # Example usage
+    model = nn.Linear(10, 1)
+    criterion = nn.MSELoss()
+    
+    # Create dummy data loader
+    from torch.utils.data import DataLoader, TensorDataset
+    X = torch.randn(1000, 10)
+    y = torch.randn(1000, 1)
+    dataset = TensorDataset(X, y)
+    train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
+    
+    lrs, losses = find_learning_rate(model, train_loader, criterion)
+    suggested_lr = plot_lr_finder(lrs, losses)
+    
+    print(f"Suggested learning rate: {suggested_lr:.2e}")
+EOF</code></pre>
+                        </div>
+
+                        <div class="exercise-card">
+                            <h3>Final Project: Complete AI Monitoring System</h3>
+                            <p>Build a comprehensive monitoring system for AI training pipelines.</p>
+                            <div class="code-block">
+                                <pre><code># Create monitoring system
+cat > ai_monitoring_system.py << 'EOF'
+#!/usr/bin/env python3
+import json
+import time
+import subprocess
+import threading
+import logging
+from datetime import datetime
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+class AIMonitoringSystem:
+    def __init__(self, config_file='monitoring_config.json'):
+        self.config = self.load_config(config_file)
+        self.setup_logging()
+        self.metrics_buffer = []
+        self.running = False
+        
+    def load_config(self, config_file):
+        default_config = {
+            "log_file": "training.log",
+            "output_dir": "monitoring_output",
+            "check_interval": 5,
+            "gpu_monitoring": True,
+            "system_monitoring": True,
+            "log_parsing": True,
+            "alert_thresholds": {
+                "gpu_memory": 95,
+                "gpu_utilization": 95,
+                "system_memory": 90,
+                "training_loss_plateau": 100
+            }
+        }
+        
+        if os.path.exists(config_file):
+            with open(config_file, 'r') as f:
+                config = json.load(f)
+            # Merge with defaults
+            for key, value in default_config.items():
+                if key not in config:
+                    config[key] = value
+        else:
+            config = default_config
+            with open(config_file, 'w') as f:
+                json.dump(config, f, indent=2)
+        
+        return config
+    
+    def setup_logging(self):
+        os.makedirs(self.config['output_dir'], exist_ok=True)
+        
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(levelname)s - %(message)s',
+            handlers=[
+                logging.FileHandler(f"{self.config['output_dir']}/monitor.log"),
+                logging.StreamHandler()
+            ]
+        )
+        self.logger = logging.getLogger(__name__)
+    
+    def collect_gpu_metrics(self):
+        try:
+            result = subprocess.run([
+                'nvidia-smi', '--query-gpu=index,name,utilization.gpu,memory.used,memory.total,temperature.gpu',
+                '--format=csv,noheader,nounits'
+            ], capture_output=True, text=True)
+            
+            if result.returncode == 0:
+                metrics = []
+                for line in result.stdout.strip().split('\n'):
+                    if line:
+                        parts = line.split(', ')
+                        if len(parts) >= 6:
+                            metrics.append({
+                                'gpu_id': int(parts[0]),
+                                'gpu_name': parts[1],
+                                'gpu_utilization': float(parts[2]),
+                                'memory_used': float(parts[3]),
+                                'memory_total': float(parts[4]),
+                                'temperature': float(parts[5]),
+                                'memory_percent': (float(parts[3]) / float(parts[4])) * 100
+                            })
+                return metrics
+        except Exception as e:
+            self.logger.error(f"Error collecting GPU metrics: {e}")
+        return []
+    
+    def collect_system_metrics(self):
+        try:
+            import psutil
+            
+            memory = psutil.virtual_memory()
+            cpu_percent = psutil.cpu_percent(interval=1)
+            
+            return {
+                'cpu_percent': cpu_percent,
+                'memory_percent': memory.percent,
+                'memory_used': memory.used,
+                'memory_total': memory.total,
+                'disk_usage': psutil.disk_usage('/').percent
+            }
+        except Exception as e:
+            self.logger.error(f"Error collecting system metrics: {e}")
+        return {}
+    
+    def parse_training_logs(self):
+        try:
+            if os.path.exists(self.config['log_file']):
+                with open(self.config['log_file'], 'r') as f:
+                    lines = f.readlines()
+                
+                # Parse recent lines for metrics
+                recent_metrics = []
+                for line in lines[-100:]:  # Check last 100 lines
+                    if 'loss' in line.lower() or 'accuracy' in line.lower():
+                        # Extract metrics using regex or simple parsing
+                        # This is a simplified example
+                        if 'loss:' in line:
+                            try:
+                                loss_value = float(line.split('loss:')[1].split()[0])
+                                recent_metrics.append({'metric': 'loss', 'value': loss_value})
+                            except:
+                                pass
+                
+                return recent_metrics
+        except Exception as e:
+            self.logger.error(f"Error parsing training logs: {e}")
+        return []
+    
+    def check_alerts(self, metrics):
+        alerts = []
+        
+        # GPU alerts
+        for gpu_metric in metrics.get('gpu', []):
+            if gpu_metric['memory_percent'] > self.config['alert_thresholds']['gpu_memory']:
+                alerts.append(f"GPU {gpu_metric['gpu_id']} memory high: {gpu_metric['memory_percent']:.1f}%")
+            
+            if gpu_metric['gpu_utilization'] > self.config['alert_thresholds']['gpu_utilization']:
+                alerts.append(f"GPU {gpu_metric['gpu_id']} utilization high: {gpu_metric['gpu_utilization']:.1f}%")
+        
+        # System alerts
+        if 'system' in metrics:
+            if metrics['system']['memory_percent'] > self.config['alert_thresholds']['system_memory']:
+                alerts.append(f"System memory high: {metrics['system']['memory_percent']:.1f}%")
+        
+        return alerts
+    
+    def generate_report(self):
+        if not self.metrics_buffer:
+            return
+        
+        # Create DataFrame from metrics
+        df_data = []
+        for metric in self.metrics_buffer:
+            row = {'timestamp': metric['timestamp']}
+            
+            # Add GPU metrics
+            for gpu in metric.get('gpu', []):
+                row[f'gpu_{gpu["gpu_id"]}_util'] = gpu['gpu_utilization']
+                row[f'gpu_{gpu["gpu_id"]}_memory'] = gpu['memory_percent']
+                row[f'gpu_{gpu["gpu_id"]}_temp'] = gpu['temperature']
+            
+            # Add system metrics
+            if 'system' in metric:
+                row['cpu_percent'] = metric['system']['cpu_percent']
+                row['memory_percent'] = metric['system']['memory_percent']
+            
+            df_data.append(row)
+        
+        df = pd.DataFrame(df_data)
+        
+        # Generate plots
+        fig, axes = plt.subplots(2, 2, figsize=(15, 10))
+        
+        # GPU utilization
+        gpu_util_cols = [col for col in df.columns if 'gpu_' in col and '_util' in col]
+        if gpu_util_cols:
+            df[gpu_util_cols].plot(ax=axes[0, 0], title='GPU Utilization')
+            axes[0, 0].set_ylabel('Utilization %')
+            axes[0, 0].grid(True)
+        
+        # GPU memory
+        gpu_mem_cols = [col for col in df.columns if 'gpu_' in col and '_memory' in col]
+        if gpu_mem_cols:
+            df[gpu_mem_cols].plot(ax=axes[0, 1], title='GPU Memory Usage')
+            axes[0, 1].set_ylabel('Memory %')
+            axes[0, 1].grid(True)
+        
+        # System metrics
+        if 'cpu_percent' in df.columns:
+            df['cpu_percent'].plot(ax=axes[1, 0], title='CPU Usage')
+            axes[1, 0].set_ylabel('CPU %')
+            axes[1, 0].grid(True)
+        
+        if 'memory_percent' in df.columns:
+            df['memory_percent'].plot(ax=axes[1, 1], title='System Memory Usage')
+            axes[1, 1].set_ylabel('Memory %')
+            axes[1, 1].grid(True)
+        
+        plt.tight_layout()
+        plt.savefig(f"{self.config['output_dir']}/monitoring_report.png", dpi=300)
+        plt.close()
+        
+        # Save metrics to CSV
+        df.to_csv(f"{self.config['output_dir']}/metrics.csv", index=False)
+        
+        self.logger.info(f"Report generated: {len(df)} data points")
+    
+    def monitoring_loop(self):
+        while self.running:
+            try:
+                current_metrics = {
+                    'timestamp': datetime.now().isoformat()
+                }
+                
+                if self.config['gpu_monitoring']:
+                    current_metrics['gpu'] = self.collect_gpu_metrics()
+                
+                if self.config['system_monitoring']:
+                    current_metrics['system'] = self.collect_system_metrics()
+                
+                if self.config['log_parsing']:
+                    current_metrics['training'] = self.parse_training_logs()
+                
+                self.metrics_buffer.append(current_metrics)
+                
+                # Check for alerts
+                alerts = self.check_alerts(current_metrics)
+                for alert in alerts:
+                    self.logger.warning(f"ALERT: {alert}")
+                
+                # Keep buffer size manageable
+                if len(self.metrics_buffer) > 1000:
+                    self.metrics_buffer = self.metrics_buffer[-500:]
+                
+                time.sleep(self.config['check_interval'])
+                
+            except Exception as e:
+                self.logger.error(f"Error in monitoring loop: {e}")
+                time.sleep(self.config['check_interval'])
+    
+    def start(self):
+        self.logger.info("Starting AI monitoring system")
+        self.running = True
+        
+        # Start monitoring in separate thread
+        monitor_thread = threading.Thread(target=self.monitoring_loop)
+        monitor_thread.daemon = True
+        monitor_thread.start()
+        
+        try:
+            while self.running:
+                time.sleep(60)  # Generate report every minute
+                self.generate_report()
+        except KeyboardInterrupt:
+            self.logger.info("Stopping monitoring system")
+            self.running = False
+            self.generate_report()  # Final report
+
+if __name__ == "__main__":
+    monitor = AIMonitoringSystem()
+    monitor.start()
+EOF
+
+# Run the monitoring system
+python ai_monitoring_system.py</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <nav class="lesson-nav">
+                        <a href="09-cloud-ai-tools.html" class="btn btn-outline-secondary">
+                            ← Previous: Cloud AI Tools
+                        </a>
+                        <a href="../lessons.html" class="btn btn-outline-primary">
+                            Back to Lessons
+                        </a>
+                    </nav>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../terminal-simulator.js"></script>
+    <script>
+        // Terminal simulator functions
+        function runTensorBoardDemo() {
+            const terminal = document.getElementById('tensorboard-demo-output');
+            const commands = [
+                { cmd: 'tensorboard --logdir=./experiments --port=6006', 
+                  output: 'TensorBoard 2.13.0 at http://localhost:6006/ (Press CTRL+C to quit)\nServing TensorBoard on http://0.0.0.0:6006\n' },
+                { cmd: 'curl -s http://localhost:6006/data/runs', 
+                  output: '["experiment_1", "experiment_2", "experiment_3"]' }
+            ];
+            
+            simulateTerminalSession(terminal, commands);
+        }
+
+        function runGPUMonitorDemo() {
+            const terminal = document.getElementById('gpu-monitor-demo-output');
+            const commands = [
+                { cmd: 'nvidia-smi', 
+                  output: '+-----------------------------------------------------------------------------+\n| NVIDIA-SMI 470.57.02    Driver Version: 470.57.02    CUDA Version: 11.4     |\n|-------------------------------+----------------------+----------------------+\n| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |\n|                               |                      |               MIG M. |\n|===============================+======================+======================|\n|   0  Tesla V100-SXM2...  On   | 00000000:00:04.0 Off |                    0 |\n| N/A   42C    P0    47W / 300W |   8192MiB / 16160MiB |     85%      Default |\n|                               |                      |                  N/A |\n+-------------------------------+----------------------+----------------------+' },
+                { cmd: 'nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv',
+                  output: 'utilization.gpu [%], memory.used [MiB], memory.total [MiB]\n85, 8192, 16160' }
+            ];
+            
+            simulateTerminalSession(terminal, commands);
+        }
+
+        function simulateTerminalSession(terminal, commands) {
+            terminal.innerHTML = '';
+            let delay = 0;
+            
+            commands.forEach((command, index) => {
+                setTimeout(() => {
+                    // Add command prompt
+                    const promptElement = document.createElement('div');
+                    promptElement.className = 'terminal-prompt';
+                    promptElement.innerHTML = `<span class="prompt-symbol">$</span> ${command.cmd}`;
+                    terminal.appendChild(promptElement);
+                    
+                    // Add output
+                    setTimeout(() => {
+                        const outputElement = document.createElement('div');
+                        outputElement.className = 'terminal-output';
+                        outputElement.innerHTML = command.output.replace(/\n/g, '<br>');
+                        terminal.appendChild(outputElement);
+                        
+                        // Scroll to bottom
+                        terminal.scrollTop = terminal.scrollHeight;
+                    }, 500);
+                }, delay);
+                
+                delay += 1500;
+            });
+        }
+
+        function clearTerminal(terminalId) {
+            const terminal = document.getElementById(terminalId + '-output');
+            terminal.innerHTML = '';
+        }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

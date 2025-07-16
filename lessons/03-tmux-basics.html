@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 3: Tmux Basics - AI Terminal Tutor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/lessons.css">
+    <style>
+        .terminal-simulator {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            min-height: 300px;
+            margin: 20px 0;
+            position: relative;
+            overflow-y: auto;
+            border: 2px solid #333;
+        }
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: #d4d4d4;
+            outline: none;
+            width: 100%;
+            font-family: inherit;
+        }
+        .terminal-line {
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+        .terminal-prompt {
+            color: #4ec9b0;
+            font-weight: bold;
+        }
+        .terminal-output {
+            color: #cccccc;
+            white-space: pre-wrap;
+        }
+        .terminal-command {
+            color: #9cdcfe;
+        }
+        .terminal-error {
+            color: #f14c4c;
+        }
+        .key-binding {
+            background-color: #2d3142;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            display: inline-block;
+            margin: 2px;
+            border: 1px solid #444;
+        }
+        .tmux-diagram {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 25px 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .tmux-session {
+            border: 3px solid #4299e1;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            background: rgba(66, 153, 225, 0.1);
+        }
+        .tmux-window {
+            border: 2px solid #48bb78;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(72, 187, 120, 0.1);
+        }
+        .tmux-pane {
+            border: 1px solid #ed8936;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 8px;
+            background: rgba(237, 137, 54, 0.1);
+            color: white;
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .exercise-box {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-left: 5px solid #4299e1;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        .config-example {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            border: 1px solid #4a5568;
+        }
+        .troubleshooting-item {
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #fef5e7 0%, #fed7aa 100%);
+            border-radius: 8px;
+            border-left: 4px solid #f39c12;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .concept-card {
+            transition: transform 0.2s ease;
+            border: none;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        .concept-card:hover {
+            transform: translateY(-4px);
+        }
+        .workflow-example {
+            background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 1px solid #cbd5e0;
+        }
+        .keybinding-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        .keybinding-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+        }
+        .keybinding-table td {
+            padding: 12px 15px;
+            vertical-align: middle;
+        }
+        .ai-use-case {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .demo-button {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-terminal"></i> AI Terminal Tutor
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="../index.html#lessons">Lessons</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="list-group sticky-top" style="top: 20px;">
+                    <a href="#introduction" class="list-group-item list-group-item-action">
+                        <i class="fas fa-info-circle me-2"></i>Introduction to Tmux
+                    </a>
+                    <a href="#installation" class="list-group-item list-group-item-action">
+                        <i class="fas fa-download me-2"></i>Installation
+                    </a>
+                    <a href="#concepts" class="list-group-item list-group-item-action">
+                        <i class="fas fa-cube me-2"></i>Core Concepts
+                    </a>
+                    <a href="#keybindings" class="list-group-item list-group-item-action">
+                        <i class="fas fa-keyboard me-2"></i>Essential Keybindings
+                    </a>
+                    <a href="#exercises" class="list-group-item list-group-item-action">
+                        <i class="fas fa-dumbbell me-2"></i>Interactive Exercises
+                    </a>
+                    <a href="#ai-workflows" class="list-group-item list-group-item-action">
+                        <i class="fas fa-robot me-2"></i>AI Development Workflows
+                    </a>
+                    <a href="#configuration" class="list-group-item list-group-item-action">
+                        <i class="fas fa-cog me-2"></i>Configuration
+                    </a>
+                    <a href="#troubleshooting" class="list-group-item list-group-item-action">
+                        <i class="fas fa-wrench me-2"></i>Troubleshooting
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <!-- Lesson Header -->
+                <div class="card mb-4 shadow">
+                    <div class="card-body bg-light">
+                        <h1 class="card-title h2 mb-3">
+                            <i class="fas fa-graduation-cap text-primary"></i> Lesson 3: Tmux Basics
+                        </h1>
+                        <p class="lead mb-4">Master the terminal multiplexer that's essential for AI development, remote work, and managing complex terminal workflows.</p>
+                        
+                        <!-- Learning Objectives -->
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading"><i class="fas fa-bullseye"></i> Learning Objectives</h5>
+                            <ul class="mb-0">
+                                <li>Understand what tmux is and why it's crucial for AI development</li>
+                                <li>Install and configure tmux across different platforms</li>
+                                <li>Master the three-tier hierarchy: sessions, windows, and panes</li>
+                                <li>Use essential keybindings for efficient workflow</li>
+                                <li>Create custom configurations for AI development</li>
+                                <li>Troubleshoot common tmux issues</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 1: Introduction -->
+                <section id="introduction" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-info-circle"></i> What is Tmux?</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Tmux (Terminal Multiplexer) is a powerful tool that allows you to create and manage multiple terminal sessions within a single window. It's like having multiple tabs and split screens in your terminal, but much more powerful.</p>
+                            
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <div class="card concept-card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><i class="fas fa-question-circle text-primary"></i> Why Use Tmux?</h5>
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-check text-success me-2"></i>Persist sessions across SSH disconnections</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Organize multiple projects in separate sessions</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Split terminal into multiple panes</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Share sessions with teammates</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Create reproducible development environments</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Background process management</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card concept-card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><i class="fas fa-robot text-success"></i> Benefits for AI Development</h5>
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-brain text-info me-2"></i>Monitor training logs in real-time</li>
+                                                <li><i class="fas fa-flask text-info me-2"></i>Run multiple experiments simultaneously</li>
+                                                <li><i class="fas fa-book text-info me-2"></i>Keep Jupyter notebooks running</li>
+                                                <li><i class="fas fa-microchip text-info me-2"></i>Manage GPU processes efficiently</li>
+                                                <li><i class="fas fa-exchange-alt text-info me-2"></i>Quick context switching between projects</li>
+                                                <li><i class="fas fa-server text-info me-2"></i>Remote model serving and monitoring</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ai-use-case mt-4">
+                                <h5><i class="fas fa-lightbulb"></i> Real-World AI Development Scenario</h5>
+                                <p class="mb-2">Imagine you're training a deep learning model remotely. With tmux, you can:</p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul class="mb-0">
+                                            <li>Session 1: Training script running for hours</li>
+                                            <li>Session 2: Jupyter notebook for data analysis</li>
+                                            <li>Session 3: TensorBoard monitoring</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ul class="mb-0">
+                                            <li>Detach and go home while training continues</li>
+                                            <li>Reattach from anywhere to check progress</li>
+                                            <li>Share sessions with team members</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: Installation -->
+                <section id="installation" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-download"></i> Installation</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Tmux is available on all major platforms. Choose your operating system below:</p>
+                            
+                            <ul class="nav nav-tabs" id="installTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="mac-tab" data-bs-toggle="tab" data-bs-target="#mac" type="button">
+                                        <i class="fab fa-apple me-2"></i>macOS
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="linux-tab" data-bs-toggle="tab" data-bs-target="#linux" type="button">
+                                        <i class="fab fa-linux me-2"></i>Linux
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="windows-tab" data-bs-toggle="tab" data-bs-target="#windows" type="button">
+                                        <i class="fab fa-windows me-2"></i>Windows
+                                    </button>
+                                </li>
+                            </ul>
+                            
+                            <div class="tab-content mt-3" id="installTabContent">
+                                <div class="tab-pane fade show active" id="mac" role="tabpanel">
+                                    <h5><i class="fas fa-beer text-warning"></i> Using Homebrew (Recommended):</h5>
+                                    <div class="terminal-simulator">
+                                        <div class="terminal-line">
+                                            <span class="terminal-prompt">$</span> <span class="terminal-command">brew install tmux</span>
+                                        </div>
+                                        <div class="terminal-line terminal-output">
+                                            Installing tmux...
+                                            🍺  tmux was successfully installed!
+                                        </div>
+                                    </div>
+                                    <h5><i class="fas fa-package text-secondary"></i> Using MacPorts:</h5>
+                                    <div class="terminal-simulator">
+                                        <div class="terminal-line">
+                                            <span class="terminal-prompt">$</span> <span class="terminal-command">sudo port install tmux</span>
+                                        </div>
+                                    </div>
+                                    <h5><i class="fas fa-box text-info"></i> Using Conda:</h5>
+                                    <div class="terminal-simulator">
+                                        <div class="terminal-line">
+                                            <span class="terminal-prompt">$</span> <span class="terminal-command">conda install -c conda-forge tmux</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="tab-pane fade" id="linux" role="tabpanel">
+                                    <h5><i class="fab fa-ubuntu text-warning"></i> Ubuntu/Debian:</h5>
+                                    <div class="terminal-simulator">
+                                        <div class="terminal-line">
+                                            <span class="terminal-prompt">$</span> <span class="terminal-command">sudo apt update</span>
+                                        </div>
+                                        <div class="terminal-line">
+                                            <span class="terminal-prompt">$</span> <span class="terminal-command">sudo apt install tmux</span>
+                                        </div>
+                                    </div>
+                                    <h5><i class="fab fa-redhat text-danger"></i> Fedora/RHEL/CentOS:</h5>
+                                    <div class="terminal-simulator">
+                                        <div class="terminal-line">
+                                            <span class="terminal-prompt">$</span> <span class="terminal-command">sudo dnf install tmux</span>
+                                        </div>
+                                    </div>
+                                    <h5><i class="fas fa-mountain text-primary"></i> Arch Linux:</h5>
+                                    <div class="terminal-simulator">
+                                        <div class="terminal-line">
+                                            <span class="terminal-prompt">$</span> <span class="terminal-command">sudo pacman -S tmux</span>
+                                        </div>
+                                    </div>
+                                    <h5><i class="fas fa-box text-info"></i> Using Conda (Any Linux):</h5>
+                                    <div class="terminal-simulator">
+                                        <div class="terminal-line">
+                                            <span class="terminal-prompt">$</span> <span class="terminal-command">conda install -c conda-forge tmux</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="tab-pane fade" id="windows" role="tabpanel">
+                                    <h5><i class="fab fa-microsoft text-info"></i> Using WSL2 (Recommended):</h5>
+                                    <div class="terminal-simulator">
+                                        <div class="terminal-line">
+                                            <span class="terminal-prompt">$</span> <span class="terminal-command">sudo apt update && sudo apt install tmux</span>
+                                        </div>
+                                    </div>
+                                    <h5><i class="fas fa-gift text-success"></i> Using Chocolatey:</h5>
+                                    <div class="terminal-simulator">
+                                        <div class="terminal-line">
+                                            <span class="terminal-prompt">$</span> <span class="terminal-command">choco install tmux</span>
+                                        </div>
+                                    </div>
+                                    <h5><i class="fab fa-git-alt text-warning"></i> Using Git Bash:</h5>
+                                    <p>Download the precompiled binary from the tmux GitHub releases page and add to PATH.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info mt-4" role="alert">
+                                <h5><i class="fas fa-info-circle"></i> Verify Installation</h5>
+                                <p class="mb-2">After installation, verify tmux is working correctly:</p>
+                                <div class="terminal-simulator">
+                                    <div class="terminal-line">
+                                        <span class="terminal-prompt">$</span> <span class="terminal-command">tmux -V</span>
+                                    </div>
+                                    <div class="terminal-line terminal-output">tmux 3.3a</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3: Core Concepts -->
+                <section id="concepts" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-cube"></i> Core Concepts</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Tmux has a hierarchical structure with three main components. Understanding this hierarchy is crucial for mastering tmux.</p>
+                            
+                            <div class="tmux-diagram">
+                                <h4 class="text-white text-center mb-4"><i class="fas fa-sitemap"></i> Tmux Hierarchy</h4>
+                                <div class="tmux-session">
+                                    <h5 class="text-primary mb-3"><i class="fas fa-server"></i> Session: "ai-project"</h5>
+                                    <p class="text-light mb-3">A persistent workspace containing multiple windows</p>
+                                    
+                                    <div class="tmux-window">
+                                        <h6 class="text-success mb-2"><i class="fas fa-window-maximize"></i> Window 1: "editor"</h6>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="tmux-pane">
+                                                    <div>
+                                                        <i class="fas fa-code"></i><br>
+                                                        <small>Pane 1: Neovim</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="tmux-pane">
+                                                    <div>
+                                                        <i class="fas fa-terminal"></i><br>
+                                                        <small>Pane 2: Terminal</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="tmux-window">
+                                        <h6 class="text-success mb-2"><i class="fas fa-window-maximize"></i> Window 2: "training"</h6>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="tmux-pane">
+                                                    <div>
+                                                        <i class="fas fa-brain"></i><br>
+                                                        <small>Pane 1: Training Script</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="tmux-pane">
+                                                    <div>
+                                                        <i class="fas fa-chart-line"></i><br>
+                                                        <small>Pane 2: TensorBoard</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tmux-window">
+                                        <h6 class="text-success mb-2"><i class="fas fa-window-maximize"></i> Window 3: "jupyter"</h6>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="tmux-pane">
+                                                    <div>
+                                                        <i class="fas fa-book"></i><br>
+                                                        <small>Pane 1: Jupyter Lab</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-md-4">
+                                    <div class="card concept-card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><i class="fas fa-server text-primary"></i> Sessions</h5>
+                                            <p>Independent workspaces that persist even when detached. Perfect for organizing different projects or environments.</p>
+                                            <ul class="small list-unstyled">
+                                                <li><i class="fas fa-tag me-2"></i>Can be named for easy identification</li>
+                                                <li><i class="fas fa-clock me-2"></i>Persist after disconnection</li>
+                                                <li><i class="fas fa-users me-2"></i>Can be shared between users</li>
+                                                <li><i class="fas fa-save me-2"></i>Maintain state across reboots</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card concept-card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><i class="fas fa-window-maximize text-success"></i> Windows</h5>
+                                            <p>Similar to tabs in a browser. Each window can have a different layout and purpose within a session.</p>
+                                            <ul class="small list-unstyled">
+                                                <li><i class="fas fa-sort-numeric-up me-2"></i>Numbered and named</li>
+                                                <li><i class="fas fa-exchange-alt me-2"></i>Quick switching with shortcuts</li>
+                                                <li><i class="fas fa-th me-2"></i>Independent layouts</li>
+                                                <li><i class="fas fa-eye me-2"></i>Status bar indicators</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card concept-card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><i class="fas fa-columns text-warning"></i> Panes</h5>
+                                            <p>Split views within a window. Each pane runs its own shell instance independently.</p>
+                                            <ul class="small list-unstyled">
+                                                <li><i class="fas fa-cut me-2"></i>Horizontal/vertical splits</li>
+                                                <li><i class="fas fa-arrows-alt me-2"></i>Resizable boundaries</li>
+                                                <li><i class="fas fa-crosshairs me-2"></i>Focus switching</li>
+                                                <li><i class="fas fa-expand me-2"></i>Zoom functionality</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 4: Essential Keybindings -->
+                <section id="keybindings" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-keyboard"></i> Essential Keybindings</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Tmux uses a prefix key (default: <span class="key-binding">Ctrl+b</span>) followed by a command key. Master these shortcuts for efficient workflow.</p>
+                            
+                            <div class="alert alert-warning mb-4">
+                                <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> All keybindings below assume you press and release <span class="key-binding">Ctrl+b</span> first, then press the command key.
+                            </div>
+                            
+                            <div class="accordion" id="keybindingsAccordion">
+                                <!-- Session Management -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#sessionKeys">
+                                            <i class="fas fa-server me-2"></i> Session Management
+                                        </button>
+                                    </h2>
+                                    <div id="sessionKeys" class="accordion-collapse collapse show" data-bs-parent="#keybindingsAccordion">
+                                        <div class="accordion-body">
+                                            <table class="table keybinding-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Command</th>
+                                                        <th>Keybinding</th>
+                                                        <th>Description</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><strong>Start session</strong></td>
+                                                        <td><span class="key-binding">tmux new -s name</span></td>
+                                                        <td>Create a new named session</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>List sessions</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b s</span></td>
+                                                        <td>Interactive session selector</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Detach session</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b d</span></td>
+                                                        <td>Detach from current session</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Attach session</strong></td>
+                                                        <td><span class="key-binding">tmux attach -t name</span></td>
+                                                        <td>Reattach to named session</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Rename session</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b $</span></td>
+                                                        <td>Rename current session</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Kill session</strong></td>
+                                                        <td><span class="key-binding">tmux kill-session -t name</span></td>
+                                                        <td>Terminate named session</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Window Management -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#windowKeys">
+                                            <i class="fas fa-window-maximize me-2"></i> Window Management
+                                        </button>
+                                    </h2>
+                                    <div id="windowKeys" class="accordion-collapse collapse" data-bs-parent="#keybindingsAccordion">
+                                        <div class="accordion-body">
+                                            <table class="table keybinding-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Command</th>
+                                                        <th>Keybinding</th>
+                                                        <th>Description</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><strong>New window</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b c</span></td>
+                                                        <td>Create a new window</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Next window</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b n</span></td>
+                                                        <td>Move to next window</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Previous window</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b p</span></td>
+                                                        <td>Move to previous window</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Select window</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b 0-9</span></td>
+                                                        <td>Jump to window by number</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Last window</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b l</span></td>
+                                                        <td>Switch to last active window</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Rename window</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b ,</span></td>
+                                                        <td>Rename current window</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Kill window</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b &</span></td>
+                                                        <td>Close current window</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>List windows</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b w</span></td>
+                                                        <td>Interactive window selector</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Pane Management -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#paneKeys">
+                                            <i class="fas fa-columns me-2"></i> Pane Management
+                                        </button>
+                                    </h2>
+                                    <div id="paneKeys" class="accordion-collapse collapse" data-bs-parent="#keybindingsAccordion">
+                                        <div class="accordion-body">
+                                            <table class="table keybinding-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Command</th>
+                                                        <th>Keybinding</th>
+                                                        <th>Description</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><strong>Split vertical</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b %</span></td>
+                                                        <td>Split pane left/right</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Split horizontal</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b "</span></td>
+                                                        <td>Split pane top/bottom</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Navigate panes</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b ←→↑↓</span></td>
+                                                        <td>Move between panes</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Next pane</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b o</span></td>
+                                                        <td>Cycle through panes</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Toggle zoom</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b z</span></td>
+                                                        <td>Zoom/unzoom current pane</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Resize pane</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b Ctrl+←→↑↓</span></td>
+                                                        <td>Resize in direction</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Close pane</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b x</span></td>
+                                                        <td>Kill current pane</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Show pane numbers</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b q</span></td>
+                                                        <td>Display pane numbers</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Copy Mode -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#copyKeys">
+                                            <i class="fas fa-copy me-2"></i> Copy Mode & Scrolling
+                                        </button>
+                                    </h2>
+                                    <div id="copyKeys" class="accordion-collapse collapse" data-bs-parent="#keybindingsAccordion">
+                                        <div class="accordion-body">
+                                            <table class="table keybinding-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Command</th>
+                                                        <th>Keybinding</th>
+                                                        <th>Description</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><strong>Enter copy mode</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b [</span></td>
+                                                        <td>Enter copy/scroll mode</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Exit copy mode</strong></td>
+                                                        <td><span class="key-binding">Esc</span> or <span class="key-binding">q</span></td>
+                                                        <td>Exit copy mode</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Start selection</strong></td>
+                                                        <td><span class="key-binding">Space</span></td>
+                                                        <td>Begin text selection</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Copy selection</strong></td>
+                                                        <td><span class="key-binding">Enter</span></td>
+                                                        <td>Copy selected text</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Paste</strong></td>
+                                                        <td><span class="key-binding">Ctrl+b ]</span></td>
+                                                        <td>Paste copied text</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Search up</strong></td>
+                                                        <td><span class="key-binding">?</span></td>
+                                                        <td>Search backwards in copy mode</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Search down</strong></td>
+                                                        <td><span class="key-binding">/</span></td>
+                                                        <td>Search forwards in copy mode</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-success mt-4" role="alert">
+                                <i class="fas fa-lightbulb"></i> <strong>Pro Tips:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li>Press <span class="key-binding">Ctrl+b ?</span> to see all available keybindings</li>
+                                    <li>Use <span class="key-binding">Ctrl+b :</span> to enter command mode for advanced operations</li>
+                                    <li>Hold <span class="key-binding">Ctrl+b</span> and tap <span class="key-binding">q</span> to quickly show pane numbers</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 5: Interactive Exercises -->
+                <section id="exercises" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-dumbbell"></i> Interactive Exercises</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Practice these exercises to master tmux basics. Use the terminal simulator or your own terminal.</p>
+                            
+                            <!-- Exercise 1 -->
+                            <div class="exercise-box">
+                                <h5><i class="fas fa-play-circle text-primary"></i> Exercise 1: Your First Session</h5>
+                                <p>Learn the basics of session management:</p>
+                                <ol>
+                                    <li>Start a new tmux session named "tutorial"</li>
+                                    <li>Create a new window and name it "practice"</li>
+                                    <li>Split the window into two vertical panes</li>
+                                    <li>Navigate between the panes</li>
+                                    <li>Detach from the session</li>
+                                    <li>List all sessions and reattach</li>
+                                </ol>
+                                
+                                <div class="terminal-simulator" id="terminal1">
+                                    <div class="terminal-line">
+                                        <span class="terminal-prompt">tutorial@ai-tutor:~$</span> 
+                                        <input type="text" class="terminal-input" placeholder="Type: tmux new -s tutorial" onkeypress="handleTerminalInput(event, 'terminal1')" />
+                                    </div>
+                                </div>
+                                
+                                <button class="btn demo-button mt-3" onclick="toggleSolution('solution1')">
+                                    <i class="fas fa-eye"></i> Show Solution
+                                </button>
+                                <button class="btn btn-outline-primary mt-3 ms-2" onclick="resetTerminal('terminal1')">
+                                    <i class="fas fa-redo"></i> Reset Terminal
+                                </button>
+                                
+                                <div id="solution1" class="mt-3" style="display: none;">
+                                    <div class="alert alert-info">
+                                        <h6><i class="fas fa-lightbulb"></i> Step-by-step Solution:</h6>
+                                        <div class="config-example">
+# 1. Start new session
+$ tmux new -s tutorial
+
+# 2. Create new window (inside tmux)
+Ctrl+b c
+Ctrl+b ,  # then type "practice"
+
+# 3. Split window vertically
+Ctrl+b %
+
+# 4. Navigate between panes
+Ctrl+b ←  # or Ctrl+b →
+
+# 5. Detach from session
+Ctrl+b d
+
+# 6. List sessions and reattach
+$ tmux ls
+$ tmux attach -t tutorial</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Exercise 2 -->
+                            <div class="exercise-box">
+                                <h5><i class="fas fa-brain text-success"></i> Exercise 2: AI Development Setup</h5>
+                                <p>Create a typical AI development environment:</p>
+                                <ol>
+                                    <li>Create a session named "ml-project"</li>
+                                    <li>Window 1: Split into 3 panes (code editor, terminal, file browser)</li>
+                                    <li>Window 2: Named "jupyter" for notebook server</li>
+                                    <li>Window 3: Named "monitoring" for TensorBoard</li>
+                                    <li>Practice navigating between windows and panes</li>
+                                    <li>Use zoom to focus on specific panes</li>
+                                </ol>
+                                
+                                <div class="terminal-simulator" id="terminal2">
+                                    <div class="terminal-line">
+                                        <span class="terminal-prompt">ml-dev@ai-tutor:~$</span> 
+                                        <input type="text" class="terminal-input" placeholder="Type: tmux new -s ml-project" onkeypress="handleTerminalInput(event, 'terminal2')" />
+                                    </div>
+                                </div>
+                                
+                                <button class="btn demo-button mt-3" onclick="toggleSolution('solution2')">
+                                    <i class="fas fa-eye"></i> Show Solution
+                                </button>
+                                <button class="btn btn-outline-primary mt-3 ms-2" onclick="resetTerminal('terminal2')">
+                                    <i class="fas fa-redo"></i> Reset Terminal
+                                </button>
+                                
+                                <div id="solution2" class="mt-3" style="display: none;">
+                                    <div class="alert alert-info">
+                                        <h6><i class="fas fa-lightbulb"></i> Step-by-step Solution:</h6>
+                                        <div class="config-example">
+# 1. Create session
+$ tmux new -s ml-project
+
+# 2. Setup Window 1 (3 panes)
+Ctrl+b %      # Split vertically (left: editor, right: terminal)
+Ctrl+b →      # Move to right pane
+Ctrl+b "      # Split horizontally (top: terminal, bottom: file browser)
+Ctrl+b ,      # Rename to "development"
+
+# 3. Create Window 2
+Ctrl+b c
+Ctrl+b ,      # Rename to "jupyter"
+
+# 4. Create Window 3
+Ctrl+b c
+Ctrl+b ,      # Rename to "monitoring"
+
+# 5. Navigate between windows
+Ctrl+b 1      # Go to window 1
+Ctrl+b 2      # Go to window 2
+Ctrl+b 3      # Go to window 3
+
+# 6. Navigate panes and use zoom
+Ctrl+b 1      # Go to development window
+Ctrl+b ←→↑↓   # Navigate between panes
+Ctrl+b z      # Zoom/unzoom current pane</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Exercise 3 -->
+                            <div class="exercise-box">
+                                <h5><i class="fas fa-rocket text-warning"></i> Exercise 3: Advanced Navigation & Copy Mode</h5>
+                                <p>Master advanced tmux features:</p>
+                                <ol>
+                                    <li>Enter copy mode and practice scrolling</li>
+                                    <li>Search for text in the scrollback buffer</li>
+                                    <li>Copy text and paste it in another pane</li>
+                                    <li>Resize panes for optimal layout</li>
+                                    <li>Use command mode to run tmux commands</li>
+                                </ol>
+                                
+                                <div class="terminal-simulator" id="terminal3">
+                                    <div class="terminal-line">
+                                        <span class="terminal-prompt">advanced@ai-tutor:~$</span> 
+                                        <input type="text" class="terminal-input" placeholder="First, generate some text: echo 'Hello from tmux tutorial!'" onkeypress="handleTerminalInput(event, 'terminal3')" />
+                                    </div>
+                                </div>
+                                
+                                <button class="btn demo-button mt-3" onclick="toggleSolution('solution3')">
+                                    <i class="fas fa-eye"></i> Show Solution
+                                </button>
+                                <button class="btn btn-outline-primary mt-3 ms-2" onclick="resetTerminal('terminal3')">
+                                    <i class="fas fa-redo"></i> Reset Terminal
+                                </button>
+                                
+                                <div id="solution3" class="mt-3" style="display: none;">
+                                    <div class="alert alert-info">
+                                        <h6><i class="fas fa-lightbulb"></i> Step-by-step Solution:</h6>
+                                        <div class="config-example">
+# 1. Enter copy mode
+Ctrl+b [
+
+# 2. Navigate in copy mode
+↑↓          # Move up/down
+Page Up/Down # Move faster
+/text       # Search for "text"
+?text       # Search backwards for "text"
+
+# 3. Copy and paste
+Space       # Start selection
+Enter       # Copy selection
+q           # Exit copy mode
+Ctrl+b ]    # Paste
+
+# 4. Resize panes
+Ctrl+b Ctrl+← # Resize left
+Ctrl+b Ctrl+→ # Resize right
+Ctrl+b Ctrl+↑ # Resize up
+Ctrl+b Ctrl+↓ # Resize down
+
+# 5. Command mode
+Ctrl+b :     # Enter command mode
+# Try: list-sessions, list-windows, resize-pane -R 10</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 6: AI Development Workflows -->
+                <section id="ai-workflows" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-robot"></i> AI Development Workflows</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Discover how to use tmux effectively for AI and machine learning development workflows.</p>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="workflow-example">
+                                        <h5><i class="fas fa-brain text-primary"></i> Machine Learning Training Session</h5>
+                                        <p>Perfect setup for long-running training jobs:</p>
+                                        <div class="config-example">
+# Create training session
+$ tmux new -s ml-training
+
+# Window 1: Training
+Ctrl+b c
+Ctrl+b , # rename to "training"
+# Split for training script and logs
+Ctrl+b %
+# Left: python train.py
+# Right: tail -f training.log
+
+# Window 2: Monitoring
+Ctrl+b c
+Ctrl+b , # rename to "monitoring"
+# Split for different monitoring tools
+Ctrl+b %
+# Left: tensorboard --logdir=./logs
+# Right: nvidia-smi -l 1</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="workflow-example">
+                                        <h5><i class="fas fa-code text-success"></i> Development & Testing</h5>
+                                        <p>Efficient code development workflow:</p>
+                                        <div class="config-example">
+# Create development session
+$ tmux new -s dev-work
+
+# Window 1: Editor
+Ctrl+b c
+Ctrl+b , # rename to "editor"
+# Split for editor and terminal
+Ctrl+b %
+# Left: nvim main.py
+# Right: terminal for testing
+
+# Window 2: Tests
+Ctrl+b c
+Ctrl+b , # rename to "tests"
+# Split for different test types
+Ctrl+b "
+# Top: pytest -v
+# Bottom: pytest --cov=./</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <div class="workflow-example">
+                                        <h5><i class="fas fa-server text-info"></i> Remote Model Serving</h5>
+                                        <p>Manage model deployment and monitoring:</p>
+                                        <div class="config-example">
+# Create serving session
+$ tmux new -s model-serving
+
+# Window 1: API Server
+Ctrl+b c
+Ctrl+b , # rename to "api"
+# Split for server and logs
+Ctrl+b %
+# Left: uvicorn app:app --reload
+# Right: tail -f api.log
+
+# Window 2: Load Testing
+Ctrl+b c
+Ctrl+b , # rename to "testing"
+# Test API endpoints
+# locust -f locustfile.py</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="workflow-example">
+                                        <h5><i class="fas fa-database text-warning"></i> Data Pipeline</h5>
+                                        <p>Monitor data processing workflows:</p>
+                                        <div class="config-example">
+# Create pipeline session
+$ tmux new -s data-pipeline
+
+# Window 1: Processing
+Ctrl+b c
+Ctrl+b , # rename to "processing"
+# Split for different stages
+Ctrl+b %
+# Left: python extract.py
+# Right: python transform.py
+
+# Window 2: Monitoring
+Ctrl+b c
+Ctrl+b , # rename to "monitoring"
+# Monitor system resources
+# htop, iotop, watch df -h</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ai-use-case mt-4">
+                                <h5><i class="fas fa-lightbulb"></i> Pro Tips for AI Development</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul class="text-white">
+                                            <li><strong>Long Training Jobs:</strong> Use tmux for overnight training sessions</li>
+                                            <li><strong>Experiment Tracking:</strong> Keep logs visible in separate panes</li>
+                                            <li><strong>Model Comparison:</strong> Run multiple models in different windows</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ul class="text-white">
+                                            <li><strong>Data Preprocessing:</strong> Monitor pipeline stages simultaneously</li>
+                                            <li><strong>Hyperparameter Tuning:</strong> Track multiple experiments</li>
+                                            <li><strong>Remote Work:</strong> Maintain persistent development environments</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 7: Configuration -->
+                <section id="configuration" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-cog"></i> Configuration</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Customize tmux with a configuration file at <code>~/.tmux.conf</code> to boost your productivity.</p>
+                            
+                            <h4><i class="fas fa-file-code"></i> Basic Configuration</h4>
+                            <div class="config-example">
+# ~/.tmux.conf - Basic Configuration
+
+# Change prefix from Ctrl+b to Ctrl+a (easier to reach)
+unbind C-b
+set-option -g prefix C-a
+bind-key C-a send-prefix
+
+# Enable mouse support
+set -g mouse on
+
+# Start windows and panes at 1, not 0
+set -g base-index 1
+setw -g pane-base-index 1
+
+# Easier pane splitting
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
+
+# Vim-style pane navigation
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# Vim-style window navigation
+bind -n M-h previous-window
+bind -n M-l next-window
+
+# Reload config file
+bind r source-file ~/.tmux.conf \; display "Config reloaded!"
+
+# Increase history limit
+set-option -g history-limit 50000
+
+# Improve colors
+set -g default-terminal "screen-256color"
+set-option -sa terminal-overrides ',xterm-256color:RGB'</div>
+                            
+                            <h4 class="mt-4"><i class="fas fa-brain"></i> AI Development Configuration</h4>
+                            <div class="config-example">
+# ~/.tmux.conf - AI Development Enhanced
+
+# Status bar customization
+set -g status-bg colour235
+set -g status-fg white
+set -g status-left-length 40
+set -g status-left '#[fg=green]#S #[fg=blue]#I:#P #[default]'
+set -g status-right '#[fg=cyan]%Y-%m-%d %H:%M #[fg=yellow]#(uptime | cut -d "," -f 1)'
+
+# Window status format
+setw -g window-status-current-format '#[fg=white,bg=red] #I:#W '
+setw -g window-status-format '#[fg=cyan,bg=black] #I:#W '
+
+# Pane border colors
+set -g pane-border-style fg=colour238
+set -g pane-active-border-style fg=colour39
+
+# Message colors
+set -g message-style bg=colour235,fg=colour166
+
+# Copy mode improvements
+setw -g mode-keys vi
+bind-key -T copy-mode-vi 'v' send -X begin-selection
+bind-key -T copy-mode-vi 'y' send -X copy-selection-and-cancel
+
+# Quick pane cycling
+unbind ^A
+bind ^A select-pane -t :.+
+
+# Synchronize panes (useful for cluster operations)
+bind y setw synchronize-panes
+
+# Monitor activity in other windows
+setw -g monitor-activity on
+set -g visual-activity on
+
+# Better session management
+bind S command-prompt -p "New session:" "new-session -A -s '%%'"
+bind K confirm-before -p "Kill session #S? (y/n)" kill-session
+
+# Resize panes more easily
+bind -r H resize-pane -L 5
+bind -r J resize-pane -D 5
+bind -r K resize-pane -U 5
+bind -r L resize-pane -R 5</div>
+                            
+                            <h4 class="mt-4"><i class="fas fa-palette"></i> Theme Configuration</h4>
+                            <div class="config-example">
+# ~/.tmux.conf - Custom Theme
+
+# Tokyo Night Theme
+set -g status-style bg='#1a1b26',fg='#a9b1d6'
+set -g window-status-current-style bg='#7aa2f7',fg='#1a1b26'
+set -g pane-border-style fg='#3b4261'
+set -g pane-active-border-style fg='#7aa2f7'
+set -g message-style bg='#1a1b26',fg='#7aa2f7'
+
+# Custom status bar with system info
+set -g status-left '#[fg=#7aa2f7,bg=#1a1b26] #S #[fg=#a9b1d6,bg=#1a1b26] '
+set -g status-right '#[fg=#9ece6a]CPU: #{cpu_percentage} #[fg=#e0af68]MEM: #{ram_percentage} #[fg=#bb9af7]%H:%M '
+
+# Window list format
+setw -g window-status-format ' #I:#W '
+setw -g window-status-current-format ' #I:#W '
+
+# Plugins (requires TPM - Tmux Plugin Manager)
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-cpu'
+
+# Initialize TMUX plugin manager (keep at bottom)
+run '~/.tmux/plugins/tpm/tpm'</div>
+                            
+                            <div class="mt-4">
+                                <button class="btn btn-success" onclick="downloadConfig('basic')">
+                                    <i class="fas fa-download"></i> Download Basic Config
+                                </button>
+                                <button class="btn btn-success ms-2" onclick="downloadConfig('ai-dev')">
+                                    <i class="fas fa-download"></i> Download AI Dev Config
+                                </button>
+                                <button class="btn btn-success ms-2" onclick="downloadConfig('theme')">
+                                    <i class="fas fa-download"></i> Download Theme Config
+                                </button>
+                            </div>
+
+                            <div class="alert alert-info mt-4">
+                                <h5><i class="fas fa-info-circle"></i> Installation Instructions</h5>
+                                <ol>
+                                    <li>Download your preferred configuration file</li>
+                                    <li>Save it as <code>~/.tmux.conf</code> in your home directory</li>
+                                    <li>Reload tmux: <code>tmux source-file ~/.tmux.conf</code></li>
+                                    <li>Or restart tmux to apply changes</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 8: Troubleshooting -->
+                <section id="troubleshooting" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-warning text-dark">
+                            <h3 class="h5 mb-0"><i class="fas fa-wrench"></i> Common Troubleshooting</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Solutions to common tmux issues you might encounter.</p>
+                            
+                            <div class="troubleshooting-item">
+                                <h5><i class="fas fa-mouse-pointer"></i> Mouse scrolling doesn't work</h5>
+                                <p><strong>Problem:</strong> Mouse wheel scrolling doesn't work in tmux</p>
+                                <p><strong>Solution:</strong> Add mouse support to your configuration:</p>
+                                <div class="config-example">
+# Add to ~/.tmux.conf
+set -g mouse on
+
+# Reload configuration
+$ tmux source-file ~/.tmux.conf
+</div>
+                            </div>
+                            
+                            <div class="troubleshooting-item">
+                                <h5><i class="fas fa-palette"></i> Colors look wrong in vim/neovim</h5>
+                                <p><strong>Problem:</strong> Syntax highlighting colors are incorrect in editors</p>
+                                <p><strong>Solution:</strong> Fix terminal color support:</p>
+                                <div class="config-example">
+# Add to ~/.tmux.conf
+set -g default-terminal "screen-256color"
+set-option -sa terminal-overrides ',xterm-256color:RGB'
+
+# For older tmux versions
+set-option -sa terminal-overrides ',xterm-256color:Tc'
+</div>
+                            </div>
+                            
+                            <div class="troubleshooting-item">
+                                <h5><i class="fas fa-clipboard"></i> Can't copy/paste with system clipboard</h5>
+                                <p><strong>Problem:</strong> Copy/paste doesn't work between tmux and system clipboard</p>
+                                <p><strong>Solution:</strong> Configure clipboard integration:</p>
+                                <div class="config-example">
+# macOS
+$ brew install reattach-to-user-namespace
+
+# Add to ~/.tmux.conf
+set-option -g default-command "reattach-to-user-namespace -l $SHELL"
+
+# Linux with xclip
+$ sudo apt install xclip
+
+# Add to ~/.tmux.conf
+bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
+</div>
+                            </div>
+                            
+                            <div class="troubleshooting-item">
+                                <h5><i class="fas fa-wifi"></i> SSH connection lost, how to recover session?</h5>
+                                <p><strong>Problem:</strong> Lost SSH connection and need to recover work</p>
+                                <p><strong>Solution:</strong> Sessions persist automatically:</p>
+                                <div class="config-example">
+# SSH back to the server
+$ ssh user@server
+
+# List all running sessions
+$ tmux ls
+
+# Attach to your session
+$ tmux attach -t session-name
+
+# Or attach to the most recent session
+$ tmux attach
+</div>
+                            </div>
+                            
+                            <div class="troubleshooting-item">
+                                <h5><i class="fas fa-keyboard"></i> Prefix key conflicts with other applications</h5>
+                                <p><strong>Problem:</strong> Ctrl+b conflicts with other keybindings</p>
+                                <p><strong>Solution:</strong> Change the prefix key:</p>
+                                <div class="config-example">
+# Change to Ctrl+a (popular alternative)
+unbind C-b
+set -g prefix C-a
+bind C-a send-prefix
+
+# Or use Ctrl+Space
+unbind C-b
+set -g prefix C-Space
+bind C-Space send-prefix
+</div>
+                            </div>
+
+                            <div class="troubleshooting-item">
+                                <h5><i class="fas fa-clock"></i> Tmux starts slowly</h5>
+                                <p><strong>Problem:</strong> Tmux takes a long time to start</p>
+                                <p><strong>Solution:</strong> Optimize your configuration:</p>
+                                <div class="config-example">
+# Remove or optimize slow plugins
+# Check for expensive status bar updates
+# Reduce history limit if set too high
+set-option -g history-limit 10000
+
+# Profile your configuration
+$ tmux -f /dev/null -L test new-session -d 'sleep 1'
+$ tmux -L test list-sessions
+$ tmux -L test kill-server
+</div>
+                            </div>
+
+                            <div class="troubleshooting-item">
+                                <h5><i class="fas fa-exclamation-triangle"></i> "No such session" error</h5>
+                                <p><strong>Problem:</strong> Can't attach to a session that should exist</p>
+                                <p><strong>Solution:</strong> Check session status and names:</p>
+                                <div class="config-example">
+# List all sessions
+$ tmux ls
+
+# If no sessions exist, create one
+$ tmux new -s main
+
+# Check for detached sessions
+$ tmux list-sessions
+
+# Kill problematic sessions
+$ tmux kill-session -t session-name
+</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Summary -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-check-circle"></i> Lesson Summary</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">Congratulations! You've mastered the fundamentals of tmux. Here's what you've learned:</p>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-star text-warning"></i> Core Concepts</h5>
+                                <ul>
+                                    <li>Understanding the session/window/pane hierarchy</li>
+                                    <li>Essential keybindings for navigation and management</li>
+                                    <li>Session persistence and detachment</li>
+                                    <li>Copy mode and text manipulation</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-brain text-info"></i> AI Development Skills</h5>
+                                <ul>
+                                    <li>Setting up efficient ML training workflows</li>
+                                    <li>Managing long-running processes</li>
+                                    <li>Monitoring multiple experiments</li>
+                                    <li>Remote development best practices</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h5><i class="fas fa-arrow-right"></i> Next Steps</h5>
+                            <p>Ready to take your tmux skills to the next level? Continue to the advanced workflows lesson to learn about:</p>
+                            <ul>
+                                <li>Tmuxinator for workspace automation</li>
+                                <li>Custom layouts and scripts</li>
+                                <li>Team collaboration features</li>
+                                <li>Advanced configuration patterns</li>
+                            </ul>
+                            <a href="04-tmux-workflows.html" class="btn btn-primary">
+                                <i class="fas fa-arrow-right"></i> Next: Advanced Tmux Workflows
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Final Practice Challenge -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="h5 mb-0"><i class="fas fa-graduation-cap"></i> Final Practice Challenge</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">Test your comprehensive tmux knowledge with this real-world scenario:</p>
+                        
+                        <div class="alert alert-primary">
+                            <h5><i class="fas fa-tasks"></i> Challenge: Complete AI Development Environment</h5>
+                            <p>Create a complete development environment for an AI project with the following requirements:</p>
+                            <ol>
+                                <li>Session named "ai-research" with 4 windows</li>
+                                <li>Window 1 "development": 3 panes (editor, terminal, file browser)</li>
+                                <li>Window 2 "training": 2 panes (training script, log monitoring)</li>
+                                <li>Window 3 "jupyter": Single pane for Jupyter Lab</li>
+                                <li>Window 4 "monitoring": 3 panes (htop, nvidia-smi, tensorboard)</li>
+                                <li>Configure useful keybindings and save the session</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="terminal-simulator" id="challenge-terminal">
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">challenge@ai-tutor:~$</span> 
+                                <input type="text" class="terminal-input" placeholder="Start the challenge: tmux new -s ai-research" onkeypress="handleTerminalInput(event, 'challenge-terminal')" />
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-success mt-3" onclick="startChallenge()">
+                            <i class="fas fa-play"></i> Start Challenge
+                        </button>
+                        <button class="btn demo-button mt-3 ms-2" onclick="toggleSolution('challenge-solution')">
+                            <i class="fas fa-eye"></i> Show Solution
+                        </button>
+                        
+                        <div id="challenge-solution" class="mt-3" style="display: none;">
+                            <div class="alert alert-success">
+                                <h6><i class="fas fa-trophy"></i> Complete Solution:</h6>
+                                <div class="config-example">
+# Create the main session
+$ tmux new -s ai-research
+
+# Window 1: Development (3 panes)
+Ctrl+b ,             # Rename to "development"
+Ctrl+b %             # Split vertically
+Ctrl+b →             # Move to right pane
+Ctrl+b "             # Split horizontally
+# Now you have: Left (editor), Top-right (terminal), Bottom-right (files)
+
+# Window 2: Training (2 panes)
+Ctrl+b c             # New window
+Ctrl+b ,             # Rename to "training"
+Ctrl+b %             # Split vertically
+# Left: python train.py, Right: tail -f logs/training.log
+
+# Window 3: Jupyter (1 pane)
+Ctrl+b c             # New window
+Ctrl+b ,             # Rename to "jupyter"
+# Run: jupyter lab --no-browser
+
+# Window 4: Monitoring (3 panes)
+Ctrl+b c             # New window
+Ctrl+b ,             # Rename to "monitoring"
+Ctrl+b %             # Split vertically
+Ctrl+b →             # Move to right pane
+Ctrl+b "             # Split horizontally
+# Left: htop, Top-right: nvidia-smi -l 1, Bottom-right: tensorboard
+
+# Save and detach
+Ctrl+b d             # Detach session
+
+# Later, reattach
+$ tmux attach -t ai-research</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 AI Terminal Tutor. Built with Bootstrap and love for the command line.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/terminal-simulator.js"></script>
+    <script>
+        // Terminal simulator functionality
+        function handleTerminalInput(event, terminalId) {
+            if (event.key === 'Enter') {
+                const input = event.target;
+                const command = input.value.trim();
+                const terminal = document.getElementById(terminalId);
+                
+                if (command) {
+                    // Add command to history
+                    const commandLine = document.createElement('div');
+                    commandLine.className = 'terminal-line';
+                    commandLine.innerHTML = `<span class="terminal-prompt">${input.closest('.terminal-line').querySelector('.terminal-prompt').textContent}</span> <span class="terminal-command">${command}</span>`;
+                    
+                    // Add simulated output
+                    const outputLine = document.createElement('div');
+                    outputLine.className = 'terminal-line terminal-output';
+                    outputLine.textContent = simulateCommand(command);
+                    
+                    // Add new input line
+                    const newLine = document.createElement('div');
+                    newLine.className = 'terminal-line';
+                    newLine.innerHTML = `<span class="terminal-prompt">${input.closest('.terminal-line').querySelector('.terminal-prompt').textContent}</span> <input type="text" class="terminal-input" placeholder="Type your next command..." onkeypress="handleTerminalInput(event, '${terminalId}')" />`;
+                    
+                    // Update terminal
+                    input.disabled = true;
+                    terminal.appendChild(commandLine);
+                    terminal.appendChild(outputLine);
+                    terminal.appendChild(newLine);
+                    
+                    // Focus new input
+                    newLine.querySelector('.terminal-input').focus();
+                    
+                    // Scroll to bottom
+                    terminal.scrollTop = terminal.scrollHeight;
+                }
+            }
+        }
+
+        function simulateCommand(command) {
+            const responses = {
+                'tmux new -s tutorial': 'Starting new tmux session "tutorial"...',
+                'tmux new -s ml-project': 'Starting new tmux session "ml-project"...',
+                'tmux new -s ai-research': 'Starting new tmux session "ai-research"...',
+                'tmux ls': 'tutorial: 1 windows (created Thu Jan 1 12:00:00 2024)',
+                'tmux attach -t tutorial': 'Attaching to session "tutorial"...',
+                'echo Hello from tmux tutorial!': 'Hello from tmux tutorial!',
+                'python train.py': 'Training started... (This would run your training script)',
+                'nvidia-smi': 'GPU information would be displayed here',
+                'htop': 'System monitor would be displayed here',
+                'jupyter lab --no-browser': 'Jupyter Lab starting on http://localhost:8888',
+                'tensorboard --logdir=./logs': 'TensorBoard starting on http://localhost:6006'
+            };
+            
+            return responses[command] || `Simulated output for: ${command}`;
+        }
+
+        function toggleSolution(solutionId) {
+            const solution = document.getElementById(solutionId);
+            const button = event.target;
+            
+            if (solution.style.display === 'none') {
+                solution.style.display = 'block';
+                button.innerHTML = '<i class="fas fa-eye-slash"></i> Hide Solution';
+            } else {
+                solution.style.display = 'none';
+                button.innerHTML = '<i class="fas fa-eye"></i> Show Solution';
+            }
+        }
+
+        function resetTerminal(terminalId) {
+            const terminal = document.getElementById(terminalId);
+            const prompt = terminal.querySelector('.terminal-prompt').textContent;
+            terminal.innerHTML = `
+                <div class="terminal-line">
+                    <span class="terminal-prompt">${prompt}</span> 
+                    <input type="text" class="terminal-input" placeholder="Type your command..." onkeypress="handleTerminalInput(event, '${terminalId}')" />
+                </div>
+            `;
+            terminal.querySelector('.terminal-input').focus();
+        }
+
+        function startChallenge() {
+            const terminal = document.getElementById('challenge-terminal');
+            const steps = [
+                'tmux new -s ai-research',
+                'Ctrl+b , (rename to "development")',
+                'Ctrl+b % (split vertically)',
+                'Ctrl+b → (move right)',
+                'Ctrl+b " (split horizontally)',
+                'Ctrl+b c (new window)',
+                'Continue with the remaining steps...'
+            ];
+            
+            alert('Challenge started! Follow the solution steps to complete the full setup.');
+        }
+
+        function downloadConfig(type) {
+            let content = '';
+            let filename = '';
+            
+            const configs = {
+                'basic': {
+                    filename: 'tmux-basic.conf',
+                    content: `# Basic tmux configuration
+# Save this as ~/.tmux.conf
+
+# Change prefix from Ctrl+b to Ctrl+a
+unbind C-b
+set-option -g prefix C-a
+bind-key C-a send-prefix
+
+# Enable mouse support
+set -g mouse on
+
+# Start windows and panes at 1, not 0
+set -g base-index 1
+setw -g pane-base-index 1
+
+# Easier pane splitting
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
+
+# Vim-style pane navigation
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# Reload config file
+bind r source-file ~/.tmux.conf \\; display "Config reloaded!"
+
+# Increase history limit
+set-option -g history-limit 50000
+
+# Improve colors
+set -g default-terminal "screen-256color"
+set-option -sa terminal-overrides ',xterm-256color:RGB'`
+                },
+                'ai-dev': {
+                    filename: 'tmux-ai-dev.conf',
+                    content: `# AI Development tmux configuration
+# Save this as ~/.tmux.conf
+
+# Basic settings
+unbind C-b
+set-option -g prefix C-a
+bind-key C-a send-prefix
+set -g mouse on
+set -g base-index 1
+setw -g pane-base-index 1
+
+# Status bar customization
+set -g status-bg colour235
+set -g status-fg white
+set -g status-left-length 40
+set -g status-left '#[fg=green]#S #[fg=blue]#I:#P #[default]'
+set -g status-right '#[fg=cyan]%Y-%m-%d %H:%M #[fg=yellow]#(uptime | cut -d "," -f 1)'
+
+# Window status format
+setw -g window-status-current-format '#[fg=white,bg=red] #I:#W '
+setw -g window-status-format '#[fg=cyan,bg=black] #I:#W '
+
+# Pane splitting
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
+
+# Vim-style navigation
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# Copy mode improvements
+setw -g mode-keys vi
+bind-key -T copy-mode-vi 'v' send -X begin-selection
+bind-key -T copy-mode-vi 'y' send -X copy-selection-and-cancel
+
+# Increase history limit for logs
+set-option -g history-limit 50000
+
+# Better colors for syntax highlighting
+set -g default-terminal "screen-256color"
+set-option -sa terminal-overrides ',xterm-256color:RGB'
+
+# Quick pane cycling
+bind ^A select-pane -t :.+
+
+# Synchronize panes
+bind y setw synchronize-panes
+
+# Monitor activity
+setw -g monitor-activity on
+set -g visual-activity on
+
+# Reload config
+bind r source-file ~/.tmux.conf \\; display "Config reloaded!"`
+                },
+                'theme': {
+                    filename: 'tmux-theme.conf',
+                    content: `# Tmux Theme Configuration
+# Save this as ~/.tmux.conf
+
+# Basic settings
+unbind C-b
+set-option -g prefix C-a
+bind-key C-a send-prefix
+set -g mouse on
+set -g base-index 1
+setw -g pane-base-index 1
+
+# Tokyo Night Theme
+set -g status-style bg='#1a1b26',fg='#a9b1d6'
+set -g window-status-current-style bg='#7aa2f7',fg='#1a1b26'
+set -g pane-border-style fg='#3b4261'
+set -g pane-active-border-style fg='#7aa2f7'
+set -g message-style bg='#1a1b26',fg='#7aa2f7'
+
+# Custom status bar
+set -g status-left '#[fg=#7aa2f7,bg=#1a1b26] #S #[fg=#a9b1d6,bg=#1a1b26] '
+set -g status-right '#[fg=#9ece6a]%Y-%m-%d #[fg=#bb9af7]%H:%M '
+
+# Window list format
+setw -g window-status-format ' #I:#W '
+setw -g window-status-current-format ' #I:#W '
+
+# Pane splitting
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
+
+# Vim-style navigation
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# Copy mode
+setw -g mode-keys vi
+bind-key -T copy-mode-vi 'v' send -X begin-selection
+bind-key -T copy-mode-vi 'y' send -X copy-selection-and-cancel
+
+# Colors and terminal
+set -g default-terminal "screen-256color"
+set-option -sa terminal-overrides ',xterm-256color:RGB'
+set-option -g history-limit 50000
+
+# Reload config
+bind r source-file ~/.tmux.conf \\; display "Config reloaded!"`
+                }
+            };
+            
+            const config = configs[type];
+            if (config) {
+                const blob = new Blob([config.content], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = config.filename;
+                a.click();
+                window.URL.revokeObjectURL(url);
+            }
+        }
+
+        // Initialize terminals
+        document.addEventListener('DOMContentLoaded', function() {
+            // Focus first terminal input
+            const firstInput = document.querySelector('.terminal-input');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        });
+    </script>
+</body>
+</html>

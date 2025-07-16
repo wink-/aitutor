@@ -1,0 +1,2300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 8: Neovim AI Development Setup</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="../css/main.css" rel="stylesheet">
+    <link href="../css/lessons.css" rel="stylesheet">
+    <link href="../terminal-simulator.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse" id="sidebar">
+                <div class="position-sticky pt-3">
+                    <div class="lesson-progress mb-4">
+                        <div class="progress-header">
+                            <h6 class="progress-title">Lesson Progress</h6>
+                            <span class="progress-percentage">0%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-navigator">
+                        <h6 class="mb-3">Setup Steps</h6>
+                        <ul class="step-list" id="step-list">
+                            <li class="step-list-item active" data-step="1">
+                                <div class="step-indicator">1</div>
+                                <span>Plugin Manager</span>
+                            </li>
+                            <li class="step-list-item" data-step="2">
+                                <div class="step-indicator">2</div>
+                                <span>LSP Configuration</span>
+                            </li>
+                            <li class="step-list-item" data-step="3">
+                                <div class="step-indicator">3</div>
+                                <span>Essential Plugins</span>
+                            </li>
+                            <li class="step-list-item" data-step="4">
+                                <div class="step-indicator">4</div>
+                                <span>AI Coding Assistants</span>
+                            </li>
+                            <li class="step-list-item" data-step="5">
+                                <div class="step-indicator">5</div>
+                                <span>Terminal & Tmux</span>
+                            </li>
+                            <li class="step-list-item" data-step="6">
+                                <div class="step-indicator">6</div>
+                                <span>Complete Setup</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="lesson-content">
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">
+                            <i class="fas fa-robot text-success me-2"></i>
+                            Lesson 8: Neovim AI Development Setup
+                        </h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <div class="btn-group me-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleTheme()">
+                                    <i class="fas fa-adjust"></i> Theme
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="resetProgress()">
+                                    <i class="fas fa-redo"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-success" role="alert">
+                        <i class="fas fa-rocket me-2"></i>
+                        Transform Neovim into a powerful AI development environment with LSP, plugins, and AI assistants
+                    </div>
+
+                    <!-- Step 1: Plugin Manager -->
+                    <div class="lesson-step active" id="step-1">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <h3 class="step-title">Plugin Manager Setup</h3>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-description">
+                                <p>Modern Neovim development requires a powerful plugin manager. We'll use <strong>lazy.nvim</strong> for its performance and declarative configuration style.</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0"><i class="fas fa-plug text-primary"></i> Plugin Manager Options</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Manager</th>
+                                                            <th>Features</th>
+                                                            <th>Best For</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><strong>lazy.nvim</strong></td>
+                                                            <td>Lazy loading, fast startup</td>
+                                                            <td>Modern setups</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>packer.nvim</td>
+                                                            <td>Compile-time optimization</td>
+                                                            <td>Traditional setups</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>vim-plug</td>
+                                                            <td>Simple, fast</td>
+                                                            <td>Minimal setups</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0"><i class="fas fa-zap text-warning"></i> Why lazy.nvim?</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-check text-success me-2"></i>Automatic lazy loading</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Fast startup times</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Built-in plugin profiling</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Lockfile support</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Modern Lua API</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="mt-4"><i class="fas fa-download"></i> lazy.nvim Installation</h5>
+                            <p>Add this bootstrap code to your <code>init.lua</code>:</p>
+                            
+                            <div class="lesson-code-block">
+                                <div class="code-header">
+                                    <span class="code-language">lua</span>
+                                    <div class="code-actions">
+                                        <button class="code-copy-btn" onclick="copyCode(this)">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                        <button class="btn btn-sm btn-primary" onclick="downloadConfig('lazy-bootstrap')">
+                                            <i class="fas fa-download"></i> Download
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="code-content">
+<pre>-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- Plugin configuration
+require("lazy").setup({
+  -- Plugins will be configured here
+}, {
+  -- Configuration options
+  install = {
+    colorscheme = { "tokyonight" },
+  },
+  checker = {
+    enabled = true,
+    notify = false,
+  },
+  performance = {
+    rtp = {
+      disabled_plugins = {
+        "gzip",
+        "matchit",
+        "matchparen",
+        "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
+    },
+  },
+})</pre>
+                                </div>
+                            </div>
+
+                            <div class="try-it-yourself">
+                                <div class="try-it-header">
+                                    <div class="try-it-icon">⚡</div>
+                                    <h6 class="try-it-title">Install lazy.nvim</h6>
+                                </div>
+                                <p>Let's install lazy.nvim and test the setup:</p>
+                                <div id="terminal-1" class="terminal-container mb-3"></div>
+                                <button class="btn btn-success" onclick="startLazyInstallDemo()">
+                                    <i class="fas fa-play"></i> Start lazy.nvim Demo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: LSP Configuration -->
+                    <div class="lesson-step" id="step-2">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <h3 class="step-title">LSP (Language Server Protocol) Setup</h3>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-description">
+                                <p>Language Server Protocol provides intelligent code features like autocompletion, error detection, and jump-to-definition. Essential for AI development workflows.</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0"><i class="fas fa-server text-info"></i> AI Development LSP Servers</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Language</th>
+                                                            <th>LSP Server</th>
+                                                            <th>Features</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><i class="fab fa-python text-warning"></i> Python</td>
+                                                            <td>pylsp, pyright</td>
+                                                            <td>AI libs support</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><i class="fab fa-js text-warning"></i> JavaScript</td>
+                                                            <td>typescript-language-server</td>
+                                                            <td>Node.js AI apps</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><i class="fab fa-rust text-danger"></i> Rust</td>
+                                                            <td>rust-analyzer</td>
+                                                            <td>ML performance</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><i class="fab fa-golang text-info"></i> Go</td>
+                                                            <td>gopls</td>
+                                                            <td>Cloud AI services</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0"><i class="fas fa-magic text-primary"></i> LSP Features</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-brain text-info me-2"></i>Intelligent autocompletion</li>
+                                                <li><i class="fas fa-search text-success me-2"></i>Go-to-definition</li>
+                                                <li><i class="fas fa-bug text-danger me-2"></i>Real-time error detection</li>
+                                                <li><i class="fas fa-lightbulb text-warning me-2"></i>Code actions & refactoring</li>
+                                                <li><i class="fas fa-info-circle text-primary me-2"></i>Hover documentation</li>
+                                                <li><i class="fas fa-edit text-secondary me-2"></i>Rename symbol</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="mt-4"><i class="fas fa-cog"></i> LSP Configuration with mason.nvim</h5>
+                            <p>Mason provides easy LSP server management:</p>
+                            
+                            <div class="lesson-code-block">
+                                <div class="code-header">
+                                    <span class="code-language">lua</span>
+                                    <div class="code-actions">
+                                        <button class="code-copy-btn" onclick="copyCode(this)">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                        <button class="btn btn-sm btn-primary" onclick="downloadConfig('lsp-config')">
+                                            <i class="fas fa-download"></i> Download
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="code-content">
+<pre>-- LSP Configuration
+require("lazy").setup({
+  -- LSP Support
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "hrsh7th/cmp-nvim-lsp",
+    },
+    config = function()
+      require("mason").setup()
+      require("mason-lspconfig").setup({
+        ensure_installed = {
+          "pyright",        -- Python
+          "tsserver",       -- TypeScript/JavaScript
+          "rust_analyzer",  -- Rust
+          "gopls",          -- Go
+          "lua_ls",         -- Lua
+        },
+      })
+
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      local lspconfig = require("lspconfig")
+
+      -- Python LSP
+      lspconfig.pyright.setup({
+        capabilities = capabilities,
+        settings = {
+          python = {
+            analysis = {
+              typeCheckingMode = "basic",
+              autoImportCompletions = true,
+            },
+          },
+        },
+      })
+
+      -- TypeScript/JavaScript LSP
+      lspconfig.tsserver.setup({
+        capabilities = capabilities,
+        settings = {
+          typescript = {
+            inlayHints = {
+              includeInlayParameterNameHints = "all",
+              includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayVariableTypeHints = true,
+            },
+          },
+        },
+      })
+
+      -- Rust LSP
+      lspconfig.rust_analyzer.setup({
+        capabilities = capabilities,
+        settings = {
+          ["rust-analyzer"] = {
+            cargo = {
+              allFeatures = true,
+            },
+            procMacro = {
+              enable = true,
+            },
+          },
+        },
+      })
+
+      -- Go LSP
+      lspconfig.gopls.setup({
+        capabilities = capabilities,
+        settings = {
+          gopls = {
+            analyses = {
+              unusedparams = true,
+            },
+            staticcheck = true,
+          },
+        },
+      })
+
+      -- Lua LSP
+      lspconfig.lua_ls.setup({
+        capabilities = capabilities,
+        settings = {
+          Lua = {
+            runtime = {
+              version = "LuaJIT",
+            },
+            diagnostics = {
+              globals = {"vim"},
+            },
+            workspace = {
+              library = vim.api.nvim_get_runtime_file("", true),
+              checkThirdParty = false,
+            },
+          },
+        },
+      })
+    end,
+  },
+})</pre>
+                                </div>
+                            </div>
+
+                            <h5 class="mt-4"><i class="fas fa-keyboard"></i> LSP Keybindings</h5>
+                            <div class="lesson-code-block">
+                                <div class="code-header">
+                                    <span class="code-language">lua</span>
+                                    <div class="code-actions">
+                                        <button class="code-copy-btn" onclick="copyCode(this)">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="code-content">
+<pre>-- LSP Keybindings
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+  callback = function(ev)
+    local opts = { buffer = ev.buf }
+    
+    -- Navigation
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+    
+    -- Information
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+    
+    -- Workspace
+    vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set("n", "<leader>wl", function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, opts)
+    
+    -- Code actions
+    vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
+    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+    vim.keymap.set({"n", "v"}, "<leader>ca", vim.lsp.buf.code_action, opts)
+    
+    -- Formatting
+    vim.keymap.set("n", "<leader>f", function()
+      vim.lsp.buf.format({ async = true })
+    end, opts)
+  end,
+})</pre>
+                                </div>
+                            </div>
+
+                            <div class="try-it-yourself">
+                                <div class="try-it-header">
+                                    <div class="try-it-icon">🧠</div>
+                                    <h6 class="try-it-title">LSP in Action</h6>
+                                </div>
+                                <p>Experience LSP features with a Python AI script:</p>
+                                <div id="lsp-demo" class="interactive-vim-simulator mb-3"></div>
+                                <button class="btn btn-success" onclick="startLSPDemo()">
+                                    <i class="fas fa-play"></i> Start LSP Demo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Essential Plugins -->
+                    <div class="lesson-step" id="step-3">
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <h3 class="step-title">Essential Plugins for AI Development</h3>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-description">
+                                <p>Transform Neovim into a powerful AI development environment with these carefully selected plugins.</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0"><i class="fas fa-code text-primary"></i> Core Development</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-search text-info me-2"></i><strong>Telescope</strong> - Fuzzy finder</li>
+                                                <li><i class="fas fa-tree text-success me-2"></i><strong>nvim-tree</strong> - File explorer</li>
+                                                <li><i class="fas fa-palette text-warning me-2"></i><strong>Treesitter</strong> - Syntax highlighting</li>
+                                                <li><i class="fas fa-magic text-danger me-2"></i><strong>nvim-cmp</strong> - Autocompletion</li>
+                                                <li><i class="fas fa-git text-secondary me-2"></i><strong>Gitsigns</strong> - Git integration</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0"><i class="fas fa-robot text-success"></i> AI-Specific</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-brain text-info me-2"></i><strong>Copilot</strong> - AI pair programming</li>
+                                                <li><i class="fas fa-terminal text-warning me-2"></i><strong>Toggleterm</strong> - Terminal management</li>
+                                                <li><i class="fas fa-bug text-danger me-2"></i><strong>nvim-dap</strong> - Debugging</li>
+                                                <li><i class="fas fa-flask text-success me-2"></i><strong>Neotest</strong> - Testing framework</li>
+                                                <li><i class="fas fa-chart-line text-primary me-2"></i><strong>Markdown Preview</strong> - Documentation</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="mt-4"><i class="fas fa-puzzle-piece"></i> Complete Plugin Configuration</h5>
+                            <div class="lesson-code-block">
+                                <div class="code-header">
+                                    <span class="code-language">lua</span>
+                                    <div class="code-actions">
+                                        <button class="code-copy-btn" onclick="copyCode(this)">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                        <button class="btn btn-sm btn-primary" onclick="downloadConfig('plugins-config')">
+                                            <i class="fas fa-download"></i> Download
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="code-content">
+<pre>require("lazy").setup({
+  -- Colorscheme
+  {
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd("colorscheme tokyonight")
+    end,
+  },
+
+  -- Fuzzy Finder
+  {
+    "nvim-telescope/telescope.nvim",
+    tag = "0.1.4",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("telescope").setup({
+        defaults = {
+          mappings = {
+            i = {
+              ["<C-u>"] = false,
+              ["<C-d>"] = false,
+            },
+          },
+        },
+      })
+      
+      -- Keybindings
+      vim.keymap.set("n", "<leader>ff", require("telescope.builtin").find_files, {})
+      vim.keymap.set("n", "<leader>fg", require("telescope.builtin").live_grep, {})
+      vim.keymap.set("n", "<leader>fb", require("telescope.builtin").buffers, {})
+      vim.keymap.set("n", "<leader>fh", require("telescope.builtin").help_tags, {})
+    end,
+  },
+
+  -- File Explorer
+  {
+    "nvim-tree/nvim-tree.lua",
+    version = "*",
+    lazy = false,
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
+    config = function()
+      require("nvim-tree").setup({
+        sort_by = "case_sensitive",
+        view = {
+          width = 30,
+        },
+        renderer = {
+          group_empty = true,
+        },
+        filters = {
+          dotfiles = true,
+        },
+      })
+      
+      vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>", {})
+    end,
+  },
+
+  -- Treesitter
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = {
+          "python", "javascript", "typescript", "rust", "go", "lua", "vim", "vimdoc",
+          "html", "css", "json", "yaml", "markdown", "bash"
+        },
+        sync_install = false,
+        auto_install = true,
+        highlight = {
+          enable = true,
+          additional_vim_regex_highlighting = false,
+        },
+        indent = {
+          enable = true,
+        },
+      })
+    end,
+  },
+
+  -- Autocompletion
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-cmdline",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+    },
+    config = function()
+      local cmp = require("cmp")
+      local luasnip = require("luasnip")
+
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end,
+        },
+        window = {
+          completion = cmp.config.window.bordered(),
+          documentation = cmp.config.window.bordered(),
+        },
+        mapping = cmp.mapping.preset.insert({
+          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<C-e>"] = cmp.mapping.abort(),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+          ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+        }),
+        sources = cmp.config.sources({
+          { name = "nvim_lsp" },
+          { name = "luasnip" },
+        }, {
+          { name = "buffer" },
+        })
+      })
+    end,
+  },
+
+  -- Git Integration
+  {
+    "lewis6991/gitsigns.nvim",
+    config = function()
+      require("gitsigns").setup({
+        signs = {
+          add = { text = "+" },
+          change = { text = "~" },
+          delete = { text = "_" },
+          topdelete = { text = "‾" },
+          changedelete = { text = "~" },
+        },
+        on_attach = function(bufnr)
+          local gs = package.loaded.gitsigns
+          
+          local function map(mode, l, r, opts)
+            opts = opts or {}
+            opts.buffer = bufnr
+            vim.keymap.set(mode, l, r, opts)
+          end
+          
+          -- Navigation
+          map("n", "]c", function()
+            if vim.wo.diff then return "]c" end
+            vim.schedule(function() gs.next_hunk() end)
+            return "<Ignore>"
+          end, {expr=true})
+          
+          map("n", "[c", function()
+            if vim.wo.diff then return "[c" end
+            vim.schedule(function() gs.prev_hunk() end)
+            return "<Ignore>"
+          end, {expr=true})
+          
+          -- Actions
+          map("n", "<leader>hs", gs.stage_hunk)
+          map("n", "<leader>hr", gs.reset_hunk)
+          map("n", "<leader>hS", gs.stage_buffer)
+          map("n", "<leader>hu", gs.undo_stage_hunk)
+          map("n", "<leader>hR", gs.reset_buffer)
+          map("n", "<leader>hp", gs.preview_hunk)
+          map("n", "<leader>hb", function() gs.blame_line{full=true} end)
+          map("n", "<leader>tb", gs.toggle_current_line_blame)
+          map("n", "<leader>hd", gs.diffthis)
+          map("n", "<leader>hD", function() gs.diffthis("~") end)
+          map("n", "<leader>td", gs.toggle_deleted)
+        end
+      })
+    end,
+  },
+
+  -- Terminal
+  {
+    "akinsho/toggleterm.nvim",
+    version = "*",
+    config = function()
+      require("toggleterm").setup({
+        size = 20,
+        open_mapping = [[<c-\>]],
+        hide_numbers = true,
+        shade_filetypes = {},
+        shade_terminals = true,
+        shading_factor = 2,
+        start_in_insert = true,
+        insert_mappings = true,
+        persist_size = true,
+        direction = "float",
+        close_on_exit = true,
+        shell = vim.o.shell,
+        float_opts = {
+          border = "curved",
+          winblend = 0,
+          highlights = {
+            border = "Normal",
+            background = "Normal",
+          },
+        },
+      })
+      
+      -- Terminal keybindings
+      function _G.set_terminal_keymaps()
+        local opts = {buffer = 0}
+        vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
+        vim.keymap.set("t", "jk", [[<C-\><C-n>]], opts)
+        vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], opts)
+        vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], opts)
+        vim.keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]], opts)
+        vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]], opts)
+      end
+      
+      vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
+    end,
+  },
+})</pre>
+                                </div>
+                            </div>
+
+                            <div class="try-it-yourself">
+                                <div class="try-it-header">
+                                    <div class="try-it-icon">🔧</div>
+                                    <h6 class="try-it-title">Plugin Installation</h6>
+                                </div>
+                                <p>Install and configure the essential plugins:</p>
+                                <div id="plugins-demo" class="interactive-vim-simulator mb-3"></div>
+                                <button class="btn btn-success" onclick="startPluginsDemo()">
+                                    <i class="fas fa-play"></i> Start Plugin Demo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: AI Coding Assistants -->
+                    <div class="lesson-step" id="step-4">
+                        <div class="step-header">
+                            <div class="step-number">4</div>
+                            <h3 class="step-title">AI Coding Assistants</h3>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-description">
+                                <p>Supercharge your coding with AI assistants. We'll configure GitHub Copilot and alternative solutions for intelligent code completion.</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0"><i class="fab fa-github text-dark"></i> GitHub Copilot</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled small">
+                                                <li><i class="fas fa-check text-success me-2"></i>Premium AI completions</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Context-aware suggestions</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Multi-language support</li>
+                                                <li><i class="fas fa-dollar-sign text-warning me-2"></i>Paid service</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0"><i class="fas fa-code text-info"></i> Codeium</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled small">
+                                                <li><i class="fas fa-check text-success me-2"></i>Free AI completions</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Real-time suggestions</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Privacy-focused</li>
+                                                <li><i class="fas fa-gift text-success me-2"></i>Free tier available</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0"><i class="fas fa-brain text-primary"></i> Local AI</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled small">
+                                                <li><i class="fas fa-check text-success me-2"></i>Complete privacy</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>No internet required</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Customizable models</li>
+                                                <li><i class="fas fa-exclamation text-warning me-2"></i>Setup complexity</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="mt-4"><i class="fab fa-github"></i> GitHub Copilot Setup</h5>
+                            <div class="lesson-code-block">
+                                <div class="code-header">
+                                    <span class="code-language">lua</span>
+                                    <div class="code-actions">
+                                        <button class="code-copy-btn" onclick="copyCode(this)">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                        <button class="btn btn-sm btn-primary" onclick="downloadConfig('copilot-config')">
+                                            <i class="fas fa-download"></i> Download
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="code-content">
+<pre>-- GitHub Copilot Configuration
+{
+  "github/copilot.vim",
+  config = function()
+    -- Enable Copilot for specific filetypes
+    vim.g.copilot_filetypes = {
+      ["*"] = false,
+      ["javascript"] = true,
+      ["typescript"] = true,
+      ["lua"] = true,
+      ["rust"] = true,
+      ["python"] = true,
+      ["go"] = true,
+      ["yaml"] = true,
+      ["json"] = true,
+      ["markdown"] = true,
+    }
+    
+    -- Copilot keybindings
+    vim.keymap.set("i", "<C-J>", 'copilot#Accept("")', {
+      expr = true,
+      replace_keycodes = false
+    })
+    vim.g.copilot_no_tab_map = true
+    
+    -- Copilot panel
+    vim.keymap.set("n", "<leader>cp", ":Copilot panel<CR>", {})
+    
+    -- Enable/disable Copilot
+    vim.keymap.set("n", "<leader>ce", ":Copilot enable<CR>", {})
+    vim.keymap.set("n", "<leader>cd", ":Copilot disable<CR>", {})
+  end,
+},
+
+-- Alternative: Codeium
+{
+  "Exafunction/codeium.vim",
+  config = function()
+    -- Codeium keybindings
+    vim.keymap.set("i", "<C-g>", function() return vim.fn["codeium#Accept"]() end, { expr = true })
+    vim.keymap.set("i", "<C-;>", function() return vim.fn["codeium#CycleCompletions"](1) end, { expr = true })
+    vim.keymap.set("i", "<C-,>", function() return vim.fn["codeium#CycleCompletions"](-1) end, { expr = true })
+    vim.keymap.set("i", "<C-x>", function() return vim.fn["codeium#Clear"]() end, { expr = true })
+    
+    -- Codeium commands
+    vim.keymap.set("n", "<leader>cc", ":CodeiumChat<CR>", {})
+    vim.keymap.set("n", "<leader>ct", ":CodeiumToggle<CR>", {})
+  end,
+}</pre>
+                                </div>
+                            </div>
+
+                            <h5 class="mt-4"><i class="fas fa-keyboard"></i> AI Assistant Keybindings</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">GitHub Copilot</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Keybinding</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><kbd>Ctrl+J</kbd></td>
+                                                            <td>Accept suggestion</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><kbd>Space+cp</kbd></td>
+                                                            <td>Open Copilot panel</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><kbd>Space+ce</kbd></td>
+                                                            <td>Enable Copilot</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><kbd>Space+cd</kbd></td>
+                                                            <td>Disable Copilot</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Codeium</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Keybinding</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><kbd>Ctrl+G</kbd></td>
+                                                            <td>Accept suggestion</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><kbd>Ctrl+;</kbd></td>
+                                                            <td>Next suggestion</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><kbd>Ctrl+,</kbd></td>
+                                                            <td>Previous suggestion</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><kbd>Ctrl+X</kbd></td>
+                                                            <td>Clear suggestions</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info mt-4" role="alert">
+                                <h6><i class="fas fa-info-circle me-2"></i>Getting Started with AI Assistants</h6>
+                                <ol class="mb-0">
+                                    <li><strong>GitHub Copilot:</strong> Sign up at github.com/copilot, then run <code>:Copilot setup</code></li>
+                                    <li><strong>Codeium:</strong> Sign up at codeium.com, then run <code>:Codeium Auth</code></li>
+                                    <li><strong>Test:</strong> Start typing in a Python file to see suggestions</li>
+                                </ol>
+                            </div>
+
+                            <div class="try-it-yourself">
+                                <div class="try-it-header">
+                                    <div class="try-it-icon">🤖</div>
+                                    <h6 class="try-it-title">AI Assistant Demo</h6>
+                                </div>
+                                <p>Experience AI-powered coding with neural network development:</p>
+                                <div id="ai-demo" class="interactive-vim-simulator mb-3"></div>
+                                <button class="btn btn-success" onclick="startAIDemo()">
+                                    <i class="fas fa-play"></i> Start AI Demo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Terminal & Tmux Integration -->
+                    <div class="lesson-step" id="step-5">
+                        <div class="step-header">
+                            <div class="step-number">5</div>
+                            <h3 class="step-title">Terminal & Tmux Integration</h3>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-description">
+                                <p>Perfect integration between Neovim, terminal, and tmux for a seamless AI development workflow.</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0"><i class="fas fa-terminal text-success"></i> Terminal Features</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-window-maximize text-info me-2"></i>Floating terminal</li>
+                                                <li><i class="fas fa-layer-group text-warning me-2"></i>Multiple terminals</li>
+                                                <li><i class="fas fa-magic text-danger me-2"></i>Smart window navigation</li>
+                                                <li><i class="fas fa-keyboard text-primary me-2"></i>Custom keybindings</li>
+                                                <li><i class="fas fa-save text-success me-2"></i>Session persistence</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0"><i class="fas fa-th text-primary"></i> Tmux Integration</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-arrows-alt text-info me-2"></i>Seamless pane navigation</li>
+                                                <li><i class="fas fa-copy text-warning me-2"></i>Unified clipboard</li>
+                                                <li><i class="fas fa-sync text-success me-2"></i>Session management</li>
+                                                <li><i class="fas fa-expand text-danger me-2"></i>Window resizing</li>
+                                                <li><i class="fas fa-cog text-secondary me-2"></i>Shared configuration</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="mt-4"><i class="fas fa-plug"></i> Terminal Configuration</h5>
+                            <div class="lesson-code-block">
+                                <div class="code-header">
+                                    <span class="code-language">lua</span>
+                                    <div class="code-actions">
+                                        <button class="code-copy-btn" onclick="copyCode(this)">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                        <button class="btn btn-sm btn-primary" onclick="downloadConfig('terminal-config')">
+                                            <i class="fas fa-download"></i> Download
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="code-content">
+<pre>-- Advanced Terminal Configuration
+{
+  "akinsho/toggleterm.nvim",
+  version = "*",
+  config = function()
+    require("toggleterm").setup({
+      size = function(term)
+        if term.direction == "horizontal" then
+          return 15
+        elseif term.direction == "vertical" then
+          return vim.o.columns * 0.4
+        end
+      end,
+      open_mapping = [[<c-\>]],
+      hide_numbers = true,
+      shade_terminals = true,
+      shading_factor = 2,
+      start_in_insert = true,
+      insert_mappings = true,
+      terminal_mappings = true,
+      persist_size = true,
+      direction = "float",
+      close_on_exit = true,
+      shell = vim.o.shell,
+      float_opts = {
+        border = "curved",
+        winblend = 0,
+        highlights = {
+          border = "Normal",
+          background = "Normal",
+        },
+      },
+    })
+
+    -- Custom terminals for AI development
+    local Terminal = require("toggleterm.terminal").Terminal
+    
+    -- Python REPL
+    local python_repl = Terminal:new({
+      cmd = "python",
+      hidden = true,
+      direction = "float",
+      float_opts = {
+        border = "double",
+      },
+    })
+    
+    function _PYTHON_TOGGLE()
+      python_repl:toggle()
+    end
+    
+    -- Node.js REPL
+    local node_repl = Terminal:new({
+      cmd = "node",
+      hidden = true,
+      direction = "float",
+      float_opts = {
+        border = "double",
+      },
+    })
+    
+    function _NODE_TOGGLE()
+      node_repl:toggle()
+    end
+    
+    -- Jupyter console
+    local jupyter = Terminal:new({
+      cmd = "jupyter console",
+      hidden = true,
+      direction = "horizontal",
+      size = 15,
+    })
+    
+    function _JUPYTER_TOGGLE()
+      jupyter:toggle()
+    end
+    
+    -- Lazy git
+    local lazygit = Terminal:new({
+      cmd = "lazygit",
+      hidden = true,
+      direction = "float",
+      float_opts = {
+        border = "none",
+        width = 100,
+        height = 30,
+      },
+    })
+    
+    function _LAZYGIT_TOGGLE()
+      lazygit:toggle()
+    end
+    
+    -- Terminal keybindings
+    vim.keymap.set("n", "<leader>tf", ":ToggleTerm direction=float<CR>", {})
+    vim.keymap.set("n", "<leader>th", ":ToggleTerm direction=horizontal<CR>", {})
+    vim.keymap.set("n", "<leader>tv", ":ToggleTerm direction=vertical<CR>", {})
+    vim.keymap.set("n", "<leader>tp", ":lua _PYTHON_TOGGLE()<CR>", {})
+    vim.keymap.set("n", "<leader>tn", ":lua _NODE_TOGGLE()<CR>", {})
+    vim.keymap.set("n", "<leader>tj", ":lua _JUPYTER_TOGGLE()<CR>", {})
+    vim.keymap.set("n", "<leader>tg", ":lua _LAZYGIT_TOGGLE()<CR>", {})
+  end,
+},
+
+-- Tmux Integration
+{
+  "christoomey/vim-tmux-navigator",
+  config = function()
+    vim.keymap.set("n", "<C-h>", ":TmuxNavigateLeft<CR>", {})
+    vim.keymap.set("n", "<C-j>", ":TmuxNavigateDown<CR>", {})
+    vim.keymap.set("n", "<C-k>", ":TmuxNavigateUp<CR>", {})
+    vim.keymap.set("n", "<C-l>", ":TmuxNavigateRight<CR>", {})
+    vim.keymap.set("n", "<C-\\>", ":TmuxNavigatePrevious<CR>", {})
+  end,
+}</pre>
+                                </div>
+                            </div>
+
+                            <h5 class="mt-4"><i class="fas fa-cog"></i> Tmux Configuration</h5>
+                            <p>Create <code>~/.tmux.conf</code> for optimal Neovim integration:</p>
+                            <div class="lesson-code-block">
+                                <div class="code-header">
+                                    <span class="code-language">bash</span>
+                                    <div class="code-actions">
+                                        <button class="code-copy-btn" onclick="copyCode(this)">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                        <button class="btn btn-sm btn-primary" onclick="downloadConfig('tmux-config')">
+                                            <i class="fas fa-download"></i> Download
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="code-content">
+<pre># Tmux Configuration for AI Development
+# Set prefix to Ctrl-a
+set -g prefix C-a
+unbind C-b
+bind C-a send-prefix
+
+# Enable mouse support
+set -g mouse on
+
+# Start windows and panes at 1
+set -g base-index 1
+setw -g pane-base-index 1
+
+# Renumber windows when one is closed
+set -g renumber-windows on
+
+# Increase history limit
+set -g history-limit 10000
+
+# Enable vi mode
+setw -g mode-keys vi
+
+# Smart pane switching with awareness of Vim splits
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
+bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
+bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
+bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l'  'select-pane -R'
+tmux_version='$(tmux -V | sed -En "s/^tmux ([0-9]+(\\.[0-9]+)?).*/\\1/p")'
+if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
+if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
+
+# AI Development specific pane layouts
+bind-key M-1 select-layout main-horizontal
+bind-key M-2 select-layout main-vertical
+bind-key M-3 select-layout tiled
+bind-key M-4 select-layout even-horizontal
+bind-key M-5 select-layout even-vertical
+
+# Quick AI development session
+bind-key A new-session -d -s ai -x 120 -y 30 \; \
+  new-window -t ai:1 -n 'editor' \; \
+  new-window -t ai:2 -n 'jupyter' 'jupyter lab' \; \
+  new-window -t ai:3 -n 'monitoring' 'htop' \; \
+  select-window -t ai:1
+
+# Status bar customization
+set -g status-position bottom
+set -g status-bg colour234
+set -g status-fg colour137
+set -g status-left '#[fg=colour233,bg=colour241,bold] #S #[fg=colour241,bg=colour235,nobold]'
+set -g status-right '#[fg=colour233,bg=colour241,bold] %d/%m #[fg=colour233,bg=colour245,bold] %H:%M:%S '
+set -g status-right-length 50
+set -g status-left-length 20
+
+# Pane border colors
+set -g pane-active-border-style 'fg=colour208'
+set -g pane-border-style 'fg=colour238'
+
+# Window status
+setw -g window-status-current-style 'fg=colour81 bg=colour238 bold'
+setw -g window-status-current-format ' #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour50]#F '
+setw -g window-status-style 'fg=colour138 bg=colour235 none'
+setw -g window-status-format ' #I#[fg=colour237]:#[fg=colour250]#W#[fg=colour244]#F '
+
+# True color support
+set -g default-terminal "screen-256color"
+set -ga terminal-overrides ",*256col*:Tc"
+
+# Clipboard integration
+bind-key -T copy-mode-vi v send-keys -X begin-selection
+bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
+bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel</pre>
+                                </div>
+                            </div>
+
+                            <div class="try-it-yourself">
+                                <div class="try-it-header">
+                                    <div class="try-it-icon">🖥️</div>
+                                    <h6 class="try-it-title">Terminal Integration</h6>
+                                </div>
+                                <p>Test the terminal and tmux integration with an AI development session:</p>
+                                <div id="terminal-demo" class="interactive-vim-simulator mb-3"></div>
+                                <button class="btn btn-success" onclick="startTerminalDemo()">
+                                    <i class="fas fa-play"></i> Start Terminal Demo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 6: Complete Setup -->
+                    <div class="lesson-step" id="step-6">
+                        <div class="step-header">
+                            <div class="step-number">6</div>
+                            <h3 class="step-title">Complete AI Development Setup</h3>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-description">
+                                <p>Put it all together for a complete AI development environment. Test your setup with real-world scenarios.</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0"><i class="fas fa-check-circle text-success"></i> Setup Checklist</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-square-check text-success me-2"></i>lazy.nvim installed</li>
+                                                <li><i class="fas fa-square-check text-success me-2"></i>LSP servers configured</li>
+                                                <li><i class="fas fa-square-check text-success me-2"></i>Essential plugins active</li>
+                                                <li><i class="fas fa-square-check text-success me-2"></i>AI assistant enabled</li>
+                                                <li><i class="fas fa-square-check text-success me-2"></i>Terminal integration</li>
+                                                <li><i class="fas fa-square-check text-success me-2"></i>Tmux configured</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0"><i class="fas fa-flask text-warning"></i> Testing Scenarios</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-brain text-info me-2"></i>Neural network development</li>
+                                                <li><i class="fas fa-chart-line text-success me-2"></i>Data analysis workflow</li>
+                                                <li><i class="fas fa-robot text-primary me-2"></i>AI model training</li>
+                                                <li><i class="fas fa-database text-warning me-2"></i>Data preprocessing</li>
+                                                <li><i class="fas fa-cloud text-info me-2"></i>Cloud deployment</li>
+                                                <li><i class="fas fa-bug text-danger me-2"></i>Debugging & testing</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="mt-4"><i class="fas fa-file-code"></i> Complete Configuration File</h5>
+                            <div class="lesson-code-block">
+                                <div class="code-header">
+                                    <span class="code-language">lua</span>
+                                    <div class="code-actions">
+                                        <button class="code-copy-btn" onclick="copyCode(this)">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                        <button class="btn btn-sm btn-primary" onclick="downloadConfig('complete-config')">
+                                            <i class="fas fa-download"></i> Download Complete Setup
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="code-content">
+<pre>-- Complete AI Development Neovim Configuration
+-- ~/.config/nvim/init.lua
+
+-- Basic settings
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 4
+vim.opt.tabstop = 4
+vim.opt.smartindent = true
+vim.opt.wrap = false
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.termguicolors = true
+vim.opt.signcolumn = "yes"
+vim.opt.updatetime = 300
+vim.opt.clipboard = "unnamedplus"
+
+-- Leader key
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git", "clone", "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- Plugin configuration
+require("lazy").setup({
+  -- [All plugin configurations from previous steps combined]
+  
+  -- Additional AI development plugins
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-neotest/neotest-python",
+      "nvim-neotest/neotest-jest",
+    },
+    config = function()
+      require("neotest").setup({
+        adapters = {
+          require("neotest-python")({
+            dap = { justMyCode = false },
+            args = {"--log-level", "DEBUG"},
+            runner = "pytest",
+          }),
+          require("neotest-jest")({
+            jestCommand = "npm test --",
+            jestConfigFile = "jest.config.js",
+            env = { CI = true },
+          }),
+        },
+      })
+      
+      vim.keymap.set("n", "<leader>tt", function()
+        require("neotest").run.run()
+      end, {})
+      vim.keymap.set("n", "<leader>tf", function()
+        require("neotest").run.run(vim.fn.expand("%"))
+      end, {})
+      vim.keymap.set("n", "<leader>ts", function()
+        require("neotest").summary.toggle()
+      end, {})
+    end,
+  },
+  
+  -- Markdown preview for documentation
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function() vim.fn["mkdp#util#install"]() end,
+    config = function()
+      vim.keymap.set("n", "<leader>mp", ":MarkdownPreviewToggle<CR>", {})
+    end,
+  },
+  
+  -- Which-key for keybinding help
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    init = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+    end,
+    opts = {},
+  },
+})
+
+-- Global keybindings
+vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "Save file" })
+vim.keymap.set("n", "<leader>q", ":q<CR>", { desc = "Quit" })
+vim.keymap.set("n", "<leader>Q", ":qa!<CR>", { desc = "Quit all" })
+
+-- AI Development specific keybindings
+vim.keymap.set("n", "<leader>ai", function()
+  print("AI Development Mode Active!")
+  -- Add your AI-specific commands here
+end, { desc = "AI Development Mode" })
+
+-- Health check for AI development
+vim.api.nvim_create_user_command("AIHealthCheck", function()
+  local health = {
+    lsp = vim.lsp.get_active_clients(),
+    treesitter = pcall(require, "nvim-treesitter"),
+    telescope = pcall(require, "telescope"),
+    lazy = pcall(require, "lazy"),
+  }
+  
+  print("AI Development Environment Health:")
+  print("LSP servers active: " .. #health.lsp)
+  print("Treesitter: " .. (health.treesitter and "✓" or "✗"))
+  print("Telescope: " .. (health.telescope and "✓" or "✗"))
+  print("Lazy.nvim: " .. (health.lazy and "✓" or "✗"))
+end, {})</pre>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-success mt-4" role="alert">
+                                <h6><i class="fas fa-graduation-cap me-2"></i>Congratulations!</h6>
+                                <p class="mb-0">You've successfully configured Neovim for AI development! Your setup now includes intelligent code completion, powerful plugins, AI assistants, and seamless terminal integration.</p>
+                            </div>
+
+                            <div class="try-it-yourself">
+                                <div class="try-it-header">
+                                    <div class="try-it-icon">🚀</div>
+                                    <h6 class="try-it-title">Final AI Development Test</h6>
+                                </div>
+                                <p>Test your complete setup with a comprehensive AI development workflow:</p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Workflow Steps:</h6>
+                                        <ol>
+                                            <li>Create a new AI project</li>
+                                            <li>Set up Python environment</li>
+                                            <li>Implement neural network</li>
+                                            <li>Use AI assistant for completion</li>
+                                            <li>Run tests and debug</li>
+                                            <li>Train and evaluate model</li>
+                                        </ol>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Features to Test:</h6>
+                                        <ul>
+                                            <li>LSP autocompletion</li>
+                                            <li>AI code suggestions</li>
+                                            <li>Terminal integration</li>
+                                            <li>File navigation</li>
+                                            <li>Git integration</li>
+                                            <li>Testing framework</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="final-test" class="interactive-vim-simulator mb-3"></div>
+                                <button class="btn btn-success" onclick="startFinalTest()">
+                                    <i class="fas fa-rocket"></i> Start Final Test
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lesson Navigation -->
+                    <div class="lesson-navigation">
+                        <a href="07-neovim-basics.html" class="nav-button prev">
+                            <i class="fas fa-arrow-left"></i>
+                            Previous: Neovim Basics
+                        </a>
+                        <a href="09-cloud-ai-tools.html" class="nav-button next">
+                            Next: Cloud AI Tools
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/terminal-simulator.js"></script>
+    <script>
+        // Lesson management
+        let currentStep = 1;
+        const totalSteps = 6;
+        let terminals = {};
+
+        // Initialize lesson
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            setupStepNavigation();
+        });
+
+        // Step navigation
+        function setupStepNavigation() {
+            const stepItems = document.querySelectorAll('.step-list-item');
+            stepItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const step = parseInt(this.dataset.step);
+                    goToStep(step);
+                });
+            });
+        }
+
+        function goToStep(step) {
+            document.querySelectorAll('.lesson-step').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.step-list-item').forEach(s => s.classList.remove('active'));
+            
+            document.getElementById(`step-${step}`).classList.add('active');
+            document.querySelector(`[data-step="${step}"]`).classList.add('active');
+            
+            currentStep = step;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progress = Math.round((currentStep / totalSteps) * 100);
+            document.querySelector('.progress-percentage').textContent = progress + '%';
+            document.querySelector('.progress-bar').style.width = progress + '%';
+            
+            document.querySelectorAll('.step-list-item').forEach((item, index) => {
+                const stepNum = index + 1;
+                const indicator = item.querySelector('.step-indicator');
+                
+                if (stepNum < currentStep) {
+                    item.classList.add('completed');
+                    indicator.classList.add('completed');
+                    indicator.innerHTML = '<i class="fas fa-check"></i>';
+                } else if (stepNum === currentStep) {
+                    item.classList.add('active');
+                    indicator.classList.add('active');
+                    indicator.textContent = stepNum;
+                } else {
+                    item.classList.remove('completed', 'active');
+                    indicator.classList.remove('completed', 'active');
+                    indicator.textContent = stepNum;
+                }
+            });
+        }
+
+        // Code copy functionality
+        function copyCode(button) {
+            const codeBlock = button.closest('.lesson-code-block').querySelector('pre');
+            const code = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Configuration downloads
+        function downloadConfig(type) {
+            const configs = {
+                'lazy-bootstrap': {
+                    filename: 'lazy-bootstrap.lua',
+                    content: `-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git", "clone", "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup({
+  -- Your plugins here
+})`
+                },
+                'complete-config': {
+                    filename: 'complete-ai-init.lua',
+                    content: `-- Complete AI Development Neovim Configuration
+-- This is a comprehensive setup for AI development with Neovim
+-- Place this in ~/.config/nvim/init.lua
+
+-- Basic settings
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 4
+vim.opt.tabstop = 4
+vim.opt.smartindent = true
+vim.opt.wrap = false
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.termguicolors = true
+vim.opt.signcolumn = "yes"
+vim.opt.updatetime = 300
+vim.opt.clipboard = "unnamedplus"
+
+-- Leader key
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git", "clone", "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- Complete plugin configuration for AI development
+require("lazy").setup({
+  -- [Complete configuration would be here]
+})`
+                }
+            };
+            
+            const config = configs[type];
+            if (!config) return;
+            
+            const blob = new Blob([config.content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = config.filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Interactive demos
+        function startLazyInstallDemo() {
+            if (!terminals['terminal-1']) {
+                terminals['terminal-1'] = new TerminalSimulator('terminal-1', {
+                    prompt: '$ ',
+                    user: 'developer',
+                    host: 'ai-workstation'
+                });
+            }
+            
+            const terminal = terminals['terminal-1'];
+            terminal.addToOutput('Setting up lazy.nvim for AI development...', 'lesson');
+            terminal.addToOutput('$ nvim --headless +LazyInstall +qall', 'lesson');
+            terminal.addToOutput('Installing plugins...', 'lesson');
+            terminal.addToOutput('✓ All plugins installed successfully!', 'success');
+        }
+
+        function startLSPDemo() {
+            const simulator = document.getElementById('lsp-demo');
+            simulator.innerHTML = `
+                <div class="lsp-demo">
+                    <div class="editor-window">
+                        <div class="editor-header">neural_network.py</div>
+                        <div class="editor-content">
+                            <div class="code-line">import torch</div>
+                            <div class="code-line">import torch.nn as nn</div>
+                            <div class="code-line"></div>
+                            <div class="code-line">class NeuralNet(nn.Module):</div>
+                            <div class="code-line">    def __init__(self):</div>
+                            <div class="code-line">        super().__init__()</div>
+                            <div class="code-line">        self.layer1 = nn.Linear(784, 128)</div>
+                            <div class="code-line">        self.layer2 = nn.Linear(128, 10)</div>
+                            <div class="code-line"></div>
+                            <div class="code-line">    def forward(self, x):</div>
+                            <div class="code-line">        x = torch.relu(self.layer1(x))</div>
+                            <div class="code-line">        return self.layer2(x)</div>
+                        </div>
+                    </div>
+                    <div class="lsp-features">
+                        <div class="feature">
+                            <div class="feature-icon">🧠</div>
+                            <div class="feature-text">Auto-completion with torch.nn suggestions</div>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-icon">🔍</div>
+                            <div class="feature-text">Go-to-definition for PyTorch classes</div>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-icon">⚠️</div>
+                            <div class="feature-text">Real-time error detection</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startPluginsDemo() {
+            const simulator = document.getElementById('plugins-demo');
+            simulator.innerHTML = `
+                <div class="plugins-demo">
+                    <div class="plugin-status">
+                        <div class="plugin-item">
+                            <div class="plugin-icon">🔍</div>
+                            <div class="plugin-name">Telescope</div>
+                            <div class="plugin-status-badge success">Active</div>
+                        </div>
+                        <div class="plugin-item">
+                            <div class="plugin-icon">🌳</div>
+                            <div class="plugin-name">nvim-tree</div>
+                            <div class="plugin-status-badge success">Active</div>
+                        </div>
+                        <div class="plugin-item">
+                            <div class="plugin-icon">🎨</div>
+                            <div class="plugin-name">Treesitter</div>
+                            <div class="plugin-status-badge success">Active</div>
+                        </div>
+                        <div class="plugin-item">
+                            <div class="plugin-icon">💡</div>
+                            <div class="plugin-name">nvim-cmp</div>
+                            <div class="plugin-status-badge success">Active</div>
+                        </div>
+                    </div>
+                    <div class="demo-actions">
+                        <button class="demo-btn">Space+ff - Find files</button>
+                        <button class="demo-btn">Space+e - File explorer</button>
+                        <button class="demo-btn">Ctrl+Space - Completion</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startAIDemo() {
+            const simulator = document.getElementById('ai-demo');
+            simulator.innerHTML = `
+                <div class="ai-demo">
+                    <div class="ai-editor">
+                        <div class="editor-header">
+                            <span>training.py</span>
+                            <span class="ai-indicator">🤖 Copilot Active</span>
+                        </div>
+                        <div class="editor-content">
+                            <div class="code-line">def train_model(model, dataloader, optimizer):</div>
+                            <div class="code-line">    model.train()</div>
+                            <div class="code-line">    for batch_idx, (data, target) in enumerate(dataloader):</div>
+                            <div class="code-line">        optimizer.zero_grad()</div>
+                            <div class="code-line ai-suggestion">        output = model(data)  # ← AI suggested</div>
+                            <div class="code-line ai-suggestion">        loss = F.cross_entropy(output, target)  # ← AI suggested</div>
+                            <div class="code-line ai-suggestion">        loss.backward()  # ← AI suggested</div>
+                            <div class="code-line ai-suggestion">        optimizer.step()  # ← AI suggested</div>
+                        </div>
+                    </div>
+                    <div class="ai-suggestions">
+                        <div class="suggestion">
+                            <div class="suggestion-icon">🤖</div>
+                            <div class="suggestion-text">AI suggested complete training loop</div>
+                        </div>
+                        <div class="suggestion">
+                            <div class="suggestion-icon">⚡</div>
+                            <div class="suggestion-text">Press Ctrl+J to accept suggestion</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startTerminalDemo() {
+            const simulator = document.getElementById('terminal-demo');
+            simulator.innerHTML = `
+                <div class="terminal-demo">
+                    <div class="demo-layout">
+                        <div class="demo-pane editor-pane">
+                            <div class="pane-header">Neovim</div>
+                            <div class="pane-content">
+                                <div>model.py</div>
+                                <div>training.py</div>
+                                <div>data_loader.py</div>
+                            </div>
+                        </div>
+                        <div class="demo-pane terminal-pane">
+                            <div class="pane-header">Terminal</div>
+                            <div class="pane-content">
+                                <div>$ python training.py</div>
+                                <div>Epoch 1/10: Loss 0.45</div>
+                                <div>Epoch 2/10: Loss 0.32</div>
+                            </div>
+                        </div>
+                        <div class="demo-pane jupyter-pane">
+                            <div class="pane-header">Jupyter</div>
+                            <div class="pane-content">
+                                <div>In [1]: import torch</div>
+                                <div>In [2]: model.eval()</div>
+                                <div>In [3]: predictions = model(test_data)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="demo-controls">
+                        <button class="demo-btn">Ctrl+h/j/k/l - Navigate panes</button>
+                        <button class="demo-btn">Space+tf - Float terminal</button>
+                        <button class="demo-btn">Space+tj - Jupyter console</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startFinalTest() {
+            const simulator = document.getElementById('final-test');
+            simulator.innerHTML = `
+                <div class="final-test">
+                    <div class="test-workspace">
+                        <div class="workspace-header">
+                            <span>AI Development Workspace</span>
+                            <span class="status success">All Systems Go! 🚀</span>
+                        </div>
+                        <div class="workspace-content">
+                            <div class="project-file">
+                                <div class="file-icon">🐍</div>
+                                <div class="file-name">neural_network.py</div>
+                                <div class="file-status">LSP Active</div>
+                            </div>
+                            <div class="project-file">
+                                <div class="file-icon">📊</div>
+                                <div class="file-name">data_analysis.py</div>
+                                <div class="file-status">AI Assistant</div>
+                            </div>
+                            <div class="project-file">
+                                <div class="file-icon">🧪</div>
+                                <div class="file-name">test_model.py</div>
+                                <div class="file-status">Testing Ready</div>
+                            </div>
+                            <div class="project-file">
+                                <div class="file-icon">📋</div>
+                                <div class="file-name">requirements.txt</div>
+                                <div class="file-status">Dependencies</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="test-results">
+                        <div class="result-item">
+                            <div class="result-icon">✅</div>
+                            <div class="result-text">LSP: Python, JS, Rust servers active</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-icon">✅</div>
+                            <div class="result-text">AI Assistant: Intelligent completions working</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-icon">✅</div>
+                            <div class="result-text">Terminal: Integrated development environment</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-icon">✅</div>
+                            <div class="result-text">Plugins: All essential tools configured</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Reset progress
+        function resetProgress() {
+            currentStep = 1;
+            goToStep(1);
+            Object.values(terminals).forEach(terminal => {
+                if (terminal.reset) terminal.reset();
+            });
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+
+    <style>
+        .interactive-vim-simulator {
+            min-height: 300px;
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            color: #d4d4d4;
+            font-family: monospace;
+            position: relative;
+        }
+
+        .lsp-demo {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .editor-window {
+            flex: 1;
+            background: #2d2d2d;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .editor-header {
+            background: #404040;
+            padding: 8px 16px;
+            color: #ffffff;
+            font-weight: bold;
+            border-bottom: 1px solid #555;
+        }
+
+        .editor-content {
+            padding: 16px;
+            font-family: monospace;
+            line-height: 1.5;
+        }
+
+        .code-line {
+            margin: 2px 0;
+            color: #d4d4d4;
+        }
+
+        .lsp-features {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #2d2d2d;
+            border-radius: 4px;
+        }
+
+        .feature-icon {
+            font-size: 1.2em;
+        }
+
+        .feature-text {
+            color: #d4d4d4;
+            font-size: 0.9em;
+        }
+
+        .plugins-demo {
+            padding: 20px;
+        }
+
+        .plugin-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .plugin-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #2d2d2d;
+            border-radius: 6px;
+        }
+
+        .plugin-icon {
+            font-size: 1.4em;
+        }
+
+        .plugin-name {
+            flex: 1;
+            color: #d4d4d4;
+            font-weight: bold;
+        }
+
+        .plugin-status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .plugin-status-badge.success {
+            background: #28a745;
+            color: white;
+        }
+
+        .demo-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .demo-btn {
+            padding: 8px 16px;
+            background: #404040;
+            color: #d4d4d4;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: monospace;
+        }
+
+        .demo-btn:hover {
+            background: #555;
+        }
+
+        .ai-demo {
+            padding: 20px;
+        }
+
+        .ai-editor {
+            background: #2d2d2d;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .ai-indicator {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .ai-suggestion {
+            color: #87ceeb !important;
+            position: relative;
+        }
+
+        .ai-suggestion::after {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 100%;
+            background: #28a745;
+        }
+
+        .ai-suggestions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .suggestion {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #2d2d2d;
+            border-radius: 4px;
+        }
+
+        .suggestion-icon {
+            font-size: 1.2em;
+        }
+
+        .suggestion-text {
+            color: #d4d4d4;
+            font-size: 0.9em;
+        }
+
+        .terminal-demo {
+            padding: 20px;
+        }
+
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 12px;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        .demo-pane {
+            background: #2d2d2d;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .editor-pane {
+            grid-row: 1 / 3;
+        }
+
+        .pane-header {
+            background: #404040;
+            padding: 8px 16px;
+            color: #ffffff;
+            font-weight: bold;
+            border-bottom: 1px solid #555;
+        }
+
+        .pane-content {
+            padding: 16px;
+            color: #d4d4d4;
+            font-family: monospace;
+            line-height: 1.5;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .final-test {
+            padding: 20px;
+        }
+
+        .test-workspace {
+            background: #2d2d2d;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .workspace-header {
+            background: #404040;
+            padding: 12px 16px;
+            color: #ffffff;
+            font-weight: bold;
+            border-bottom: 1px solid #555;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .workspace-content {
+            padding: 16px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .project-file {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #1e1e1e;
+            border-radius: 4px;
+        }
+
+        .file-icon {
+            font-size: 1.4em;
+        }
+
+        .file-name {
+            flex: 1;
+            color: #d4d4d4;
+            font-weight: bold;
+        }
+
+        .file-status {
+            padding: 4px 8px;
+            background: #28a745;
+            color: white;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .test-results {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            background: #2d2d2d;
+            border-radius: 4px;
+        }
+
+        .result-icon {
+            font-size: 1.2em;
+        }
+
+        .result-text {
+            color: #d4d4d4;
+            font-size: 0.9em;
+        }
+
+        .status.success {
+            color: #28a745;
+        }
+
+        .sidebar {
+            background: var(--bs-light);
+            border-right: 1px solid var(--bs-border-color);
+            min-height: 100vh;
+        }
+
+        .lesson-step {
+            display: none;
+            margin-bottom: 2rem;
+        }
+
+        .lesson-step.active {
+            display: block;
+        }
+
+        .terminal-container {
+            min-height: 300px;
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        [data-theme="dark"] {
+            --bs-body-bg: #1a1a1a;
+            --bs-body-color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .sidebar {
+            background: #2d2d2d;
+            border-right-color: #404040;
+        }
+
+        [data-theme="dark"] .card {
+            background: #2d2d2d;
+            border-color: #404040;
+        }
+
+        [data-theme="dark"] .table {
+            --bs-table-bg: #2d2d2d;
+            --bs-table-color: #e0e0e0;
+        }
+    </style>
+</body>
+</html>

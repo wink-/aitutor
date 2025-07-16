@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Simulator Example</title>
+    <link rel="stylesheet" href="terminal-simulator.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .lesson-controls {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .lesson-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .lesson-btn:hover {
+            background: #2980b9;
+        }
+        
+        .progress {
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Terminal Simulator</h1>
+            <p>Interactive command line learning environment</p>
+        </div>
+        
+        <div class="content">
+            <div class="lesson-controls">
+                <button class="lesson-btn" onclick="startBasicLesson()">Basic Commands Lesson</button>
+                <button class="lesson-btn" onclick="startNavigationLesson()">Navigation Lesson</button>
+                <button class="lesson-btn" onclick="startFileLesson()">File Operations Lesson</button>
+                <button class="lesson-btn" onclick="clearTerminal()">Clear Terminal</button>
+            </div>
+            
+            <div id="progress" class="progress"></div>
+            
+            <div id="terminal" class="terminal-simulator"></div>
+        </div>
+    </div>
+
+    <script src="terminal-simulator.js"></script>
+    <script>
+        // Initialize the terminal
+        const terminal = new TerminalSimulator('terminal', {
+            prompt: '$ ',
+            welcomeMessage: 'Welcome to the Terminal Learning Environment!\nType "help" to see available commands or click a lesson button above.\n',
+            onLessonComplete: function(lesson, completedCommands) {
+                updateProgress(`✅ Completed: ${lesson.title} (${completedCommands.length} commands)`);
+            }
+        });
+
+        // Sample lessons
+        const lessons = {
+            basic: {
+                title: "Basic Terminal Commands",
+                description: "Learn the fundamental terminal commands",
+                steps: [
+                    {
+                        instruction: "First, let's see what's in the current directory. Use the 'ls' command to list files.",
+                        expectedCommand: "ls",
+                        hint: "Type 'ls' and press Enter"
+                    },
+                    {
+                        instruction: "Great! Now let's see where we are. Use 'pwd' to print the working directory.",
+                        expectedCommand: "pwd",
+                        hint: "Type 'pwd' and press Enter"
+                    },
+                    {
+                        instruction: "Let's display a message. Use 'echo' to print 'Hello, Terminal!'",
+                        expectedCommand: "echo Hello, Terminal!",
+                        hint: "Type 'echo Hello, Terminal!' and press Enter"
+                    },
+                    {
+                        instruction: "Finally, let's see who you are. Use the 'whoami' command.",
+                        expectedCommand: "whoami",
+                        hint: "Type 'whoami' and press Enter"
+                    }
+                ]
+            },
+            
+            navigation: {
+                title: "Directory Navigation",
+                description: "Learn how to navigate the file system",
+                steps: [
+                    {
+                        instruction: "Let's explore the file system. First, list the contents of the current directory.",
+                        expectedCommand: "ls",
+                        hint: "Use the 'ls' command"
+                    },
+                    {
+                        instruction: "Now navigate to the 'documents' directory using the 'cd' command.",
+                        expectedCommand: "cd documents",
+                        hint: "Type 'cd documents'"
+                    },
+                    {
+                        instruction: "Check what files are in the documents directory.",
+                        expectedCommand: "ls",
+                        hint: "Use 'ls' to list files"
+                    },
+                    {
+                        instruction: "Go back to the parent directory using 'cd ..'",
+                        expectedCommand: "cd ..",
+                        hint: "Type 'cd ..' to go up one directory"
+                    },
+                    {
+                        instruction: "Verify you're back in the home directory by checking your current location.",
+                        expectedCommand: "pwd",
+                        hint: "Use 'pwd' to see your current directory"
+                    }
+                ]
+            },
+            
+            fileOps: {
+                title: "File Operations",
+                description: "Learn how to work with files and directories",
+                steps: [
+                    {
+                        instruction: "Let's create a new file called 'test.txt' using the 'touch' command.",
+                        expectedCommand: "touch test.txt",
+                        hint: "Type 'touch test.txt'"
+                    },
+                    {
+                        instruction: "Verify the file was created by listing the directory contents.",
+                        expectedCommand: "ls",
+                        hint: "Use 'ls' to see all files"
+                    },
+                    {
+                        instruction: "Now create a new directory called 'mydir' using 'mkdir'.",
+                        expectedCommand: "mkdir mydir",
+                        hint: "Type 'mkdir mydir'"
+                    },
+                    {
+                        instruction: "List the contents again to see your new directory.",
+                        expectedCommand: "ls",
+                        hint: "Use 'ls' to see the new directory"
+                    },
+                    {
+                        instruction: "Finally, remove the test file using 'rm test.txt'.",
+                        expectedCommand: "rm test.txt",
+                        hint: "Type 'rm test.txt' to delete the file"
+                    }
+                ]
+            }
+        };
+
+        // Lesson control functions
+        function startBasicLesson() {
+            terminal.loadLesson(lessons.basic);
+            updateProgress("📚 Starting: Basic Terminal Commands");
+        }
+
+        function startNavigationLesson() {
+            terminal.loadLesson(lessons.navigation);
+            updateProgress("📚 Starting: Directory Navigation");
+        }
+
+        function startFileLesson() {
+            terminal.loadLesson(lessons.fileOps);
+            updateProgress("📚 Starting: File Operations");
+        }
+
+        function clearTerminal() {
+            terminal.clear();
+            updateProgress("🧹 Terminal cleared");
+        }
+
+        function updateProgress(message) {
+            document.getElementById('progress').textContent = message;
+        }
+
+        // Add some custom commands for demonstration
+        terminal.addCustomCommand = function(name, handler) {
+            const originalProcess = this.processCommand;
+            this.processCommand = function(command) {
+                const [cmd, ...args] = command.split(' ');
+                if (cmd === name) {
+                    handler.call(this, args);
+                } else {
+                    originalProcess.call(this, command);
+                }
+            };
+        };
+
+        // Example of adding a custom command
+        terminal.addCustomCommand('lesson', function(args) {
+            if (args[0] === 'basic') {
+                startBasicLesson();
+            } else if (args[0] === 'navigation') {
+                startNavigationLesson();
+            } else if (args[0] === 'files') {
+                startFileLesson();
+            } else {
+                this.addOutput('Available lessons: basic, navigation, files');
+                this.addOutput('Usage: lesson <lesson-name>');
+            }
+        });
+    </script>
+</body>
+</html>
