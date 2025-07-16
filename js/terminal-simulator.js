@@ -247,16 +247,25 @@ class TerminalSimulator {
         tempSpan.style.visibility = 'hidden';
         tempSpan.style.position = 'absolute';
         tempSpan.style.whiteSpace = 'pre';
-        tempSpan.style.fontFamily = this.input.style.fontFamily || 'inherit';
-        tempSpan.style.fontSize = this.input.style.fontSize || 'inherit';
+        
+        // Copy all computed styles from the input element
+        const computedStyle = window.getComputedStyle(this.input);
+        tempSpan.style.fontFamily = computedStyle.fontFamily;
+        tempSpan.style.fontSize = computedStyle.fontSize;
+        tempSpan.style.fontWeight = computedStyle.fontWeight;
+        tempSpan.style.letterSpacing = computedStyle.letterSpacing;
+        tempSpan.style.padding = computedStyle.padding;
+        
+        // Get text up to cursor position
         tempSpan.textContent = this.input.value.substring(0, this.input.selectionStart);
         
-        document.body.appendChild(tempSpan);
+        this.input.parentElement.appendChild(tempSpan);
         const textWidth = tempSpan.offsetWidth;
-        document.body.removeChild(tempSpan);
+        this.input.parentElement.removeChild(tempSpan);
         
-        // Position the cursor
-        this.cursor.style.left = textWidth + 'px';
+        // Position the cursor accounting for input padding
+        const inputPaddingLeft = parseInt(computedStyle.paddingLeft) || 0;
+        this.cursor.style.left = (textWidth + inputPaddingLeft) + 'px';
     }
     
     // Lesson management
