@@ -2,6 +2,42 @@
    AI Terminal Coding Tutorial - Lessons Stylesheet
    ========================================== */
 
+/* CSS Variables for Spacing */
+:root {
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 3rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --color-accent-primary: #0d6efd;
+  --color-accent-secondary: #6610f2;
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8f9fa;
+  --color-bg-tertiary: #e9ecef;
+  --color-bg-code: #f8f9fa;
+  --color-border: #dee2e6;
+  --color-text-primary: #212529;
+  --color-text-secondary: #6c757d;
+  --color-text-muted: #adb5bd;
+  --color-text-inverse: #ffffff;
+  --color-accent-success: #198754;
+  --color-accent-warning: #ffc107;
+  --color-accent-danger: #dc3545;
+  --color-accent-info: #0dcaf0;
+  --terminal-bg: #1a1a1a;
+  --terminal-text: #e0e0e0;
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+  --font-family-code: 'Courier New', monospace;
+}
+
 /* ==========================================
    Code Block Styling & Syntax Highlighting
    ========================================== */
@@ -638,16 +674,17 @@
 .hero-section {
   background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
   color: white;
-  padding: var(--spacing-xxl) var(--spacing-xl);
+  padding: var(--spacing-md) var(--spacing-md);
   border-radius: var(--radius-lg);
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
+  min-height: auto;
 }
 
 .hero-stats {
   display: flex;
   justify-content: center;
-  gap: var(--spacing-xl);
-  margin-top: var(--spacing-lg);
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-md);
 }
 
 .hero-stats .stat {
@@ -655,7 +692,7 @@
 }
 
 .hero-stats .stat-number {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   display: block;
 }
@@ -666,7 +703,7 @@
 }
 
 .progress-overview {
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
 }
 
 .progress-stats {
@@ -676,8 +713,8 @@
 .stat-card {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-lg);
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
   background-color: var(--color-bg-secondary);
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
@@ -768,7 +805,7 @@
 }
 
 .category-section {
-  margin-bottom: var(--spacing-xxl);
+  margin-bottom: var(--spacing-lg);
 }
 
 .category-title {

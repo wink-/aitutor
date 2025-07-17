@@ -212,6 +212,9 @@
                     <a href="#ai-workflows" class="list-group-item list-group-item-action">
                         <i class="fas fa-robot me-2"></i>AI Development Workflows
                     </a>
+                    <a href="#claude-code" class="list-group-item list-group-item-action">
+                        <i class="fas fa-magic me-2"></i>Claude Code Integration
+                    </a>
                     <a href="#configuration" class="list-group-item list-group-item-action">
                         <i class="fas fa-cog me-2"></i>Configuration
                     </a>
@@ -1132,6 +1135,173 @@ Ctrl+b , # rename to "monitoring"
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 6.5: Claude Code Integration -->
+                <section id="claude-code" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-info text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-robot"></i> Claude Code Integration</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Optimize your tmux setup for Claude Code workflows. Perfect session layouts for AI-assisted development.</p>
+                            
+                            <div class="ai-use-case">
+                                <h4><i class="fas fa-magic text-white"></i> Why Tmux + Claude Code?</h4>
+                                <p class="mb-2">Claude Code excels in terminal environments. Tmux provides:</p>
+                                <ul class="mb-0">
+                                    <li><strong>Persistent Sessions:</strong> Keep Claude Code running even when disconnected</li>
+                                    <li><strong>Multi-pane Views:</strong> Monitor outputs while Claude Code works</li>
+                                    <li><strong>Session Organization:</strong> Separate different projects cleanly</li>
+                                    <li><strong>Remote Development:</strong> Seamless cloud GPU access with Claude Code</li>
+                                </ul>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <div class="workflow-example">
+                                        <h5><i class="fas fa-code text-primary"></i> Claude Code Development Setup</h5>
+                                        <p>Optimal layout for AI-assisted coding:</p>
+                                        <div class="config-example">
+# Create Claude Code session
+$ tmux new -s claude-dev
+
+# Window 1: Main Development
+Ctrl+b c
+Ctrl+b , # rename to "claude-code"
+# Split for Claude and monitoring
+Ctrl+b %
+
+# Left pane: Claude Code
+claude code
+
+# Right pane: File watching
+# watch -n 2 'find . -name "*.py" -newer /tmp/timestamp'
+
+# Window 2: Testing
+Ctrl+b c
+Ctrl+b , # rename to "testing"
+# For running tests as Claude Code makes changes
+pytest --watch</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="workflow-example">
+                                        <h5><i class="fas fa-server text-success"></i> Remote Claude Code Session</h5>
+                                        <p>Work with Claude Code on cloud instances:</p>
+                                        <div class="config-example">
+# SSH into remote server with tmux
+$ ssh -t user@gpu-server 'tmux attach || tmux new'
+
+# Create dedicated Claude session
+$ tmux new -s claude-remote
+
+# Window 1: Claude Code
+Ctrl+b c
+Ctrl+b , # rename to "claude"
+claude code --resume
+
+# Window 2: Resource Monitoring  
+Ctrl+b c
+Ctrl+b , # rename to "monitor"
+# Split for different monitors
+Ctrl+b "
+# Top: htop
+# Bottom: nvidia-smi -l 1</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <div class="workflow-example">
+                                        <h5><i class="fas fa-brain text-info"></i> AI Training with Claude Code</h5>
+                                        <p>Let Claude Code manage training workflows:</p>
+                                        <div class="config-example">
+# Training session with Claude oversight
+$ tmux new -s ai-training
+
+# Window 1: Claude Code
+Ctrl+b c
+Ctrl+b , # rename to "claude"
+# Let Claude Code orchestrate training
+claude code
+
+# Window 2: Training Output
+Ctrl+b c  
+Ctrl+b , # rename to "training"
+# Split for logs and metrics
+Ctrl+b %
+# Left: tail -f training.log
+# Right: tensorboard --logdir ./logs
+
+# Window 3: System Monitoring
+Ctrl+b c
+Ctrl+b , # rename to "system"
+# Monitor during training
+htop</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="workflow-example">
+                                        <h5><i class="fas fa-cogs text-warning"></i> Multi-Project Claude Code</h5>
+                                        <p>Manage multiple projects with Claude:</p>
+                                        <div class="config-example">
+# Project A session
+$ tmux new -s project-a-claude
+# Start Claude Code for project A
+claude code
+
+# Project B session (detached)
+$ tmux new -s project-b-claude -d
+$ tmux send-keys -t project-b-claude 'cd /path/to/project-b' Enter
+$ tmux send-keys -t project-b-claude 'claude code' Enter
+
+# List and switch between projects
+$ tmux list-sessions
+$ tmux attach -t project-a-claude
+$ tmux attach -t project-b-claude
+
+# Quick switching
+Ctrl+b s  # session switcher</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-success mt-4">
+                                <h5><i class="fas fa-lightbulb"></i> Claude Code Pro Tips</h5>
+                                <ul class="mb-0">
+                                    <li><strong>Session Naming:</strong> Use descriptive names like <code>claude-api-dev</code> or <code>claude-ml-training</code></li>
+                                    <li><strong>Persistent History:</strong> Claude Code can resume context in persistent tmux sessions</li>
+                                    <li><strong>Resource Monitoring:</strong> Always have a monitoring pane when Claude Code runs heavy operations</li>
+                                    <li><strong>Quick Access:</strong> Create aliases for common Claude Code + tmux combinations</li>
+                                    <li><strong>Session Templates:</strong> Use tmuxinator to automate Claude Code workspace setup</li>
+                                </ul>
+                            </div>
+
+                            <div class="config-example mt-4">
+<strong># Quick aliases for .zshrc or .bashrc</strong>
+alias claude-dev='tmux new -s claude-dev "claude code; bash"'
+alias claude-attach='tmux attach -t claude-dev || tmux new -s claude-dev "claude code; bash"'
+alias claude-kill='tmux kill-session -t claude-dev'
+
+<strong># Function to create project-specific Claude sessions</strong>
+claude-project() {
+    local project_name="$1"
+    local session_name="claude-${project_name}"
+    
+    if [ -z "$project_name" ]; then
+        echo "Usage: claude-project &lt;project-name&gt;"
+        return 1
+    fi
+    
+    tmux new -s "$session_name" -d
+    tmux send-keys -t "$session_name" "cd ~/projects/$project_name" Enter
+    tmux send-keys -t "$session_name" "claude code" Enter
+    tmux attach -t "$session_name"
+}</div>
                         </div>
                     </div>
                 </section>

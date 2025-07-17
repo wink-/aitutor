@@ -1734,11 +1734,36 @@ class LessonIndex {
      * @param {string} lessonId - The lesson ID
      */
     startLesson(lessonId) {
-        // Check if lesson file exists
-        const lessonFile = `${lessonId}.html`;
-        
-        // Navigate to lesson
-        window.location.href = lessonFile;
+        // Map lesson IDs to actual file names
+        const lessonFileMap = {
+            'zsh-basics': '01-zsh-basics.html',
+            'tmux-fundamentals': '02-oh-my-zsh.html',
+            'cli-tools-essentials': '03-tmux-basics.html',
+            'ssh-remote-development': '04-tmux-workflows.html',
+            'neovim-installation': '05-search-tools.html',
+            'vim-motions-mastery': '06-productivity-tools.html',
+            'lsp-setup': '07-neovim-basics.html',
+            'essential-plugins': '08-neovim-ai-setup.html',
+            'ai-plugins-integration': '09-cloud-ai-tools.html',
+            'advanced-neovim-config': '10-ai-monitoring.html',
+            'tmux-layouts-ai': '11-automation-scripts.html',
+            'cloud-cli-tools': '12-advanced-integration.html',
+            'jupyter-terminal': '13-jupyter-terminal.html',
+            'model-monitoring': '14-model-monitoring.html',
+            'automation-scripts': '15-automation-scripts.html',
+            'neovim-repl-integration': '16-neovim-repl-integration.html',
+            'tmuxinator-automation': '17-tmuxinator-automation.html',
+            'performance-profiling': '18-performance-profiling.html',
+            'terminal-ai-mastery': '19-terminal-ai-mastery.html'
+        };
+
+        const fileName = lessonFileMap[lessonId];
+        if (fileName) {
+            window.location.href = fileName;
+        } else {
+            console.error(`Lesson file not found for ID: ${lessonId}`);
+            alert(`Lesson file not found for: ${lessonId}`);
+        }
     }
     
     /**

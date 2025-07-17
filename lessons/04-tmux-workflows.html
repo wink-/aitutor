@@ -224,6 +224,9 @@
                     <a href="#ai-workflows" class="list-group-item list-group-item-action">
                         <i class="fas fa-brain me-2"></i>AI Development
                     </a>
+                    <a href="#claude-code-workflows" class="list-group-item list-group-item-action">
+                        <i class="fas fa-magic me-2"></i>Claude Code Workflows
+                    </a>
                     <a href="#collaboration" class="list-group-item list-group-item-action">
                         <i class="fas fa-users me-2"></i>Team Collaboration
                     </a>
@@ -1130,6 +1133,196 @@ windows:
                                 
                                 <button class="btn demo-button mt-3" onclick="startAIWorkflowExercise()">
                                     <i class="fas fa-play"></i> Start AI Workflow Exercise
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 5.5: Claude Code Integration -->
+                <section id="claude-code-workflows" class="mb-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-info text-white">
+                            <h3 class="h5 mb-0"><i class="fas fa-robot"></i> Claude Code Workflows</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Advanced tmux workflows optimized for Claude Code AI-assisted development. Create powerful automation for AI coding sessions.</p>
+                            
+                            <div class="workflow-card">
+                                <h4><i class="fas fa-magic text-white"></i> Tmuxinator for Claude Code Projects</h4>
+                                <p class="mb-3">Automate Claude Code workspace creation with custom tmuxinator templates:</p>
+                                
+                                <div class="tmuxinator-config">
+<strong># ~/.tmuxinator/claude-dev.yml</strong>
+name: claude-dev
+root: ~/projects/&lt;%= @args[0] || "current" %&gt;
+
+windows:
+  - claude:
+      layout: main-horizontal
+      panes:
+        - claude code --resume
+        - watch -n 1 'find . -name "*.py" -newer /tmp/claude-watch 2>/dev/null | head -10'
+  
+  - monitoring:
+      layout: even-horizontal  
+      panes:
+        - htop
+        - tail -f ~/.claude/logs/latest.log
+        
+  - testing:
+      layout: main-vertical
+      panes:
+        - pytest --watch --tb=short
+        - |
+          # Auto-test runner for Claude changes
+          while true; do
+            inotifywait -r -e modify,create,delete ./src/ ./tests/ 2>/dev/null
+            echo "Running tests after Claude Code changes..."
+            pytest --tb=line -q
+          done</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="config-example">
+<strong># Quick Start Commands</strong>
+# Start Claude development session
+$ mux claude-dev myproject
+
+# Start with auto-testing
+$ mux claude-dev myproject --auto-test
+
+# Resume previous Claude session  
+$ mux claude-dev myproject --resume</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="config-example">
+<strong># Advanced Claude Code Layout</strong>
+# ~/.tmuxinator/claude-ai-training.yml
+name: claude-ai-training
+root: ~/ml-projects/&lt;%= @args[0] %&gt;
+
+windows:
+  - main:
+      layout: tiled
+      panes:
+        - claude code
+        - jupyter lab --no-browser --port=8888
+        - tensorboard --logdir=./logs --port=6006
+        - nvtop</div>
+                                </div>
+                            </div>
+
+                            <h4 class="mt-4"><i class="fas fa-cogs"></i> Claude Code Automation Scripts</h4>
+                            <p>Enhance Claude Code sessions with intelligent automation:</p>
+                            
+                            <div class="config-example">
+<strong>#!/bin/bash</strong>
+<strong># ~/bin/claude-watch - Intelligent file watcher for Claude Code</strong>
+
+PROJECT_DIR="${1:-.}"
+CLAUDE_SESSION="${2:-claude-dev}"
+
+# Create timestamp file for tracking changes
+touch /tmp/claude-watch
+
+echo "Starting Claude Code file watcher for $PROJECT_DIR"
+echo "Session: $CLAUDE_SESSION"
+
+# Watch for file changes and notify Claude
+inotifywait -m -r -e modify,create,delete \
+    --include '\.(py|js|ts|jsx|tsx|md|txt|json|yaml|yml)$' \
+    "$PROJECT_DIR" | while read path action file; do
+    
+    echo "$(date): $action $path$file"
+    
+    # Send file change notification to Claude session
+    tmux send-keys -t "$CLAUDE_SESSION:claude" \
+        "# File changed: $path$file ($action)" Enter
+    
+    # Auto-run tests for Python files
+    if [[ "$file" == *.py && "$action" == "MODIFY" ]]; then
+        tmux send-keys -t "$CLAUDE_SESSION:testing" \
+            "pytest ${path}test_${file} -v" Enter 2>/dev/null
+    fi
+    
+    # Update timestamp
+    touch /tmp/claude-watch
+done</div>
+
+                            <div class="config-example">
+<strong>#!/bin/bash</strong>
+<strong># ~/bin/claude-project - Quick project setup with Claude Code</strong>
+
+project_name="$1"
+project_type="${2:-python}"
+
+if [ -z "$project_name" ]; then
+    echo "Usage: claude-project &lt;name&gt; [type]"
+    echo "Types: python, node, rust, go, ml"
+    exit 1
+fi
+
+echo "Creating Claude Code project: $project_name ($project_type)"
+
+# Create project directory
+mkdir -p ~/projects/"$project_name"
+cd ~/projects/"$project_name"
+
+# Initialize based on project type
+case "$project_type" in
+    "python")
+        python -m venv .venv
+        source .venv/bin/activate
+        pip install pytest black flake8
+        ;;
+    "ml")
+        python -m venv .venv
+        source .venv/bin/activate  
+        pip install jupyter tensorflow pytorch scikit-learn pandas numpy matplotlib
+        ;;
+    "node")
+        npm init -y
+        npm install --save-dev jest eslint prettier
+        ;;
+esac
+
+# Start Claude Code tmux session
+tmux new-session -d -s "claude-$project_name" -c ~/projects/"$project_name"
+tmux send-keys -t "claude-$project_name" "claude code" Enter
+
+# Create monitoring window
+tmux new-window -t "claude-$project_name" -n "monitor"
+tmux send-keys -t "claude-$project_name:monitor" "~/bin/claude-watch . claude-$project_name" Enter
+
+# Attach to session
+tmux attach-session -t "claude-$project_name"</div>
+
+                            <div class="alert alert-info mt-4">
+                                <h5><i class="fas fa-lightbulb"></i> Claude Code Integration Tips</h5>
+                                <ul class="mb-0">
+                                    <li><strong>Persistent Context:</strong> Claude Code maintains better context in persistent tmux sessions</li>
+                                    <li><strong>Resource Monitoring:</strong> Always monitor system resources when Claude Code runs intensive operations</li>
+                                    <li><strong>Auto-testing:</strong> Set up automatic test runners to validate Claude Code changes</li>
+                                    <li><strong>Session Templates:</strong> Create project-specific tmuxinator templates for different Claude workflows</li>
+                                    <li><strong>File Watching:</strong> Use intelligent file watchers to track Claude Code's modifications</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="exercise-box">
+                                <h5><i class="fas fa-dumbbell text-primary"></i> Exercise: Claude Code Workspace Setup</h5>
+                                <p>Create a complete Claude Code development environment:</p>
+                                <ol>
+                                    <li>Install tmuxinator: <code>gem install tmuxinator</code></li>
+                                    <li>Create the claude-dev.yml configuration above</li>
+                                    <li>Set up the claude-watch script in ~/bin/</li>
+                                    <li>Test with: <code>mux claude-dev test-project</code></li>
+                                    <li>Verify all panes are working correctly</li>
+                                </ol>
+                                
+                                <button class="btn demo-button mt-3" onclick="startClaudeWorkflowExercise()">
+                                    <i class="fas fa-play"></i> Start Claude Code Exercise
                                 </button>
                             </div>
                         </div>
