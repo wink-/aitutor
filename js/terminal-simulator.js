@@ -246,33 +246,34 @@ class TerminalSimulator {
         const computedStyle = window.getComputedStyle(this.input);
         const inputPaddingLeft = parseInt(computedStyle.paddingLeft) || 0;
         
-        if (this.input.value === '') {
-            // When input is empty, position cursor at the start (accounting for padding)
-            this.cursor.style.left = inputPaddingLeft + 'px';
-            return;
-        }
-        
         // Create a temporary span to measure text width
         const tempSpan = document.createElement('span');
         tempSpan.style.visibility = 'hidden';
         tempSpan.style.position = 'absolute';
         tempSpan.style.whiteSpace = 'pre';
+        tempSpan.style.top = '-9999px';
+        tempSpan.style.left = '-9999px';
         
         // Copy all computed styles from the input element
         tempSpan.style.fontFamily = computedStyle.fontFamily;
         tempSpan.style.fontSize = computedStyle.fontSize;
         tempSpan.style.fontWeight = computedStyle.fontWeight;
         tempSpan.style.letterSpacing = computedStyle.letterSpacing;
+        tempSpan.style.lineHeight = computedStyle.lineHeight;
         
         // Get text up to cursor position
-        tempSpan.textContent = this.input.value.substring(0, this.input.selectionStart);
+        const textToCursor = this.input.value.substring(0, this.input.selectionStart || 0);
+        tempSpan.textContent = textToCursor || '';
         
-        this.input.parentElement.appendChild(tempSpan);
+        document.body.appendChild(tempSpan);
         const textWidth = tempSpan.offsetWidth;
-        this.input.parentElement.removeChild(tempSpan);
+        document.body.removeChild(tempSpan);
         
-        // Position the cursor accounting for input padding
-        this.cursor.style.left = (textWidth + inputPaddingLeft) + 'px';
+        // Position the cursor accounting for input padding and precise positioning
+        const leftPosition = textWidth + inputPaddingLeft;
+        this.cursor.style.left = leftPosition + 'px';
+        this.cursor.style.top = '50%';
+        this.cursor.style.transform = 'translateY(-50%)';
     }
     
     // Lesson management
@@ -300,8 +301,14 @@ class TerminalSimulator {
             if (step.hint) {
                 this.addToOutput(`Hint: ${step.hint}`, 'hint');
             }
+            if (step.expectedCommand) {
+                this.addToOutput(`Expected command: ${step.expectedCommand}`, 'hint');
+            }
         } else {
-            this.addToOutput('Lesson completed! 🎉', 'success');
+            this.addToOutput('🎉 Lesson completed! Great work!', 'success');
+            if (this.options.onLessonComplete) {
+                this.options.onLessonComplete(this.currentLesson, this.lessonProgress);
+            }
             this.currentLesson = null;
         }
     }
@@ -318,8 +325,10 @@ class TerminalSimulator {
             
             if (matches) {
                 this.lessonProgress.push(command);
-                this.addToOutput('✓ Correct!', 'success');
+                this.addToOutput('✓ Correct! Moving to next step...', 'success');
                 setTimeout(() => this.displayNextStep(), 1000);
+            } else {
+                this.addToOutput(`❌ Try again. Expected: ${expected}`, 'error');
             }
         }
     }
@@ -338,6 +347,14 @@ class TerminalSimulator {
         this.lessonProgress = [];
         this.input.value = '';
         this.updatePrompt();
+        this.updateCursorPosition();
+    }
+
+    clear() {
+        this.output.innerHTML = '';
+        this.input.value = '';
+        this.updateCursorPosition();
+        this.focusInput();
     }
 }
 

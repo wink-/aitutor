@@ -70,9 +70,10 @@
         
         <div class="content">
             <div class="lesson-controls">
-                <button class="lesson-btn" onclick="startBasicLesson()">Basic Commands Lesson</button>
-                <button class="lesson-btn" onclick="startNavigationLesson()">Navigation Lesson</button>
-                <button class="lesson-btn" onclick="startFileLesson()">File Operations Lesson</button>
+                <button class="lesson-btn" onclick="startBasicLesson()">Zsh Basics</button>
+                <button class="lesson-btn" onclick="startNavigationLesson()">Tmux Fundamentals</button>
+                <button class="lesson-btn" onclick="startFileLesson()">CLI Tools</button>
+                <button class="lesson-btn" onclick="startAdvancedLesson()">Neovim Setup</button>
                 <button class="lesson-btn" onclick="clearTerminal()">Clear Terminal</button>
             </div>
             
@@ -82,14 +83,18 @@
         </div>
     </div>
 
-    <script src="terminal-simulator.js"></script>
+    <script src="js/terminal-simulator.js"></script>
+    <script src="js/lessons.js"></script>
     <script>
-        // Initialize the terminal
+        // Initialize the lesson system and terminal
+        const lessonSystem = new LessonSystem();
         const terminal = new TerminalSimulator('terminal', {
             prompt: '$ ',
             welcomeMessage: 'Welcome to the Terminal Learning Environment!\nType "help" to see available commands or click a lesson button above.\n',
             onLessonComplete: function(lesson, completedCommands) {
+                lessonSystem.markLessonComplete(lesson.id);
                 updateProgress(`✅ Completed: ${lesson.title} (${completedCommands.length} commands)`);
+                showNextLessonOption(lesson.id);
             }
         });
 
@@ -189,18 +194,45 @@
 
         // Lesson control functions
         function startBasicLesson() {
-            terminal.loadLesson(lessons.basic);
-            updateProgress("📚 Starting: Basic Terminal Commands");
+            const lesson = lessonSystem.getLesson('zsh-basics') || lessons.basic;
+            terminal.loadLesson(lesson);
+            updateProgress(`📚 Starting: ${lesson.title}`);
         }
 
         function startNavigationLesson() {
-            terminal.loadLesson(lessons.navigation);
-            updateProgress("📚 Starting: Directory Navigation");
+            const lesson = lessonSystem.getLesson('tmux-basics') || lessons.navigation;
+            terminal.loadLesson(lesson);
+            updateProgress(`📚 Starting: ${lesson.title}`);
         }
 
         function startFileLesson() {
-            terminal.loadLesson(lessons.fileOps);
-            updateProgress("📚 Starting: File Operations");
+            const lesson = lessonSystem.getLesson('cli-tools') || lessons.fileOps;
+            terminal.loadLesson(lesson);
+            updateProgress(`📚 Starting: ${lesson.title}`);
+        }
+
+        function startAdvancedLesson() {
+            const lesson = lessonSystem.getLesson('neovim-install');
+            if (lesson) {
+                terminal.loadLesson(lesson);
+                updateProgress(`📚 Starting: ${lesson.title}`);
+            } else {
+                updateProgress("🔧 Advanced lesson system loading...");
+            }
+        }
+
+        function showNextLessonOption(completedLessonId) {
+            const nextLesson = lessonSystem.getNextLesson(completedLessonId);
+            if (nextLesson) {
+                const canStart = lessonSystem.checkPrerequisites(nextLesson.id);
+                if (canStart) {
+                    updateProgress(`🎯 Next: ${nextLesson.title} (Click to start)`);
+                } else {
+                    updateProgress(`🔒 Next: ${nextLesson.title} (Prerequisites required)`);
+                }
+            } else {
+                updateProgress(`🎉 All lessons complete! You've mastered terminal-based AI development!`);
+            }
         }
 
         function clearTerminal() {

@@ -228,11 +228,13 @@ body {
 
 .terminal-cursor {
     position: absolute;
-    top: 0;
+    top: 50%;
     left: 0;
+    transform: translateY(-50%);
     color: var(--terminal-fg);
     animation: blink 1s infinite;
     pointer-events: none;
+    z-index: 1;
     font-family: inherit;
     font-size: inherit;
 }
