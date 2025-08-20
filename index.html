@@ -13,7 +13,30 @@
     <!-- Custom CSS -->
     <link href="css/main.css" rel="stylesheet">
 </head>
-<body>
+<body class="loading">
+    <!-- Skip link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Loading indicator -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Loading AI Terminal Tutor...</p>
+        </div>
+    </div>
+    
+    <!-- Error fallback (hidden by default) -->
+    <div class="error-fallback" id="error-fallback" style="display: none;">
+        <h1>Something went wrong</h1>
+        <p>The application failed to load properly. This might be due to a network issue or browser compatibility.</p>
+        <div class="error-actions">
+            <button onclick="window.location.reload()" class="btn btn-primary">Refresh Page</button>
+            <button onclick="clearCache()" class="btn btn-secondary">Clear Cache</button>
+        </div>
+    </div>
+    
+    <!-- Main content -->
+    <main id="main-content">
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div class="container">
@@ -27,18 +50,13 @@
                     <li class="nav-item"><a class="nav-link" href="lessons/">Lessons</a></li>
                     <li class="nav-item"><a class="nav-link" href="#progress">Progress</a></li>
                     <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-                    <li class="nav-item">
-                        <button class="btn btn-outline-light btn-sm ms-2" id="theme-toggle">
-                            <i class="fas fa-moon"></i>
-                        </button>
-                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="hero-section bg-primary text-white py-5">
+    <section id="home" class="hero-section bg-primary text-white py-5" role="banner">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
@@ -74,9 +92,9 @@
     </section>
 
     <!-- Lessons Section -->
-    <section id="lessons" class="py-4">
+    <section id="lessons" class="py-4" role="main" aria-labelledby="lessons-heading">
         <div class="container">
-            <h2 class="text-center mb-4">Learning Path</h2>
+            <h2 id="lessons-heading" class="text-center mb-4">Learning Path</h2>
             <div class="row">
                 <div class="col-md-6 col-lg-3 mb-4">
                     <div class="card h-100 lesson-card">
@@ -146,9 +164,9 @@
     </section>
 
     <!-- Features Section -->
-    <section class="py-4 bg-light">
+    <section class="py-4 bg-dark text-light" role="complementary" aria-labelledby="features-heading">
         <div class="container">
-            <h2 class="text-center mb-4">Why Terminal-Based AI Coding?</h2>
+            <h2 id="features-heading" class="text-center mb-4">Why Terminal-Based AI Coding?</h2>
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <div class="text-center">
@@ -176,16 +194,16 @@
     </section>
 
     <!-- Progress Section -->
-    <section id="progress" class="py-4">
+    <section id="progress" class="py-4" role="complementary" aria-labelledby="progress-heading">
         <div class="container">
-            <h2 class="text-center mb-4">Your Progress</h2>
+            <h2 id="progress-heading" class="text-center mb-4">Your Progress</h2>
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Overall Progress</h5>
-                            <div class="progress mb-3" style="height: 20px;">
-                                <div class="progress-bar" role="progressbar" style="width: 0%" id="overall-progress">0%</div>
+                            <div class="progress mb-3" style="height: 20px;" aria-label="Overall course progress">
+                                <div class="progress-bar" role="progressbar" style="width: 0%" id="overall-progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">0%</div>
                             </div>
                             <div class="row text-center">
                                 <div class="col-3">
@@ -213,11 +231,11 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-4 bg-dark text-white">
+    <section id="about" class="py-4 bg-dark text-white" role="contentinfo" aria-labelledby="about-heading">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
-                    <h2 class="mb-4">About This Course</h2>
+                    <h2 id="about-heading" class="mb-4">About This Course</h2>
                     <p class="lead">This interactive course transforms GUI-dependent developers into terminal-proficient AI coding experts through hands-on lessons and practical exercises.</p>
                     <p>Based on proven learning progressions, you'll master the essential tools used by professional AI developers working with cloud GPUs, remote servers, and large-scale projects.</p>
                 </div>
@@ -237,26 +255,115 @@
         </div>
     </section>
 
+    </main>
+    
     <!-- Footer -->
-    <footer class="bg-light py-4">
+    <footer class="bg-dark py-4 text-light">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
                     <p>&copy; 2024 AI Terminal Tutor. Open source tutorial for terminal-based AI development.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <a href="#" class="text-decoration-none me-3">GitHub</a>
-                    <a href="#" class="text-decoration-none me-3">Documentation</a>
-                    <a href="#" class="text-decoration-none">Support</a>
+                    <a href="#" class="text-light text-decoration-none me-3">GitHub</a>
+                    <a href="#" class="text-light text-decoration-none me-3">Documentation</a>
+                    <a href="#" class="text-light text-decoration-none">Support</a>
                 </div>
             </div>
         </div>
     </footer>
-
+    
+    <!-- Scripts -->
+    <!-- Error handling script (load first) -->
+    <script>
+        // Global error handling
+        window.addEventListener('error', function(event) {
+            console.error('Global error:', event.error);
+            showErrorFallback();
+        });
+        
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Unhandled promise rejection:', event.reason);
+            showErrorFallback();
+        });
+        
+        function showErrorFallback() {
+            document.getElementById('loading-overlay').style.display = 'none';
+            document.getElementById('error-fallback').style.display = 'flex';
+            document.body.classList.remove('loading');
+        }
+        
+        function clearCache() {
+            try {
+                localStorage.clear();
+                sessionStorage.clear();
+                if ('caches' in window) {
+                    caches.keys().then(names => {
+                        return Promise.all(names.map(name => caches.delete(name)));
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                } else {
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error('Failed to clear cache:', error);
+                window.location.reload();
+            }
+        }
+        
+        // Hide loading overlay once page is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                if (document.body.classList.contains('loading')) {
+                    document.getElementById('loading-overlay').style.display = 'none';
+                    document.body.classList.remove('loading');
+                    document.body.classList.add('loaded');
+                }
+            }, 2000);
+        });
+    </script>
+    
     <!-- Bootstrap 5.3 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
-    <script src="js/main.js"></script>
-    <script src="js/lesson-manager.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" 
+            onerror="console.warn('Bootstrap failed to load')"></script>
+    
+    <!-- Custom JS with error handling -->
+    <script src="js/validation.js" onerror="console.warn('Validation.js failed to load')"></script>
+    <script src="js/main.js" onerror="console.error('Main.js failed to load'); showErrorFallback();"></script>
+    <script src="js/lesson-manager.js" onerror="console.warn('Lesson manager failed to load')"></script>
+    
+    <!-- Feature detection and polyfills -->
+    <script>
+        // Check for required features
+        if (!window.localStorage) {
+            console.warn('localStorage not available');
+        }
+        
+        if (!window.fetch) {
+            console.warn('Fetch API not available');
+        }
+        
+        if (!window.Promise) {
+            console.warn('Promise not available');
+        }
+        
+        // Performance monitoring
+        if ('PerformanceObserver' in window) {
+            try {
+                const observer = new PerformanceObserver((list) => {
+                    const entries = list.getEntries();
+                    entries.forEach(entry => {
+                        if (entry.entryType === 'navigation') {
+                            console.log('Page load time:', entry.loadEventEnd - entry.loadEventStart, 'ms');
+                        }
+                    });
+                });
+                observer.observe({ entryTypes: ['navigation'] });
+            } catch (error) {
+                console.warn('Performance monitoring failed:', error);
+            }
+        }
+    </script>
 </body>
 </html>

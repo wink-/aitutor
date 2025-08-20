@@ -2,7 +2,7 @@
    AI Terminal Coding Tutorial - Lessons Stylesheet
    ========================================== */
 
-/* CSS Variables for Spacing */
+/* CSS Variables for Spacing - Dark Mode Default */
 :root {
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
@@ -15,15 +15,15 @@
   --radius-lg: 0.75rem;
   --color-accent-primary: #0d6efd;
   --color-accent-secondary: #6610f2;
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f8f9fa;
-  --color-bg-tertiary: #e9ecef;
-  --color-bg-code: #f8f9fa;
-  --color-border: #dee2e6;
-  --color-text-primary: #212529;
-  --color-text-secondary: #6c757d;
-  --color-text-muted: #adb5bd;
-  --color-text-inverse: #ffffff;
+  --color-bg-primary: #1a1a1a;
+  --color-bg-secondary: #2d2d2d;
+  --color-bg-tertiary: #3a3a3a;
+  --color-bg-code: #2d2d2d;
+  --color-border: #444;
+  --color-text-primary: #e0e0e0;
+  --color-text-secondary: #c0c0c0;
+  --color-text-muted: #999;
+  --color-text-inverse: #1a1a1a;
   --color-accent-success: #198754;
   --color-accent-warning: #ffc107;
   --color-accent-danger: #dc3545;
@@ -32,9 +32,9 @@
   --terminal-text: #e0e0e0;
   --transition-fast: 0.15s ease;
   --transition-base: 0.3s ease;
-  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.5);
   --font-family-code: 'Courier New', monospace;
 }
 
@@ -116,14 +116,15 @@
 .syntax-operator { color: #d73a49; }
 .syntax-punctuation { color: #586069; }
 
-[data-theme="dark"] .syntax-keyword { color: #ff7b72; }
-[data-theme="dark"] .syntax-string { color: #a5d6ff; }
-[data-theme="dark"] .syntax-comment { color: #8b949e; }
-[data-theme="dark"] .syntax-function { color: #d2a8ff; }
-[data-theme="dark"] .syntax-variable { color: #79c0ff; }
-[data-theme="dark"] .syntax-number { color: #79c0ff; }
-[data-theme="dark"] .syntax-operator { color: #ff7b72; }
-[data-theme="dark"] .syntax-punctuation { color: #c9d1d9; }
+/* Dark mode syntax highlighting (default) */
+.syntax-keyword { color: #ff7b72; }
+.syntax-string { color: #a5d6ff; }
+.syntax-comment { color: #8b949e; }
+.syntax-function { color: #d2a8ff; }
+.syntax-variable { color: #79c0ff; }
+.syntax-number { color: #79c0ff; }
+.syntax-operator { color: #ff7b72; }
+.syntax-punctuation { color: #c9d1d9; }
 
 /* ==========================================
    Step-by-Step Instruction Layouts
@@ -541,7 +542,6 @@
   }
   
   .lesson-sidebar,
-  .theme-toggle,
   .nav-button,
   .code-actions,
   .interactive-element {

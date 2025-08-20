@@ -29,19 +29,64 @@ class LessonManager {
     }
 
     /**
-     * Load lesson prerequisites from lessons.json
+     * Load lesson prerequisites from lessons.json with caching
      */
     async loadPrerequisites() {
         try {
-            const response = await fetch('../lessons.json');
-            const data = await response.json();
+            // Try to get from cache first
+            let data = this.getCachedLessonsData();
+            
+            if (!data) {
+                const response = await fetch('../lessons.json');
+                data = await response.json();
+                this.cacheLessonsData(data);
+            }
             
             data.lessons.forEach(lesson => {
                 this.prerequisites.set(lesson.id, lesson.prerequisites || []);
             });
         } catch (error) {
             console.error('Error loading prerequisites:', error);
+            this.showError('Failed to load lesson data. Some features may not work properly.');
         }
+    }
+    
+    /**
+     * Cache lessons data in localStorage
+     */
+    cacheLessonsData(data) {
+        try {
+            const cacheData = {
+                data,
+                timestamp: Date.now(),
+                version: '1.0.0'
+            };
+            localStorage.setItem('lessonsData', JSON.stringify(cacheData));
+        } catch (error) {
+            console.warn('Failed to cache lessons data:', error);
+        }
+    }
+    
+    /**
+     * Get cached lessons data if still valid
+     */
+    getCachedLessonsData() {
+        try {
+            const cached = localStorage.getItem('lessonsData');
+            if (!cached) return null;
+            
+            const cacheData = JSON.parse(cached);
+            const cacheAge = Date.now() - cacheData.timestamp;
+            const maxAge = 60 * 60 * 1000; // 1 hour
+            
+            if (cacheAge < maxAge) {
+                return cacheData.data;
+            }
+        } catch (error) {
+            console.warn('Failed to get cached lessons data:', error);
+        }
+        
+        return null;
     }
 
     /**
@@ -403,6 +448,15 @@ class LessonManager {
             window.AITutorial?.announceToScreenReader('Code copied to clipboard');
         } catch (error) {
             console.error('Failed to copy code:', error);
+            
+            // Error feedback
+            button.innerHTML = '<i class="fas fa-times"></i>';
+            button.classList.add('btn-danger');
+            
+            setTimeout(() => {
+                button.innerHTML = originalContent;
+                button.classList.remove('btn-danger');
+            }, 2000);
         }
     }
 
@@ -1518,31 +1572,76 @@ class LessonIndex {
     }
     
     /**
-     * Initialize the lesson index
+     * Initialize lesson index with performance optimizations
      */
     async init() {
         try {
+            // Show loading state
+            document.body.classList.add('loading');
+            
+            // Load lessons data with caching
             await this.loadLessonsData();
-            this.bindEvents();
-            this.renderLessons();
-            this.updateProgress();
-            this.generateRecommendations();
-            this.renderBookmarkedLessons();
+            
+            // Initialize in stages for better perceived performance
+            requestAnimationFrame(() => {
+                this.bindEvents();
+                this.updateProgress();
+            });
+            
+            // Defer non-critical rendering
+            setTimeout(() => {
+                this.renderLessons();
+                this.generateRecommendations();
+                this.renderBookmarkedLessons();
+                document.body.classList.remove('loading');
+                document.body.classList.add('loaded');
+            }, 100);
+            
         } catch (error) {
+            document.body.classList.remove('loading');
             console.error('Error initializing lesson index:', error);
+            this.showError('Failed to initialize lessons. Please refresh the page.');
         }
     }
     
     /**
-     * Load lessons data from JSON file
+     * Load lessons data from JSON file with caching and error handling
      */
     async loadLessonsData() {
         try {
-            const response = await fetch('../lessons.json');
-            this.lessonsData = await response.json();
-            this.filteredLessons = this.lessonsData.lessons;
+            // Try cache first
+            let cachedData = this.getCachedLessonsData();
+            
+            if (cachedData) {
+                this.lessonsData = cachedData;
+                this.filteredLessons = this.lessonsData.lessons;
+                
+                // Fetch fresh data in background
+                this.refreshLessonsData();
+            } else {
+                // Load from network
+                const response = await fetch('../lessons.json');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch lessons: ${response.status}`);
+                }
+                
+                this.lessonsData = await response.json();
+                this.filteredLessons = this.lessonsData.lessons;
+                this.cacheLessonsData(this.lessonsData);
+            }
+            
         } catch (error) {
             console.error('Error loading lessons data:', error);
+            
+            // Try to use any cached data as fallback
+            const fallbackData = this.getCachedLessonsData(true); // ignore expiry
+            if (fallbackData) {
+                this.lessonsData = fallbackData;
+                this.filteredLessons = this.lessonsData.lessons;
+                this.showError('Using cached lesson data. Some information may be outdated.');
+            } else {
+                throw new Error('No lesson data available');
+            }
         }
     }
     
@@ -1604,23 +1703,34 @@ class LessonIndex {
     }
     
     /**
-     * Filter lessons based on search and category
+     * Filter lessons based on search and category with debouncing
      */
     filterLessons() {
         if (!this.lessonsData) return;
         
-        this.filteredLessons = this.lessonsData.lessons.filter(lesson => {
-            const matchesSearch = this.currentSearchTerm === '' || 
-                lesson.title.toLowerCase().includes(this.currentSearchTerm) ||
-                lesson.description.toLowerCase().includes(this.currentSearchTerm) ||
-                lesson.objectives.some(obj => obj.toLowerCase().includes(this.currentSearchTerm));
-            
-            const matchesCategory = this.currentFilter === '' || lesson.category === this.currentFilter;
-            
-            return matchesSearch && matchesCategory;
-        });
+        // Cancel previous filter if still running
+        if (this.filterTimeout) {
+            clearTimeout(this.filterTimeout);
+        }
         
-        this.renderLessons();
+        this.filterTimeout = setTimeout(() => {
+            const startTime = performance.now();
+            
+            this.filteredLessons = this.lessonsData.lessons.filter(lesson => {
+                const matchesSearch = this.currentSearchTerm === '' || 
+                    this.searchInLesson(lesson, this.currentSearchTerm);
+                
+                const matchesCategory = this.currentFilter === '' || lesson.category === this.currentFilter;
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            this.renderLessons();
+            this.updateSearchResults(this.filteredLessons.length, this.currentSearchTerm);
+            
+            const duration = performance.now() - startTime;
+            console.log(`Filter completed in ${duration.toFixed(2)}ms`);
+        }, 100);
     }
     
     /**
@@ -1736,25 +1846,32 @@ class LessonIndex {
     startLesson(lessonId) {
         // Map lesson IDs to actual file names
         const lessonFileMap = {
+            // Foundation lessons
             'zsh-basics': '01-zsh-basics.html',
-            'tmux-fundamentals': '02-oh-my-zsh.html',
-            'cli-tools-essentials': '03-tmux-basics.html',
-            'ssh-remote-development': '04-tmux-workflows.html',
-            'neovim-installation': '05-search-tools.html',
-            'vim-motions-mastery': '06-productivity-tools.html',
-            'lsp-setup': '07-neovim-basics.html',
+            'tmux-fundamentals': '03-tmux-basics.html',
+            'cli-tools-essentials': '05-search-tools.html',
+            'ssh-remote-development': '02-oh-my-zsh.html',
+            
+            // Editor Transition lessons
+            'neovim-installation': '07-neovim-basics.html',
+            'vim-motions-mastery': '07-neovim-basics.html',
+            'lsp-setup': '08-neovim-ai-setup.html',
             'essential-plugins': '08-neovim-ai-setup.html',
-            'ai-plugins-integration': '09-cloud-ai-tools.html',
-            'advanced-neovim-config': '10-ai-monitoring.html',
-            'tmux-layouts-ai': '11-automation-scripts.html',
-            'cloud-cli-tools': '12-advanced-integration.html',
-            'jupyter-terminal': '13-jupyter-terminal.html',
-            'model-monitoring': '14-model-monitoring.html',
-            'automation-scripts': '15-automation-scripts.html',
-            'neovim-repl-integration': '16-neovim-repl-integration.html',
-            'tmuxinator-automation': '17-tmuxinator-automation.html',
-            'performance-profiling': '18-performance-profiling.html',
-            'terminal-ai-mastery': '19-terminal-ai-mastery.html'
+            'ai-plugins-integration': '08-neovim-ai-setup.html',
+            'advanced-neovim-config': '08-neovim-ai-setup.html',
+            
+            // AI Workflow Tools lessons
+            'tmux-layouts-ai': '04-tmux-workflows.html',
+            'cloud-cli-tools': '09-cloud-ai-tools.html',
+            'jupyter-terminal': '06-productivity-tools.html',
+            'model-monitoring': '10-ai-monitoring.html',
+            
+            // Advanced Integration lessons
+            'automation-scripts': '11-automation-scripts.html',
+            'neovim-repl-integration': '08-neovim-ai-setup.html',
+            'tmuxinator-automation': '12-advanced-integration.html',
+            'performance-profiling': '11-automation-scripts.html',
+            'terminal-ai-mastery': '12-advanced-integration.html'
         };
 
         const fileName = lessonFileMap[lessonId];
@@ -2098,17 +2215,175 @@ class LessonIndex {
     }
 }
 
-// Initialize lesson manager when DOM is loaded
+// Initialize lesson manager when DOM is loaded with error handling
 document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname.includes('lessons/index.html') || window.location.pathname.endsWith('lessons/')) {
-        // Initialize lesson index
-        window.lessonIndex = new LessonIndex();
-    } else {
-        // Initialize regular lesson manager
-        window.lessonManager = new LessonManager();
+    try {
+        if (window.location.pathname.includes('lessons/index.html') || window.location.pathname.endsWith('lessons/')) {
+            // Initialize lesson index
+            window.lessonIndex = new LessonIndex();
+        } else {
+            // Initialize regular lesson manager
+            window.lessonManager = new LessonManager();
+        }
+        
+        // Register service worker for offline support
+        if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
+            navigator.serviceWorker.register('/sw.js').catch(error => {
+                console.warn('Service Worker registration failed:', error);
+            });
+        }
+        
+    } catch (error) {
+        console.error('Failed to initialize lesson manager:', error);
+        
+        // Show error message to user
+        document.body.innerHTML = `
+            <div class="container mt-5">
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">Initialization Error</h4>
+                    <p>The lesson system failed to initialize. Please refresh the page to try again.</p>
+                    <button class="btn btn-primary" onclick="window.location.reload()">Refresh Page</button>
+                </div>
+            </div>
+        `;
     }
 });
 
 // Export for use in other modules
 window.LessonManager = LessonManager;
 window.LessonIndex = LessonIndex;
+
+// Add utility methods to LessonIndex prototype
+LessonIndex.prototype.getCachedLessonsData = function(ignoreExpiry = false) {
+    try {
+        const cached = localStorage.getItem('lessonsIndexData');
+        if (!cached) return null;
+        
+        const cacheData = JSON.parse(cached);
+        
+        if (ignoreExpiry) {
+            return cacheData.data;
+        }
+        
+        const cacheAge = Date.now() - cacheData.timestamp;
+        const maxAge = 30 * 60 * 1000; // 30 minutes
+        
+        if (cacheAge < maxAge) {
+            return cacheData.data;
+        }
+    } catch (error) {
+        console.warn('Failed to get cached lessons data:', error);
+    }
+    
+    return null;
+};
+
+LessonIndex.prototype.cacheLessonsData = function(data) {
+    try {
+        const cacheData = {
+            data,
+            timestamp: Date.now(),
+            version: '1.0.0'
+        };
+        localStorage.setItem('lessonsIndexData', JSON.stringify(cacheData));
+    } catch (error) {
+        console.warn('Failed to cache lessons data:', error);
+    }
+};
+
+LessonIndex.prototype.refreshLessonsData = async function() {
+    try {
+        const response = await fetch('../lessons.json');
+        if (response.ok) {
+            const freshData = await response.json();
+            this.cacheLessonsData(freshData);
+            
+            // Update if data changed
+            if (JSON.stringify(freshData) !== JSON.stringify(this.lessonsData)) {
+                this.lessonsData = freshData;
+                this.filteredLessons = this.lessonsData.lessons;
+                this.renderLessons();
+            }
+        }
+    } catch (error) {
+        console.warn('Background refresh failed:', error);
+    }
+};
+
+LessonIndex.prototype.searchInLesson = function(lesson, term) {
+    const searchFields = [
+        lesson.title,
+        lesson.description,
+        ...(lesson.objectives || []),
+        ...(lesson.hands_on_exercises || []),
+        lesson.category.replace('-', ' ')
+    ];
+    
+    const normalizedTerm = term.toLowerCase();
+    
+    return searchFields.some(field => 
+        field && field.toLowerCase().includes(normalizedTerm)
+    );
+};
+
+LessonIndex.prototype.updateSearchResults = function(count, term) {
+    const resultsEl = document.getElementById('search-results');
+    if (resultsEl) {
+        if (term) {
+            resultsEl.textContent = `Found ${count} lesson${count !== 1 ? 's' : ''} matching "${term}"`;
+            resultsEl.style.display = 'block';
+        } else {
+            resultsEl.style.display = 'none';
+        }
+    }
+};
+
+LessonIndex.prototype.showError = function(message) {
+    const alert = document.createElement('div');
+    alert.className = 'alert alert-danger alert-dismissible fade show';
+    alert.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const container = document.querySelector('.main-content') || document.body;
+    container.insertBefore(alert, container.firstChild);
+    
+    setTimeout(() => {
+        if (alert.parentNode) {
+            alert.remove();
+        }
+    }, 8000);
+};
+
+// Preload critical resources
+if ('requestIdleCallback' in window) {
+    requestIdleCallback(() => {
+        // Preload lessons.json
+        fetch('../lessons.json').then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        }).then(data => {
+            if (data) {
+                console.log('Lessons data preloaded');
+            }
+        }).catch(() => {
+            // Silently fail preloading
+        });
+        
+        // Preload common lesson files
+        const commonLessons = [
+            '/lessons/01-zsh-basics.html',
+            '/lessons/02-oh-my-zsh.html',
+            '/lessons/03-tmux-basics.html'
+        ];
+        
+        commonLessons.forEach(lesson => {
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = lesson;
+            document.head.appendChild(link);
+        });
+    });
+}
