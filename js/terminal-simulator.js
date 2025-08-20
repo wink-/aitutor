@@ -432,7 +432,8 @@ class TerminalSimulator {
         
         // Move cursor to end of input
         this.input.setSelectionRange(this.input.value.length, this.input.value.length);
-        this.updateCursorPosition();
+        // Add small delay to ensure DOM is updated
+        setTimeout(() => this.updateCursorPosition(), 0);
     }
     
     handleTabCompletion() {
@@ -466,7 +467,8 @@ class TerminalSimulator {
         }
         
         this.input.setSelectionRange(this.input.value.length, this.input.value.length);
-        this.updateCursorPosition();
+        // Add small delay to ensure DOM is updated
+        setTimeout(() => this.updateCursorPosition(), 0);
     }
     
     focusInput() {
@@ -478,37 +480,87 @@ class TerminalSimulator {
     }
     
     updateCursorPosition() {
-        // Get computed styles from the input element
-        const computedStyle = window.getComputedStyle(this.input);
-        const inputPaddingLeft = parseInt(computedStyle.paddingLeft) || 0;
-        
-        if (this.input.value === '') {
-            // When input is empty, position cursor at the start (accounting for padding)
-            this.cursor.style.left = inputPaddingLeft + 'px';
-            return;
+        try {
+            // Get the cursor position in the input
+            const cursorPos = this.input.selectionStart || 0;
+            const textBeforeCursor = this.input.value.substring(0, cursorPos);
+            
+            // Get computed styles from the input element
+            const computedStyle = window.getComputedStyle(this.input);
+            
+            if (textBeforeCursor === '') {
+                // When no text before cursor, position at input start with padding
+                const inputPaddingLeft = parseInt(computedStyle.paddingLeft) || 0;
+                this.cursor.style.left = inputPaddingLeft + 'px';
+                return;
+            }
+            
+            // Create a canvas to precisely measure text width
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            
+            // Set font properties to match the input
+            const fontSize = computedStyle.fontSize;
+            const fontFamily = computedStyle.fontFamily;
+            const fontWeight = computedStyle.fontWeight;
+            context.font = `${fontWeight} ${fontSize} ${fontFamily}`;
+            
+            // Measure the text width
+            const textMetrics = context.measureText(textBeforeCursor);
+            const textWidth = textMetrics.width;
+            
+            // Get input padding to account for input field offset
+            const inputPaddingLeft = parseInt(computedStyle.paddingLeft) || 0;
+            
+            // Position cursor at text width + padding
+            this.cursor.style.left = (textWidth + inputPaddingLeft) + 'px';
+            
+        } catch (error) {
+            console.warn('Error updating cursor position:', error);
+            // Fallback method using a temporary span
+            this.fallbackCursorPosition();
         }
-        
-        // Create a temporary span to measure text width
-        const tempSpan = document.createElement('span');
-        tempSpan.style.visibility = 'hidden';
-        tempSpan.style.position = 'absolute';
-        tempSpan.style.whiteSpace = 'pre';
-        
-        // Copy all computed styles from the input element
-        tempSpan.style.fontFamily = computedStyle.fontFamily;
-        tempSpan.style.fontSize = computedStyle.fontSize;
-        tempSpan.style.fontWeight = computedStyle.fontWeight;
-        tempSpan.style.letterSpacing = computedStyle.letterSpacing;
-        
-        // Get text up to cursor position
-        tempSpan.textContent = this.input.value.substring(0, this.input.selectionStart);
-        
-        this.input.parentElement.appendChild(tempSpan);
-        const textWidth = tempSpan.offsetWidth;
-        this.input.parentElement.removeChild(tempSpan);
-        
-        // Position the cursor accounting for input padding
-        this.cursor.style.left = (textWidth + inputPaddingLeft) + 'px';
+    }
+    
+    fallbackCursorPosition() {
+        try {
+            const cursorPos = this.input.selectionStart || 0;
+            const textBeforeCursor = this.input.value.substring(0, cursorPos);
+            const computedStyle = window.getComputedStyle(this.input);
+            const inputPaddingLeft = parseInt(computedStyle.paddingLeft) || 0;
+            
+            if (textBeforeCursor === '') {
+                this.cursor.style.left = inputPaddingLeft + 'px';
+                return;
+            }
+            
+            // Create a temporary span for measurement
+            const tempSpan = document.createElement('span');
+            tempSpan.style.cssText = `
+                visibility: hidden;
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+                white-space: pre;
+                font-family: ${computedStyle.fontFamily};
+                font-size: ${computedStyle.fontSize};
+                font-weight: ${computedStyle.fontWeight};
+                letter-spacing: ${computedStyle.letterSpacing};
+                line-height: ${computedStyle.lineHeight};
+            `;
+            
+            tempSpan.textContent = textBeforeCursor;
+            document.body.appendChild(tempSpan);
+            const textWidth = tempSpan.offsetWidth;
+            document.body.removeChild(tempSpan);
+            
+            this.cursor.style.left = (textWidth + inputPaddingLeft) + 'px';
+            
+        } catch (error) {
+            console.warn('Fallback cursor positioning failed:', error);
+            // Last resort: just use a fixed offset
+            this.cursor.style.left = (this.input.value.length * 8 + 2) + 'px';
+        }
     }
     
     // Lesson management
